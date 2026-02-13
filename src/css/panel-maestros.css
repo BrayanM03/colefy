@@ -1,0 +1,25 @@
+.tarjeta-grupo{
+    border: 1px solid #00e5e6;
+    width: 100%;
+    height: 6rem;
+    border-radius: 8px;
+    background-color: white;
+}
+
+@media (width <= 1440px) {
+   .tarjeta-grupo{
+    font-size: 10px !important;
+   } 
+}
+
+.tarjeta-grupo:hover{
+    background-color: #c1fffd;
+    cursor: pointer;
+    box-shadow: rgba(100, 100, 111, 0.3) 0px 10px 31px 0px;
+
+}
+
+.mensaje{
+    font-weight: 100;
+    color: gray;
+}

@@ -1,0 +1,1 @@
+export function formatearFechaEspanol(e){if(!(e instanceof Date))return"Error: Se requiere un objeto Date.";return`${e.toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"}).replace(/[/-]/g," ")} - ${e.toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit",hour12:!0}).replace(" AM"," am").replace(" PM"," pm").replace(/ /g,"")}`}

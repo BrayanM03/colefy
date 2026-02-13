@@ -1,0 +1,90 @@
+.celda-desc{
+    width: 350px;
+    font-size: 12px;
+    word-break: break-word;
+    white-space: normal !important;
+
+}
+
+@media screen and (max-width: 768px) {
+    .celda-desc{
+        width: auto !important;
+        white-space: nowrap !important;
+        overflow-x: scroll !important;
+    }
+}
+
+
+.card{
+    border-radius: 16px !important;
+}
+
+.img-product{
+    width:60px; 
+    height: 60px;
+    border-radius:5px; 
+    border:1px solid #B4B2B1;
+    object-fit: cover;
+}
+
+
+
+
+
+.container-code{
+    height:25px;
+    width:75px;
+    padding: .3rem;
+    border-radius: 6px;
+    text-align: center;
+    background-color:rgba(147, 218, 234, 0.5);
+    border: 1px solid rgb(0, 208, 255);
+    color:rgb(0, 0, 0);
+    font-size: 10px;
+ }
+ 
+.container-pill{
+    height:25px;
+    width:75px;
+    padding: .3rem;
+    border-radius: 6px;
+    text-align: center;
+
+    font-size: 10px;
+ }
+ 
+ .estatus_disponible{
+    background-color:rgba(148, 202, 246, 0.5);
+    border: 1px solid rgb(19, 117, 147);
+    color:rgb(19, 117, 147);
+ }
+
+ .estatus_pagado{
+    background-color:rgba(70, 249, 112, 0.5);
+    border: 1px solid rgb(6, 161, 88);
+    color:rgb(6, 161, 88);
+ }
+
+ .estatus_pagando{
+    background-color:rgba(227, 241, 33, 0.5);
+    border: 1px solid rgb(163, 158, 3);
+    color:rgb(163, 158, 3);
+ }
+
+ .fila-disponible{
+    background-color:rgba(148, 202, 246, 0.5) !important;   
+    border:1px solid rgb(50, 50, 50) !important; 
+ }
+
+ .fila-pagado{
+     background-color:rgba(70, 249, 112, 0.5) !important;
+    border:1px solid rgb(50, 50, 50) !important; 
+
+ }
+
+ .fila-pagando{
+    background-color:rgba(227, 241, 33, 0.5) !important;
+    border:1px solid rgb(50, 50, 50) !important; 
+
+     
+ }

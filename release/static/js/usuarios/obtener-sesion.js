@@ -1,0 +1,1 @@
+export async function getRoleFromServer(){try{const r=await fetch("/api/user/usuarios",{headers:{Authorization:`Bearer ${localStorage.getItem("token")}`}});return(await r.json()).role}catch(r){return console.error("Error al obtener el rol del servidor:",r),null}}

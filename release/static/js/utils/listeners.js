@@ -1,0 +1,1 @@
+export function DataTableListener(e,t,n,o){e.on(t,n,(function(t){let n=$(this).closest("tr"),r=e.row(n).data();if(!r){let t=n.prev(".parent");t.length&&(r=e.row(t).data())}r&&r.id?o(r.id):console.error("No se pudo obtener el ID del concepto. rowData:",r)}))}export function GeneralEventListener(e,t,n){let o=document.getElementById(e);o&&o.addEventListener(t,n)}
