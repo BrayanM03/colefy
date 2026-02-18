@@ -22,7 +22,7 @@
 							</a>
 
 							<a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
-								<img src="<?php echo STATIC_URL; ?>img/avatars/<?= $_SESSION['foto_perfil']?>" id="foto_usuario_navbar" class="avatar img-fluid rounded me-1" alt="foto_usuario" /> <span class="text-dark" id="nombre_usuario_navbar" id_user="<?php echo $_SESSION["id"] ?>"><?php echo $_SESSION["nombre"]. " ". $_SESSION["apellido"]?></span>
+								<img src="<?php echo STATIC_URL; ?>img/avatars/<?= isset($_SESSION['foto_perfil']) ? $_SESSION['foto_perfil'] : 'default.png'?>" id="foto_usuario_navbar" class="avatar img-fluid rounded me-1" alt="foto_usuario" /> <span class="text-dark" id="nombre_usuario_navbar" id_user="<?php echo $_SESSION["id"] ?>"><?php echo $_SESSION["nombre"]. " ". $_SESSION["apellido"]?></span>
 							</a>
 							<div class="dropdown-menu dropdown-menu-end">
 								<div class="profile dropdown-item"><a href="<?php echo BASE_URL; ?>perfil">
