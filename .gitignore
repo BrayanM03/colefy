@@ -11,5 +11,5 @@ static/img/avatars/*
 
 # --- SEGURIDAD ---
 # No subas tus credenciales de base de datos a GitHub
-config.php
+config/conexion.php
 # (Añade aquí cualquier otro archivo que contenga contraseñas de la DB)
