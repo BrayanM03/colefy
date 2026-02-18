@@ -26,6 +26,7 @@ class AuthController {
         $_SESSION['user'] = $usuario['usuario'];
         $_SESSION['fecha_ingreso'] = $usuario['fecha_ingreso'];
         $_SESSION['rol'] = $usuario['rol'];
+        $_SESSION['rol_nombre'] = $usuario['nombre_rol'];
         $_SESSION['estatus'] = $usuario['estatus'];
         $_SESSION['es_profesor'] = $usuario['es_profesor'];
         $_SESSION['id_escuela'] = $usuario['id_escuela'];

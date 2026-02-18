@@ -47,7 +47,9 @@ class Usuario extends Datatable{
 
 
     public function obtenerPorUsuario($username) {
-        $stmt = $this->db->query("SELECT * FROM usuarios WHERE usuario = ?", [$username]);
+        $stmt = $this->db->query("SELECT u.*, r.nombre as nombre_rol, e.nombre as escuela FROM usuarios u
+        INNER JOIN roles r ON u.rol = r.id 
+        INNER JOIN escuelas e ON e.id = u.id_escuela WHERE usuario = ?", [$username]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     
