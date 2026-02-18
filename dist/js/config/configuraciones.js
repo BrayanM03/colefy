@@ -14,7 +14,7 @@ $(document).ready(function () {
  
         Swal.fire({
             title: 'Configuraciones generales',
-            imageUrl: BASE_URL+'src/img/icons/cogwheel.png',   // tu icono personalizado
+            imageUrl: STATIC_URL+'img/icons/cloud.png',   // tu icono personalizado
             imageWidth: 45,
             imageHeight: 45,
             imageAlt: 'Icono',

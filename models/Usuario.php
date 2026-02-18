@@ -52,7 +52,14 @@ class Usuario extends Datatable{
     }
     
     public function obtenerPorIDUsuario($id_usuario) {
-        $stmt = $this->db->query("SELECT u.*, r.nombre as nombre_rol FROM usuarios u INNER JOIN roles r ON u.rol = r.id WHERE u.id = ?", [$id_usuario]);
+        $stmt = $this->db->query("SELECT u.*, r.nombre as nombre_rol, e.nombre as escuela  FROM usuarios u 
+        INNER JOIN roles r ON u.rol = r.id 
+        INNER JOIN escuelas e ON e.id = u.id_escuela WHERE u.id = ?", [$id_usuario]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function actualizarUsuario($id_usuario, $data_update){
+      
+        return $this->db->update('usuarios', $data_update, 'id  = ?', [$id_usuario]);
     }
 }

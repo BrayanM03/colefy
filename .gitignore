@@ -1,0 +1,15 @@
+# Dependencias y archivos de sistema
+node_modules/
+.DS_Store
+Thumbs.db
+
+# --- PROTECCIÓN DE PRODUCCIÓN ---
+# Esto evita que tus fotos de AWS se borren al actualizar el código
+static/img/avatars/*
+# Si quieres mantener la carpeta vacía en Git pero existente, puedes usar esto:
+!static/img/avatars/.gitkeep
+
+# --- SEGURIDAD ---
+# No subas tus credenciales de base de datos a GitHub
+config.php
+# (Añade aquí cualquier otro archivo que contenga contraseñas de la DB)

@@ -64,9 +64,13 @@ enum CPERMISO: string {
     case VER_PANEL_PERMISOS = 'ver_panel_permisos';
     case VER_PERMISOS_USUARIOS = 'ver_permisos_usuarios';
 
-    // oOles
+    // Roles
     case VER_ROLES = 'ver_roles';
     case CREAR_ROLES = 'crear_roles';
     case EDITAR_ROLES = 'editar_roles';
     case CANCELAR_ROLES = 'cancelar_roles';
+
+    // Perfil
+    case VER_PERFIL = 'ver_perfil';
+    case EDITAR_PERFIL = 'editar_perfil';
 }

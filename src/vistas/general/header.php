@@ -17,6 +17,7 @@
     <title><?= $titulo_vista ?> | Colefy</title>
 
     <link href="<?php echo STATIC_URL; ?>css/app.css" rel="stylesheet">
+    <link href="<?php echo STATIC_URL; ?>css/ui.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
     <?php if (isset($css_especificos)): ?>

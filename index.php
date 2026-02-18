@@ -190,6 +190,11 @@ switch ($modulo) {
         }
     break;
 
+    case 'perfil':
+        $titulo_vista = 'Perfil';
+        $vista_a_cargar = 'src/perfil.php';
+    break;
+
     default:
         $vista_a_cargar = 'src/vistas/error/not_found.php';
         break;

@@ -29,6 +29,9 @@ class AuthController {
         $_SESSION['estatus'] = $usuario['estatus'];
         $_SESSION['es_profesor'] = $usuario['es_profesor'];
         $_SESSION['id_escuela'] = $usuario['id_escuela'];
+        $_SESSION['correo'] = $usuario['correo'];
+        $_SESSION['cargo'] = $usuario['cargo'];
+        $_SESSION['foto_perfil'] = $usuario['foto_perfil'];
        
         return [
             "estado" => 1,

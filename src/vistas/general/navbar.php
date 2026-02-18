@@ -22,10 +22,10 @@
 							</a>
 
 							<a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
-								<img src="<?php echo STATIC_URL; ?>/img/logo.png" class="avatar img-fluid rounded me-1" alt="Charles Hall" /> <span class="text-dark" id="user-data"  id_user="<?php echo $_SESSION["id"] ?>"><?php echo $_SESSION["nombre"]. " ". $_SESSION["apellido"]?></span>
+								<img src="<?php echo STATIC_URL; ?>img/avatars/<?= $_SESSION['foto_perfil']?>" id="foto_usuario_navbar" class="avatar img-fluid rounded me-1" alt="foto_usuario" /> <span class="text-dark" id="nombre_usuario_navbar" id_user="<?php echo $_SESSION["id"] ?>"><?php echo $_SESSION["nombre"]. " ". $_SESSION["apellido"]?></span>
 							</a>
 							<div class="dropdown-menu dropdown-menu-end">
-								<div class="profile dropdown-item">
+								<div class="profile dropdown-item"><a href="<?php echo BASE_URL; ?>perfil">
 									<div class="info">
 										<p class="m-0 p-0"><b><?php echo $_SESSION["user"]; ?></b></p>
 										<small class="text-muted"><?php 
@@ -37,7 +37,7 @@
 											echo 'Maestro';
 										}; 
 										?></small>
-									</div>
+									</div></a>
 									
 								</div>
 								<div class="dropdown-item" style="cursor:pointer" id="mostrar-configuraciones"><i class="align-middle me-1" data-feather="settings"></i> Configuración</div>
@@ -56,6 +56,7 @@
 			</nav>  
 			<script>
 			const BASE_URL = "<?php echo BASE_URL; ?>";
+			const STATIC_URL = "<?php echo STATIC_URL; ?>";
 			const USER_PERMISSIONS = {
 				can_view_escuelas: <?php echo $escuela_p['estatus'] ? 'true' : 'false'; ?>,
 				can_view_permisos: <?php echo $permisos_p['estatus'] ? 'true' : 'false'; ?>,

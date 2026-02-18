@@ -82,6 +82,7 @@ $(document).ready(function () {
       type: 'POST', // Recomendado para filtros
       data: function (d) {
           // Capturamos los valores de los inputs de tu HTML
+          d.f_folio = $('#f-folio').val();
           d.f_alumno = $('#f-alumno').val();
           d.f_tipo = $('#f-tipo').val();
           d.f_inicio = $('#f-fecha-inicio').val();
