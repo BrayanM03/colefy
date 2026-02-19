@@ -6,9 +6,18 @@ class AlumnoController {
         $start = $_GET['start'] ?? 0;
         $length = $_GET['length'] ?? 10;
         $search = $_GET['search']['value'] ?? '';
+        // En AlumnoController.php (Línea 9 aproximadamente)
+
+        // 1. Obtenemos el índice de la columna, si no existe, por defecto es 0
+        $orderColumnIndex = $_POST['order'][0]['column'] ?? 0;
+
+        // 2. Obtenemos la dirección, si no existe, por defecto es 'asc'
+        $orderDir = $_GET['order'][0]['dir'] ?? 'asc';
+
+        // 3. (Opcional) El término de búsqueda también puede dar warning si está vacío
 
         $alumno = new Alumno();
-        $data = $alumno->obtenerAlumnosDataTable($start, $length, $search);
+        $data = $alumno->obtenerAlumnosDataTable($start, $length, $search, $orderColumnIndex, $orderDir);
         $total = $alumno->contarAlumnos();
 
         echo json_encode([

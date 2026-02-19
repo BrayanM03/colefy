@@ -13,21 +13,37 @@ class Alumno {
         $this->id_escuela = $_SESSION['id_escuela'];
     }
 
-    public function obtenerAlumnosDataTable($start, $length, $search) {
-
+    public function obtenerAlumnosDataTable($start, $length, $search, $orderColumnIndex, $orderDir) {
         $start = (int)$start;
         $length = (int)$length;
+        
+        // 1. Definir columnas permitidas para evitar SQL Injection
+        // El índice debe coincidir con el orden de las columnas en tu JS de DataTables
+        $columns = [
+            1 => 'id',
+            2 => 'nombre',
+        ];
+    
+        // Validar que la columna solicitada exista, de lo contrario usar una por defecto
+        $orderBy = isset($columns[$orderColumnIndex]) ? $columns[$orderColumnIndex] : 'nombre';
+        
+        // Validar que la dirección sea solo ASC o DESC
+        $orderDir = strtoupper($orderDir) == 'DESC' ? 'DESC' : 'ASC';
+    
         $params[':id_escuela'] = $this->id_escuela;
-        $sql = "SELECT * FROM alumnos WHERE estatus = 1 AND id_escuela = :id_escuela";
-
-           if (!empty($search)) {
-                $sql .= " AND (nombre LIKE :search OR apellido LIKE :search)";
-                $params[':search'] = "%$search%";
-            }
-
+        $sql = "SELECT a.* FROM vista_alumnos_catalogo a WHERE estatus = 1 AND a.id_escuela = :id_escuela";
+    
+        if (!empty($search)) {
+            $sql .= " AND (a.nombre LIKE :search OR a.apellido LIKE :search)";
+            $params[':search'] = "%$search%";
+        }
+    
+        // 2. Concatenar el ORDER BY (después del WHERE y antes del LIMIT)
+        $sql .= " ORDER BY $orderBy $orderDir";
+    
+        // 3. Agregar paginación
         $sql .= " LIMIT $start, $length";
-
-
+    
         $stmt = $this->db->query($sql, $params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

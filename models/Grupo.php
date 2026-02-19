@@ -128,7 +128,8 @@ class Grupo {
     public function contarGruposFiltrados($search)
     {
         $params = [];
-        $sql = "SELECT COUNT(*) as total FROM grupos";
+        $sql = "SELECT COUNT(*) as total FROM grupos WHERE estatus = 1 AND id_escuela = :id_escuela";
+        $params[':id_escuela'] = $this->id_escuela;
        
         if (!empty($search)) {
             $sql .= " AND (nombre LIKE :search)";
@@ -145,6 +146,7 @@ class Grupo {
         $params['id_sesion']=$id_sesion;
         $sql = "SELECT COUNT(*) as total FROM vista_detalle_pregrupo WHERE id_usuario = :id_sesion";
         $params[':id_sesion']= $id_sesion;
+
         if (!empty($search)) {
             $sql .= " AND (nombre LIKE :search)";
             $params[':search'] = "%$search%";

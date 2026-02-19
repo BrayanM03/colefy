@@ -7,11 +7,23 @@ $(document).ready(function () {
   const role = $('#role').attr("role");
   const columns = [
     { data: 'id', title: '#' },
+    { data: null, title: 'Img', render: ()=>{
+      return '<img src="'+STATIC_URL+'img/avatars/default.png" style="width: 40px; border-radius:50%">';
+    }},
     {
       data: null, title: 'Nombre', render: function (data, type, row) {
         return row['nombre'] + ' ' + row['apellido_paterno'] + ' ' + row['apellido_materno'];
       }
     },
+    { data: null, title: 'Grado y grupo', render: (data)=>{
+      console.log(data);
+      if(!data.id_grupo){
+        return 'Sin grupo';
+      }else{
+        return data.grupo_grado + ' '+ data.grupo_nombre
+      }
+    }},
+
     { data: 'fecha_cumple', title: `Cumpleaños`, render: (data)=>{
       return data+` <svg
       width="24"
@@ -68,7 +80,7 @@ $(document).ready(function () {
     }
   ];
 
-  table_alumnos = initCustomDataTable('#tabla-alumnos', BASE_URL + 'api/alumnos.php?tipo=datatable', columns);
+  table_alumnos = initCustomDataTable('#tabla-alumnos', BASE_URL + 'api/alumnos.php?tipo=datatable', columns, [[2, 'asc']]);
 
   DataTableListener(table_alumnos, 'click', '.btn-editar-alumno', editarAlumno);
   DataTableListener(table_alumnos, 'click', '.btn-cancelar-alumno', cancelarAlumno);
