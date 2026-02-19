@@ -1,5 +1,7 @@
 <?php
+
 require_once  __DIR__ . '/../controllers/ProfesorController.php';
+require_once  __DIR__ . '/../config/dates.php';
 
 $controller_permiso->verificarSesion();
 $permiso_panel_maestros = $controller_permiso->validarAcceso(2, CPermiso::VER_PANEL_MAESTROS->value);
@@ -7,6 +9,8 @@ if($permiso_panel_maestros){
     $controller_prof = new ProfesorController();
     $resp_grupos = $controller_prof->obtenerGruposProfesor($_SESSION['id']);
 };
+
+$dates = new Date();
 
 include "vistas/general/header.php";
 
@@ -45,9 +49,17 @@ include "vistas/general/header.php";
                                 </div> -->
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-12 col-md-12">
+                                        <div class="col-12 col-md-3">
                                             <h5 class="card-title mb-2">Ciclo escolar actual</h5>
                                             <h3 id="ciclo" id_ciclo="1">2025-2026</h3>
+                                        </div>
+                                        <div class="col-12 col-md-3">
+                                            <h5 class="card-title mb-2">Fecha actual:</h5>
+                                            <h3 id="ciclo" id_ciclo="1"><?php
+                                             $fecha_hoy = date('Y-m-d');
+                                             $fecha_ft = $dates->formatearFechaEspanol($fecha_hoy);
+                                             echo $fecha_ft;
+                                             ?></h3>
                                         </div>
                                     </div>
                                     <div class="row mt-3">

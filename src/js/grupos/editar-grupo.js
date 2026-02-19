@@ -11,19 +11,14 @@ const Toast = Swal.mixin({
   });
   
   let ciclo_escolar = $("#ciclo").val()
-  let id_grupo =getParameterByName('id_grupo')
-  let nivel =getParameterByName('nivel')
-  let grado =getParameterByName('grado')
-  let nombre_grupo =getParameterByName('nombre')
+
   import { initCustomDataTable } from '../DataTable/datatables-init.js';
   import {DataTableListener, GeneralEventListener} from '../utils/listeners.js';
   let table;
   let estatus_tag;
 
-  $("#nombre-grupo").val(nombre_grupo)
-  $("#nivel").val(nivel)
-  $("#grado").val(grado)
 
+ 
   reloadTable()
   function reloadTable(){
     const role = $('#role').attr("role");

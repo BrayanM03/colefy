@@ -91,7 +91,7 @@ switch ($modulo) {
 
         if ($accion === 'edit' && $id) {
             $necesita_bootstrap_select=true;
-            $_GET['id'] = $id; // Lo inyectamos para que el archivo lo use
+            $_GET['id_grupo'] = $id; // Lo inyectamos para que el archivo lo use
             $vista_a_cargar = 'src/editar-grupo.php';
         } else {
             $vista_a_cargar = 'src/grupos.php';

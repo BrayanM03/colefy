@@ -4,11 +4,16 @@
 $controller_permiso->validarAcceso(1, CPermiso::EDITAR_GRUPOS->value);
 require_once __DIR__ . '/../controllers/ProfesorController.php';
 require_once __DIR__ . '/../controllers/MateriaController.php';
+require_once __DIR__ . '/../controllers/GrupoController.php';
 
 $controller_prof = new ProfesorController();
 $data_profesores =$controller_prof->combos();
 $controller_mate = new MateriaController();
 $data_materias =$controller_mate->combos();
+$controller_grupo = new Grupocontroller();
+$id_grupo = $_GET['id_grupo'];
+$data_grupo_resp =$controller_grupo->obtener_grupo(1, $id_grupo);
+$data_grupo = $data_grupo_resp['data'][0];
 
 include "vistas/general/header.php";
 /* 
@@ -38,7 +43,7 @@ $data_grupos =$controller_grup->combos(); */
                             <h1 class="h3 mb-3">Editar grupo</h1>
                         </div>
                         <div class="col-12 col-md-3 text-end">
-                           <a href="<?php echo BASE_URL; ?>grupos.php"><div class="btn btn-success">Volver</div></a> 
+                           <a href="<?php echo BASE_URL; ?>grupos"><div class="btn btn-success">Volver</div></a> 
                         </div>
                     </div>
 
@@ -54,14 +59,14 @@ $data_grupos =$controller_grup->combos(); */
                                     <div class="row mb-4">
                                         <div class="col-12 col-md-6">
                                             <label for="">Nombre del grupo</label>
-                                            <input type="text" class="form-control" id="nombre-grupo" placeholder="Nombre horario">
+                                            <input type="text" value="<?= $data_grupo['nombre']?>" class="form-control" id="nombre-grupo" placeholder="Nombre horario">
                                         </div>
                                             <div class="col-12 col-md-3">
                                                     <label for="">Nivel</label>
                                                     <select name="" id="nivel" class="form-control selectpicker">
                                                         <option value="">Seleccione un nivel</option>
-                                                        <option value="Preescolar">Preescolar</option>
-                                                        <option value="Primaria">Primaria</option>
+                                                        <option value="Preescolar" <?php if($data_grupo['nivel'] == 'Preescolar'){ echo 'selected';}?>>Preescolar</option>
+                                                        <option value="Primaria" <?php if($data_grupo['nivel'] == 'Primaria'){ echo 'selected';}?>>Primaria</option>
                                                        
                                                     </select>
                                             </div>
@@ -69,12 +74,12 @@ $data_grupos =$controller_grup->combos(); */
                                             <label for="">Grado</label>
                                             <select name="" id="grado" class="form-control selectpicker" data-live-search="true">
                                                 <option value="">Seleccione un grado</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
-                                                <option value="6">6</option>
+                                                <option value="1" <?php if($data_grupo['grado'] == 1){ echo 'selected';}?>>1</option>
+                                                <option value="2" <?php if($data_grupo['grado'] == 2){ echo 'selected';}?>>2</option>
+                                                <option value="3" <?php if($data_grupo['grado'] == 3){ echo 'selected';}?>>3</option>
+                                                <option value="4" <?php if($data_grupo['grado'] == 4){ echo 'selected';}?>>4</option>
+                                                <option value="5" <?php if($data_grupo['grado'] == 5){ echo 'selected';}?>>5</option>
+                                                <option value="6" <?php if($data_grupo['grado'] == 6){ echo 'selected';}?>>6</option>
                                             </select>
                                         </div>
                                     </div>
@@ -130,6 +135,10 @@ $data_grupos =$controller_grup->combos(); */
     <?php
         include "vistas/general/scripts.php"
     ?>
+    <script>
+        const id_grupo = <?= $_GET['id_grupo']?>;
+        const id_ciclo = <?= $data_grupo['id_ciclo']?>;
+    </script>
     <script src="<?php echo STATIC_URL; ?>./js/bootstrap-select.min.js"></script>
     <script src="<?php echo STATIC_URL; ?>js/DataTable/datatables-init.js" type="module"></script>
     <script src="<?php echo STATIC_URL; ?>js/grupos/editar-grupo.js" type="module"></script>

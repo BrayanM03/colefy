@@ -328,6 +328,18 @@ class Grupo {
         }
     }
 
+    public function obtenerGrupo($id_grupo){
+        $stmt = $this->db->query("SELECT COUNT(*) as total FROM grupos WHERE id = ? AND estatus = 1", [$id_grupo]);
+        $total = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+        if($total>0){
+            $data = $this->db->select('SELECT * FROM grupos WHERE id = ? AND estatus = 1', [$id_grupo]);
+            return array('estatus'=>true, 'mensaje'=>'Se encontraron datos del grupo', 'data'=>$data);
+        }else{
+            return array('estatus'=>false, 'mensaje'=>'No hay grupos con ese ID', 'id_grupo'=>$id_grupo);
+        }
+
+    }
+
 
 }
     ?>

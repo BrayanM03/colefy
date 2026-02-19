@@ -102,6 +102,16 @@ class GrupoController {
         echo json_encode($grupo->procesarGrupo($nombre, $nivel, $grado, $ciclo, $this->id_sesion));
         
     }
+
+    public function obtener_grupo($tipo_resp, $id_grupo){
+        $grupo = new Grupo();
+        $resp = $grupo->obtenerGrupo($id_grupo);
+        if($tipo_resp==1){
+            return $resp;
+        }else{
+            echo json_encode($resp);
+        }
+    }
     
     public function actualizarGrupo($nombre, $nivel, $grado, $ciclo, $id_grupo){
         $grupo = new Grupo();

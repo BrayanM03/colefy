@@ -11,6 +11,7 @@ if($_GET['tipo']== 'datatable_pregrupo'){
     $controller->datatable_pregrupo();
 }
 if($_GET['tipo']== 'datatable_grupo'){
+    
     $controller->datatable_detalle_grupo($_GET['id_grupo'], $_GET['ciclo']);
 }
 if($_GET['tipo']== 'combo'){

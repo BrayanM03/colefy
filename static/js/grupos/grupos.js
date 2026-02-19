@@ -8,7 +8,7 @@ let estatus_tag;
 
 function reloadTable(){
   const role = $('#role').attr("role");
-
+ 
   const columns = [
     { data: 'id', title: '#' },
     {data: 'nombre', title: 'Nombre'},
@@ -29,7 +29,7 @@ function reloadTable(){
           return `
             <div class='row'>
               <div class='col-12 col-md-12'>
-                <a href="editar_grupo/edit/${row.id}&nombre=${row.nombre}&nivel=${row.nivel}&grado=${row.grado}&ciclo=2025-2026"><div class="btn btn-primary">
+                <a href="editar_grupo/edit/${row.id}"><div class="btn btn-primary">
                   <i class="fa-solid fa-pen-to-square"></i>
                 </div></a>
                 <div class="btn btn-danger" onclick="cancelarGrupo(${row.id})">
