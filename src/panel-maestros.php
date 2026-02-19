@@ -55,7 +55,7 @@ include "vistas/general/header.php";
                                         </div>
                                         <div class="col-12 col-md-3">
                                             <h5 class="card-title mb-2">Fecha actual:</h5>
-                                            <h3 id="ciclo" id_ciclo="1"><?php
+                                            <h3 id="fecha_actual" id_ciclo="1"><?php
                                              $fecha_hoy = date('Y-m-d');
                                              $fecha_ft = $dates->formatearFechaEspanol($fecha_hoy);
                                              echo $fecha_ft;

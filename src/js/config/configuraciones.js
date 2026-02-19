@@ -1,5 +1,4 @@
 import {GeneralEventListener} from '../utils/listeners.js';
- console.log(USER_PERMISSIONS);
 
 $(document).ready(function () {
     const d_escuelas = USER_PERMISSIONS.can_view_escuelas ? '' : 'd-none';
@@ -10,7 +9,6 @@ $(document).ready(function () {
     GeneralEventListener('mostrar-configuraciones', 'click', ventanaConfiguraciones)
     
     function ventanaConfiguraciones(){
-        console.log('Configss');
  
         Swal.fire({
             title: 'Configuraciones generales',
