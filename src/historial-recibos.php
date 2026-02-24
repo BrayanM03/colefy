@@ -20,7 +20,7 @@ include "vistas/general/header.php";
             ?>
 
             <main class="content">
-                <div class="container-fluid p-0">
+                <div class="container-fluid p-0 animate__animated animate__fadeIn animate__faster">
 
                     <div class="row mb-2">
                         <div class="col-12 col-md-9">

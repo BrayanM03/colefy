@@ -9,7 +9,7 @@
      <div class="wrapper">
  
          <?php
-         include "vistas/general/sidebar.php"
+         include "vistas/general/sidebar.php" 
          ?>
          <div class="main">
              <?php
@@ -17,15 +17,15 @@
              ?>
  
              <main class="content">
-                 <div class="container-fluid p-0">
+                 <div class="container-fluid p-0 animate__animated animate__fadeIn animate__faster">
  
                      <div class="row mb-2">
                          <div class="col-12 col-md-9">
                              <h1 class="h3 mb-3">Escuelas</h1>
                          </div>
                          <div class="col-12 col-md-3 text-end">
-                         <div style="text-decoration: none; color:white;"> <div id="btn-registrar-alumno" class="btn btn-success" >
-                               Registrar nueva escuela</div></div>
+                         <div style="text-decoration: none; color:white;"> <a href="<?= BASE_URL?>escuelas/agregar" class="btn btn-success" >
+                               Registrar nueva escuela</a></div>
                          </div>
                      <!--     <div class="col-12 col-md-3">
                              <label for="proyecto">Grupo</label>

@@ -1,156 +1,101 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Determinamos el destino y el texto del botón
+if (isset($_SESSION['id'])) {
+    $url_destino = ""; // O la ruta de tu Dashboard
+    $texto_boton = "Volver al Dashboard";
+} else {
+    $url_destino = "login.php";
+    $texto_boton = "Ir al Inicio de Sesión";
+}
+?>
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Página no encontrada | Colefy</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
         body {
-  width: 100%;
-  margin: 0;
-  height: 100%;
-  background-color: #1d3041;
-  font-family: "Open Sans - Semibold", sans-serif;
-  color: #fff;
-}
-h1 {
-  text-align: center;
-  margin-top: 1%;
-  margin-bottom: 25px;
-  font-size: 30px;
-  font-weight: 400;
-  text-transform: uppercase;
-}
-p {
-  display: block;
-  margin: 25px auto;
-  max-width: 776px;
-  text-align: center;
-  color: #bcecf2;
-  font-family: "Open Sans", sans-serif;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 24px;
-}
-.bl_page404__wrapper {
-  position: relative;
-  width: 100%;
-  margin: 10px auto 10px;
-  max-width: 440px;
-  min-height: 410px;
-
-}
-.bl_page404__img {
-  width: 100%;
-}
-.bl_page404__link {
-  display: block;
-  margin: 0 auto;
-  width: 260px;
-  height: 64px;
-  box-shadow: 0 5px 0 #9c1007, inset 0 0 18px rgba(253, 60, 0, 0.75);
-  background-color: #f95801;
-  color: #fff;
-  font-family: "Open Sans", sans-serif;
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 64px;
-  text-transform: uppercase;
-  text-decoration: none;
-  border-radius: 30px;
-  text-align: center;
-}
-.bl_page404__link:hover,
-.bl_page404__link:focus {
-  background-color: #ff7400;
-}
-.bl_page404__el1 {
-  position: absolute;
-  top: 108px;
-  left: 102px;
-  opacity: 1;
-  animation: el1Move 800ms linear infinite;
-  width: 84px;
-  height: 106px;
-  background: url("https://github.com/BlackStar1991/Pictures-for-sharing-/blob/master/404/bigBoom/404-1.png?raw=true")
-    50% 50% no-repeat;
-  z-index: 2;
-}
-.bl_page404__el2 {
-  position: absolute;
-  top: 92px;
-  left: 136px;
-  opacity: 1;
-  animation: el2Move 800ms linear infinite;
-  width: 184px;
-  height: 106px;
-  background: url("https://github.com/BlackStar1991/Pictures-for-sharing-/blob/master/404/bigBoom/404-2.png?raw=true")
-    50% 50% no-repeat;
-  z-index: 2;
-}
-.bl_page404__el3 {
-  position: absolute;
-  top: 108px;
-  left: 180px;
-  opacity: 1;
-  animation: el3Move 800ms linear infinite;
-  width: 284px;
-  height: 106px;
-  background: url("https://github.com/BlackStar1991/Pictures-for-sharing-/blob/master/404/bigBoom/404-3.png?raw=true")
-    50% 50% no-repeat;
-  z-index: 2;
-}
-@keyframes el1Move {
-  0% {
-    top: 108px;
-    left: 102px;
-    opacity: 1;
-  }
-  100% {
-    top: -10px;
-    left: 22px;
-    opacity: 0;
-  }
-}
-@keyframes el2Move {
-  0% {
-    top: 92px;
-    left: 136px;
-    opacity: 1;
-  }
-  100% {
-    top: -10px;
-    left: 108px;
-    opacity: 0;
-  }
-}
-@keyframes el3Move {
-  0% {
-    top: 108px;
-    left: 180px;
-    opacity: 1;
-  }
-  100% {
-    top: 28px;
-    left: 276px;
-    opacity: 0;
-  }
-}
-
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .error-container {
+            text-align: center;
+            max-width: 500px;
+            padding: 20px;
+        }
+        .logo-error {
+            max-width: 180px;
+            margin-bottom: 30px;
+        }
+        .error-code {
+            font-size: 10rem;
+            font-weight: 800;
+            color: #1a2b4c; /* Azul oscuro del logo */
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+        .error-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        .error-text {
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+        .btn-colefy {
+            background-color: #34495e; /* Ajustado al tono del libro izquierdo */
+            color: white;
+            padding: 12px 30px;
+            border-radius: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+            border: none;
+        }
+        .btn-colefy:hover {
+            background-color: #1a2b4c;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            color: white;
+        }
+        .signal-icon {
+            color: #5bb4a5; /* Verde del logo */
+            font-size: 3rem;
+        }
     </style>
 </head>
 <body>
-<main class="bl_page404">
-  <h1>Error 404. The page does not exist</h1>
-  <p>Sorry! The page you are looking for can not be found. Perhaps the page you requested was moved or deleted. It is also possible that you made a small typo when entering the address. Go to the main page.
-  </p>
-  <div class="bl_page404__wrapper">
-    <img src="https://github.com/BlackStar1991/Pictures-for-sharing-/blob/master/404/bigBoom/cloud_warmcasino.png?raw=true" alt="cloud_warmcasino.png">
-    <div class="bl_page404__el1"></div>
-    <div class="bl_page404__el2"></div>
-    <div class="bl_page404__el3"></div>
-    <a class="bl_page404__link" href="/">go home</a>
-  </div>
-</main>
+
+    <div class="error-container animate__animated animate__fadeIn">
+        <img src="<?php echo STATIC_URL; ?>img/logo.png" alt="Colefy Logo" class="brand-logo img-fluid mb-5" width="260" />
+        
+        <div class="error-code">404</div>
+        <h1 class="error-title">¡Ups! Parece que te has perdido.</h1>
+        <p class="error-text">
+            La página que buscas no existe o ha sido movida. 
+            No te preocupes, el sistema de gestión sigue bajo control.
+        </p>
+        
+        <a href="<?php echo BASE_URL . $url_destino; ?>" class="btn-colefy">
+    <i class="fas <?php echo isset($_SESSION['id']) ? 'fa-th-large' : 'fa-sign-in-alt'; ?> me-2"></i> 
+    <?php echo $texto_boton; ?>
+</a>
+    </div>
+
 </body>
 </html>

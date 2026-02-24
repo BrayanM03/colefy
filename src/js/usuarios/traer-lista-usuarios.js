@@ -17,11 +17,15 @@
       { data: null, title: 'Rol', render: (data)=>{
         return roles[data.rol]
       }},
-      { data: 'usuario', title: 'Usuario' },
-      { data: null, title: 'Contraseña', render: (data)=>{
-          let pass= data.contraseña.substring(0, 10);
-          const pass_ft = pass + '...'
-          return pass_ft
+      { data: 'nombre_escuela', title: 'Colegio' },
+      { data: null, title: 'Logo', render: (data)=>{
+          let path_logo;
+          if(data.logo){
+            path_logo = 'escuelas/' + data.logo;
+          }else{
+            path_logo = 'default.png';
+          }
+          return '<img src="'+STATIC_URL + 'img/'+path_logo+'" style="width:45px; border-raidius:7px;">'
       }},
       { data: null, title: 'Estatus' , render: (data)=>{
         if(data.estatus ==1 || data.estatus == 2){

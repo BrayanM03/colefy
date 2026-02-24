@@ -33,8 +33,9 @@ define('ASSET_EDITAR_USUARIO_CSS', STATIC_URL . 'css/editar-usuario.css');
 define('ASSET_MENU_USUARIO_CSS', STATIC_URL . 'css/menu-usuario-edit-navegacion-pestañas.css');
 define('ASSET_MENU_NAVEGACION_RECIBO_CSS', STATIC_URL . 'css/menu-navegacion-pestañas.css');
 define('ASSET_EDITAR_ROL_CSS', STATIC_URL . 'css/editar-rol.css');
-define('ASSET_EDITAR_RECIBO_CSS', STATIC_URL . 'css/ediar-recibo.css');
+define('ASSET_EDITAR_RECIBO_CSS', STATIC_URL . 'css/editar-recibo.css');
 define('ASSET_PANEL_MAESTROS_CSS', STATIC_URL . 'css/panel-maestros.css');
+define('ASSET_FLUJO_CSS', STATIC_URL . 'css/flujo.css');
 
 //JS
 define('ASSET_FONTAWESOME_JS', 'https://kit.fontawesome.com/5c955c6e98.js');

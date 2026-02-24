@@ -7,7 +7,7 @@
     $permiso_catalogo = $controller_permiso->validarAcceso(2, CPermiso::VER_CATALOGOS->value); 
     $permiso_recibos = $controller_permiso->validarAcceso(2, CPermiso::VER_RECIBOS->value);
   
-?>
+?> 
 <nav id="sidebar" class="sidebar js-sidebar">
     <div class="sidebar-content js-simplebar">
         <a class="sidebar-brand text-center mb-2" style="border-bottom:1px solid gray" href="<?php echo BASE_URL; ?>dashboard" id="role" role="<?php /* echo $rol */ ?>">
@@ -80,6 +80,11 @@
 
                     <div id="collapseCatalogos" class="accordion-collapse collapse" style="margin-left:13px;" aria-labelledby="headingCatalogo" data-bs-parent="#accordionExample3">
                         <div class="accordion-body">
+                            <!-- <li class="sidebar-item">
+                                <a class="sidebar-link" href="<?php echo BASE_URL; ?>flujo">
+                                    <i class="align-middle" data-feather="share-2"></i> <span class="align-middle">Iniciar flujo</span>
+                                </a>
+                            </li> -->
                             <li class="sidebar-item">
                                 <a class="sidebar-link" href="<?php echo BASE_URL; ?>grupos">
                                     <i class="align-middle" data-feather="star"></i> <span class="align-middle">Grupos</span>
@@ -128,6 +133,10 @@
         </ul>
 
         <div class="sidebar-cta">
+            <div class="sidebar-cta-content text-center">
+                <img src="<?= STATIC_URL . 'img/escuelas/' . $_SESSION['logo_escuela'];?>" style="width: 90px; border-radius: 8px;">
+                <strong class="d-inline-block mb-2 mt-3"><?= $_SESSION['escuela']?></strong>
+            </div>
             <div class="sidebar-cta-content">
                 <strong class="d-inline-block mb-2">Sistema en proceso</strong>
                 <div class="mb-3 text-sm">

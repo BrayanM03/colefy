@@ -4,7 +4,7 @@ require_once __DIR__ . '/../models/Usuario.php';
 class AuthController {
     public function login($username, $password) {
         $usuarioModel = new Usuario();
-        $usuario = $usuarioModel->obtenerPorUsuario($username);
+        $usuario = $usuarioModel->obtenerPorUsuario($username); 
        
         if (!$usuario) {
             return ['estado' => 2]; // Usuario no existe
@@ -27,12 +27,14 @@ class AuthController {
         $_SESSION['fecha_ingreso'] = $usuario['fecha_ingreso'];
         $_SESSION['rol'] = $usuario['rol'];
         $_SESSION['rol_nombre'] = $usuario['nombre_rol'];
+        $_SESSION['escuela'] = $usuario['escuela'];
         $_SESSION['estatus'] = $usuario['estatus'];
         $_SESSION['es_profesor'] = $usuario['es_profesor'];
         $_SESSION['id_escuela'] = $usuario['id_escuela'];
         $_SESSION['correo'] = $usuario['correo'];
         $_SESSION['cargo'] = $usuario['cargo'];
         $_SESSION['foto_perfil'] = $usuario['foto_perfil'];
+        $_SESSION['logo_escuela'] = $usuario['logo_escuela'];
        
         return [
             "estado" => 1,

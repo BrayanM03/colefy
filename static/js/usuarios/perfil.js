@@ -90,6 +90,7 @@ function cambiarFotoPerfil() {
     });
     // Quitamos el .finally() para controlar el tiempo manualmente en el éxito
 };
+
 function guardarDatosGenerales(){
     const idBtn = 'btn-guardar-datos'
     const nombre = document.getElementById('nombre').value

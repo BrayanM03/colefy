@@ -5,7 +5,7 @@ require_once __DIR__ . '/../models/Datatable.php';
   
  
 class Usuario extends Datatable{
-    private $tabla_usuarios = 'usuarios';
+    private $tabla_usuarios = 'vista_usuarios';
 
     public function __construct() {
         $this->db = new Database();
@@ -47,14 +47,14 @@ class Usuario extends Datatable{
 
 
     public function obtenerPorUsuario($username) {
-        $stmt = $this->db->query("SELECT u.*, r.nombre as nombre_rol, e.nombre as escuela FROM usuarios u
+        $stmt = $this->db->query("SELECT u.*, r.nombre as nombre_rol, e.nombre as escuela, e.logo as logo_escuela FROM usuarios u
         INNER JOIN roles r ON u.rol = r.id 
         INNER JOIN escuelas e ON e.id = u.id_escuela WHERE usuario = ?", [$username]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     
     public function obtenerPorIDUsuario($id_usuario) {
-        $stmt = $this->db->query("SELECT u.*, r.nombre as nombre_rol, e.nombre as escuela  FROM usuarios u 
+        $stmt = $this->db->query("SELECT u.*, r.nombre as nombre_rol, e.nombre as escuela, e.logo as logo_escuela  FROM usuarios u 
         INNER JOIN roles r ON u.rol = r.id 
         INNER JOIN escuelas e ON e.id = u.id_escuela WHERE u.id = ?", [$id_usuario]);
         return $stmt->fetch(PDO::FETCH_ASSOC);

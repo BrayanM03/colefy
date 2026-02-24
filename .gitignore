@@ -3,6 +3,10 @@ node_modules/
 .DS_Store
 Thumbs.db
 
+# Ignorar carpetas de compilación y distribución
+dist/
+release/
+
 # --- PROTECCIÓN DE PRODUCCIÓN ---
 # Esto evita que tus fotos de AWS se borren al actualizar el código
 static/img/avatars/*

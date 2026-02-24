@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 require_once __DIR__ . '/../config/conexion.php';
 require_once __DIR__ . '/../config/dates.php';
 
@@ -55,65 +56,44 @@ class Escuela {
     }
 
     //Registrando
-    public function registrarAlumno($nombre, $apellido_paterno, $apellido_materno, $cumple, $genero, $telefono){
+    public function registrarEscuela($nombre, $direccion, $cedula, $telefono, $fecha_registro,
+    $estatus, $fecha_pago, $nombre_logo){
         $fecha_registro = $this->fecha->obtenerFechaRegistro();
-        $id_nuevo = $this->db->insert('alumnos',['nombre' => $nombre, 'apellido_paterno' => $apellido_paterno, 
-        'apellido_materno' => $apellido_materno, 'fecha_cumple' => $cumple, 'genero' => $genero,
-        'telefono' => $telefono, 'fecha_registro'=>$fecha_registro, 'estatus'=>1]);
+        $id_nuevo = $this->db->insert('escuelas',['nombre' => $nombre, 'direccion' => $direccion, 
+        'cedula' => $cedula, 'telefono' => $telefono, 'fecha_registro'=>$fecha_registro, 
+        'estatus'=>$estatus, 'fecha_pago'=> $fecha_pago, 'logo'=>$nombre_logo]);
+
+        $id_nuevo = intval($id_nuevo);
+        $data = $this->traerEscuela($id_nuevo);
+        $escuela_data = $data['data'];
 
         return [
             'estatus' => true,
             'mensaje' => 'Registro insertado correctamente',
-            'nuevo'   => $id_nuevo
+            'nuevo'   => $id_nuevo,
+            'escuela' => $escuela_data
         ];
     }
 
-    public function traerAlumno($id_alumno){
-        $ciclo = $this->fecha->obtenerCicloActual();
-        $ciclo = $ciclo[0];
-        if($total>0){
-            $data = $this->db->select('SELECT * FROM alumnos WHERE id = ? AND estatus = ?', [$id_alumno,1]);
-            $data = $data[0];
-            $count = $this->db->count('alumnos_grupo', 'id_alumno = ? AND id_ciclo = ? AND estatus = 1', 
-            [$id_alumno, $ciclo['id']]);
-            if($count >0){
-                $data_group = $this->db->select('SELECT ag.*, g.nombre as grupo FROM alumnos_grupo ag INNER JOIN grupos g ON ag.id_grupo = g.id
-                 WHERE ag.id_alumno = ? AND ag.id_ciclo = ? AND ag.estatus = 1', 
-                [$id_alumno, $ciclo['id']]);
-                $data['grupo']= $data_group[0];
-                $data['grupo']['estatus'] = true;
-                $data['grupo']['mensaje'] = 'Se encontró grupo';
-                /* print_r($data[0]['grupo']);
-                die(); */
-
-            }else{
-                $data['grupo']['estatus'] = false;
-                $data['grupo']['mensaje'] = 'No se encontró grupo';
-                $data['grupo']['grupo'] = 'Sin grupo';
-            }
-            $response= array('estatus'=>true, 'mensaje'=> 'Datos encontrados', 'data'=>$data);
-        }else{
-            $response= array('estatus'=>false, 'mensaje'=> 'Datos NO encontrados con ese ID', 'data'=>[]);
-        }
-        return $response;
+    public function actualizarEscuela($data, $id_escuela){
+        return $this->db->update('escuelas', $data, ' id = ?', [$id_escuela]);
     }
 
-    public function actualizarAlumno($id_alumno, $nombre, $apellido_paterno, $apellido_materno, $cumple, $genero, $telefono){
-        if($total>0){
-            $campos = [
-                'nombre'=> $nombre,
-                'apellido_paterno' => $apellido_paterno,
-                'apellido_materno' => $apellido_materno,
-                'fecha_cumple' => $cumple,
-                'genero' => $genero,
-                'telefono' => $telefono, 
-            ]; 
-            $stmt = $this->db->update('alumnos', $campos, 'id=?',[$id_alumno]);
-            $data = $this->db->select('SELECT * FROM alumnos WHERE id = ? AND estatus = 1', [$id_alumno]);
-            $response= array('estatus'=>true, 'mensaje'=> 'Alumno actualizado correctamente', 'data'=>$data);
+    public function traerEscuela(int $id_escuela) : array{
+
+       $escuela_data = $this->db->select('SELECT * FROM escuelas WHERE id = ? AND estatus = 1', [$id_escuela]);
+       if(empty($escuela_data)){
+           $estatus = false;
+           $mensaje = 'No se encontró información de esa escuela, revisar';
+           $data = [];
         }else{
-            $response= array('estatus'=>false, 'mensaje'=> 'Datos NO encontrados con ese ID', 'data'=>[]);
-        }
-        return $response;
+            $estatus = true;
+            $mensaje = 'Se encontró información de la escuela';
+            $data = $escuela_data[0];
+        };
+
+        return array('estatus' => $estatus, 'mensaje' => $mensaje, 'data' => $data);
+
     }
+
 }

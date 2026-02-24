@@ -32,7 +32,7 @@ $necesita_datatables = true; // Por defecto Si
 $necesita_sweetalert = true; // Por defecto Si
 $necesita_fontawesome = true;
 $necesita_chartjs = false; // Por defecto no
-$necesita_animatecss = false; // Por defecto no
+$necesita_animatecss = true; // Por defecto no
 $necesita_bootstrap_select = false; // Por defecto no
 
 $css_especificos = [];
@@ -76,6 +76,7 @@ switch ($modulo) {
         }else {
             $necesita_bootstrap_select = true;
             $titulo_vista = 'Recibos';
+            $necesita_animatecss = true;
             $vista_a_cargar = 'src/historial-recibos.php';
         }
     break;
@@ -181,11 +182,15 @@ switch ($modulo) {
     case 'escuelas':
         if($accion == 'editar' && $id && file_exists('src/editar-escuela.php')){
             $css_especificos[] = ASSET_EDITAR_ROL_CSS; 
-            $_GET['id_rol'] = $id;
+            $_GET['id_escuela'] = $id;
             $titulo_vista = 'Editar escuela';
             $vista_a_cargar = 'src/editar-escuela.php';
-        }else{
-            $titulo_vista = 'Escuelas';
+        }else if($accion=='agregar'&& file_exists('src/agregar-escuela.php')){
+            $titulo_vista = 'Agregar escuela';
+            $vista_a_cargar = 'src/agregar-escuela.php';
+        }
+        else{
+            $titulo_vista = 'Escuelas ' . $accion;
             $vista_a_cargar = 'src/escuelas.php';
         }
     break;
@@ -195,7 +200,29 @@ switch ($modulo) {
         $vista_a_cargar = 'src/perfil.php';
     break;
 
+    case 'flujo':     
+        $titulo_vista = 'Iniciar flujo';
+        $necesita_datatables = false;
+        $css_especificos[] = ASSET_FLUJO_CSS;
+        $vista_a_cargar = 'src/flujo.php';
+    break;
+
+    case 'not_found':
+        $titulo_pagina = 'Pagina no encontrada 404';
+        $necesita_datatables = false;
+        $necesita_animatecss = false;
+        $necesita_sweetalert = false; // Por defecto Si
+        $necesita_fontawesome = false;
+        $vista_a_cargar = 'src/vistas/error/not_found.php';
+
+    break;
+
     default:
+        $titulo_pagina = 'Pagina no encontrada 404';
+        $necesita_datatables = false;
+        $necesita_animatecss = false;
+        $necesita_sweetalert = false; // Por defecto Si
+        $necesita_fontawesome = false;
         $vista_a_cargar = 'src/vistas/error/not_found.php';
         break;
 }
@@ -221,6 +248,10 @@ if ($necesita_fontawesome) {
 if ($necesita_bootstrap_select) {
         $css_especificos[] = ASSET_BOOTSTRAP_SELECT_CSS;
         $js_especificos[] = ASSET_BOOTSTRAP_SELECT_JS;
+    }    
+
+    if ($necesita_animatecss) {
+        $css_especificos[] = ASSET_ANIMATE_CSS;
     }    
 
     
