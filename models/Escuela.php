@@ -51,7 +51,7 @@ class Escuela {
  */
     public function obtenerEscuelas($sql_where='', $params=[]) {
         
-        $stmt = $this->db->query("SELECT * FROM alumnos WHERE estatus = 1" . $sql_where . ' ORDER BY nombre ASC', $params);
+        $stmt = $this->db->query("SELECT * FROM escuelas WHERE estatus = 1" . $sql_where . ' ORDER BY nombre ASC', $params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 

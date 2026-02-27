@@ -10,7 +10,6 @@ if($_GET['tipo']== 'datatable'){
 }
 
 if($_GET['tipo']== 'combo'){
-    $busqueda= isset($_POST['busqueda']) ? $_POST['busqueda'] : '';
     $controller->combo($busqueda);
 }
 

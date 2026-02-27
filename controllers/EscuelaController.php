@@ -37,20 +37,19 @@ class EscuelaController {
         ]);
     }
 
-    public function combo($busqueda = null){
+    public function combo($tipo_resp, $busqueda = null){
         if($busqueda){
-            $params =[$_SESSION['id_escuela'],'%'.$busqueda.'%',  '%'.$busqueda.'%', '%'.$busqueda.'%'];
-            $sql_where = " AND id_escuela = ? AND (nombre LIKE ? OR apellido_paterno LIKE ? OR apellido_materno LIKE ?)";
+            $params =[$_SESSION['id_escuela'],'%'.$busqueda.'%'];
+            $sql_where = " AND id_escuela = ? AND (nombre LIKE ?)";
         }else{
-            $params = [$_SESSION['id_escuela']];
+            $params = [];
             $sql_where = '';//' AND id_escuela = ?';
         } 
 
-        $alumno = new Alumno();
         
-        $total = $alumno->contarAlumnos($sql_where, $params);
+        $total = $this->model->contarEscuelas($sql_where, $params);
         if($total > 0){
-            $data = $alumno->obtenerAlumnos($sql_where, $params);
+            $data = $this->model->obtenerEscuelas($sql_where, $params);
             $estatus = true;
             $mensaje = 'Busqueda con resultados';
         }else{
@@ -60,7 +59,11 @@ class EscuelaController {
         }
 
         $response = array('estatus'=>$estatus, 'mensaje'=>$mensaje, 'data'=>$data, 'sql'=>$sql_where);
-        echo json_encode($response);
+        if($tipo_resp == 1){
+            echo json_encode($response);
+        }else{
+            return ($response);
+        }
     }
 
     public function registrar_escuela($tipo_resp, $data){
@@ -100,7 +103,7 @@ class EscuelaController {
                 }else{
                     echo json_encode($response);
                 }
-            }
+    }
 
     public function actualizar_escuela($tipo_resp, $datos, $id_escuela){
         

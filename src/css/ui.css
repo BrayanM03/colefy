@@ -39,3 +39,24 @@
     border-width: 8px; /* Un poco más grueso para que se vea sobre la foto */
     border-color: #fff transparent #fff transparent; /* Spinner blanco */
 }
+
+/* Estilo base del icono */
+.arrow-icon {
+  transition: transform 0.3s ease; /* Aquí sucede la magia de la animación */
+  width: 16px;
+  height: 16px;
+}
+
+/* Cuando el acordeón está ABIERTO (Bootstrap quita la clase .collapsed) */
+.sidebar-item.accordion-button:not(.collapsed) .arrow-icon {
+  transform: rotate(90deg);
+}
+
+/* Opcional: Quitar el color azul y la sombra por defecto de Bootstrap en el acordeón */
+.accordion-button:focus {
+  box-shadow: none;
+  background-color: transparent;
+}
+.accordion-button::after {
+  display: none !important; /* Escondemos la flecha por defecto de Bootstrap si existe */
+}

@@ -10,8 +10,10 @@ release/
 # --- PROTECCIÓN DE PRODUCCIÓN ---
 # Esto evita que tus fotos de AWS se borren al actualizar el código
 static/img/avatars/*
+static/img/escuelas/*
 # Si quieres mantener la carpeta vacía en Git pero existente, puedes usar esto:
 !static/img/avatars/.gitkeep
+!static/img/escuelas/.gitkeep
 
 # --- SEGURIDAD ---
 # No subas tus credenciales de base de datos a GitHub

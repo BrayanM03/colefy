@@ -1,80 +1,9 @@
 <?php
 
 $redireccion = $controller_permiso->redirigirMaestros($_SESSION['rol']);
+include "vistas/general/header.php";
 
 ?>
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
-    <meta name="author" content="AdminKit">
-    <meta name="keywords" content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
-
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link rel="shortcut icon" href="<?php echo STATIC_URL; ?>img/icons/icon-48x48.png" />
-
-    <link rel="canonical" href="https://demo-basic.adminkit.io/pages-blank.html" />
-
-    <title>Panel | Colefy</title>
-
-    <link href="<?php echo STATIC_URL; ?>css/app.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.dataTables.min.css" />
-    <style>
-
-/* Estilos para las tarjetas de métricas */
-.stat-card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    border: none;
-    border-radius: 10px;
-}
-
-.stat-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1) !important;
-    cursor:pointer;
-}
-
-/* Iconos de métricas */
-.stat {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    background: rgba(59, 125, 221, 0.1); /* Color suave de fondo */
-}
-
-/* Colores específicos para iconos */
-.text-primary .stat { background: rgba(59, 125, 221, 0.1); }
-.text-info .stat { background: rgba(23, 162, 184, 0.1); }
-.text-warning .stat { background: rgba(252, 185, 44, 0.1); }
-.text-success .stat { background: rgba(40, 167, 69, 0.1); }
-
-/* Ajustes para la tabla */
-.table thead th {
-    background-color: #f8f9fa;
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    letter-spacing: 0.05em;
-    font-weight: 700;
-    border-top: none;
-}
-
-.card-header {
-    background-color: transparent;
-    border-bottom: 1px solid rgba(0,0,0,.05);
-}
-
-    </style>
-</head>
 
 <body>
     <div class="wrapper">

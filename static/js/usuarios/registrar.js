@@ -1,190 +1,71 @@
-function Registrar(){
+import { GeneralEventListener } from '../utils/listeners.js';
+import Toast from '../utils/toast.js';
+import {validarImagenLocal} from '../utils/images.js';
+import { toggleLoading } from '../utils/ui.js';
 
-    let username = document.getElementById("nombre").value;
-    let lastname = document.getElementById("apellido").value;
-    let user = document.getElementById("usuario").value;
-    let pass = document.getElementById("pass").value;
-    let store = document.getElementById("sucursal").value;
-    let proyecto = document.getElementById("project").value;
-    let rol = document.getElementById("rol").value;
+/* // Vinculamos el input con tu función de utilidad
+GeneralEventListener(
+    'input-avatar', 
+    'change', 
+    subirFoto('api/usuarios.php?tipo=subir_temporal', 'avatar', 'avatars', 'perfil')
+);
+ */
 
-    let validacion = validarDatos(username, lastname, user, pass, store, rol);
-    if(validacion){
-
-        var datosForm = new FormData();
-        datosForm.append("username", username);
-        datosForm.append("lastname", lastname); 
-        datosForm.append("user", user);
-        datosForm.append("pass", pass); 
-        datosForm.append("store", store);
-        datosForm.append("project", proyecto);
-        datosForm.append("rol", rol);
-    
-    $.ajax({
-        type: "POST",
-        url: "../servidor/usuarios/registrar-nuevo.php",
-        processData: false,
-        contentType: false,
-        data: datosForm,
-        dataType: "JSON",
-        success: function (response) {
-            if(response == 1){
-                Swal.fire({
-                    icon: "success",
-                    html: `<h3>Usuario registrado</h3>`
-                })
-            }else if(response == 2){
-                Toast.fire({
-                    icon: 'error',
-                    title: 'Ese usuaro ya existe'
-                  })
-                  document.getElementById("usuario").classList.add("animate__headShake");
-                  setTimeout(function() {
-                      document.getElementById("usuario").classList.remove("animate__headShake");
-                  }, 700);
-            }
-        }
-    });
-    }
-
-   
-
-}
-
-
-function validarDatos(username, lastname, user, password, store, rol) {
-
-    if(username == null || username == undefined || username.length == 0 || username == ""){
-        animarError("nombre")
-        return false;
-    }
-
-    if(lastname== null || lastname == undefined || lastname.length == 0 || lastname == ""){
-        animarError("apellido")
-        return false;
-    }
-
-    if(user == null || user == undefined || user.length == 0 || user == ""){
-        animarError("usuario")
-        return false;
-    }
-
-    if(password == null || password == undefined || password.length == 0 || password == ""){
-        animarError("pass")
-        return false;
-    }
-    
-    if(store == null || store == undefined || store.length == 0 || store == ""){
-        animarError("sucursal")
-        return false;
-    }
-
-    if(rol == null || rol == undefined || rol.length == 0 || rol == ""){
-        animarError("rol")
-        return false;
-    }
-
-    return true;
-    
-}
-
-function animarError(id_element){
-    document.getElementById(id_element).classList.add("animate__headShake");
-    setTimeout(function() {
-        document.getElementById(id_element).classList.remove("animate__headShake");
-    }, 700);
-
-    if(id_element == "nombre") {
-        Toast.fire({
-            icon: 'error',
-            title: 'Ingresa un nombre'
-          })
-    }else if(id_element == "apellido"){
-        Toast.fire({
-            icon: 'error',
-            title: 'Ingresa una contraseña'
-          })
-    }else if(id_element == "usuario"){
-        Toast.fire({
-            icon: 'error',
-            title: 'Ingresa un usuario'
-          })
-    }else if(id_element == "pass"){
-        Toast.fire({
-            icon: 'error',
-            title: 'Ingresa una contraseña'
-          })
-    }else if(id_element == "sucursal"){
-        Toast.fire({
-            icon: 'error',
-            title: 'selecciona una sucursal'
-          })
-    }else if(id_element == "rol"){
-        Toast.fire({
-            icon: 'error',
-            title: 'Ingresa un rol'
-          })
-    }else{
-        Toast.fire({
-            icon: 'error',
-            title: 'Algo salio mal'
-          })
-    }
-    
-}
-
-
-const Toast = Swal.mixin({
-    toast: true,
-    position: 'bottom-end',
-    showConfirmButton: false,
-    timer: 3000,
-    timerProgressBar: true,
-    didOpen: (toast) => {
-      toast.addEventListener('mouseenter', Swal.stopTimer)
-      toast.addEventListener('mouseleave', Swal.resumeTimer)
-    }
-  })
-
-setearProyecto()
-function setearProyecto() {
-    let sucursal = $("#sucursal").val();
-
-    if(sucursal !== null){ 
-      $.ajax({
-        type: "post",
-        url: "../servidor/inventario/traer-datos-en-base-uno.php",
-        data: {"id": sucursal, "tabla": "proyectos", "indicador": "sucursal_id"},
-        dataType: "JSON",
-        success: function (response) {
-          let proyecto = $("#project")
-          if(response.data != null){
-            proyecto.empty()/* .append(`
-            <option value="null">Selecciona una manzana</option>
-            `) */
-
-            response.data.forEach(element => {
-             
-              proyecto.append(`<option value="${element.id}">${element.nombre}</option>`)
-            });
-
-            proyecto.prop("disabled", false)
-            proyecto.css("background-color", "white")
-
-          }else{
-            proyecto.prop("disabled", true)
-            proyecto.css("background-color", "rgb(231,227,227)")
-            proyecto.empty().append(`
-            <option value="null">No proyectos registrados</option>
-            `)
-          }
-          
-        }
-      });
-    }else{
-      proyecto.prop("disabled", true)
-      proyecto.css("background-color", "rgb(231,227,227)")
-    }
-}
+// --- Escuchar el cambio en el input de la foto ---
+document.getElementById('input-avatar').addEventListener('change', function(e) {
+  // 1. Primero validamos (Usa la función importada)
+  const esValido = validarImagenLocal(e);
   
+  // 2. Si es válido, ejecutamos TU código de previsualización
+  if (esValido && this.files[0]) {
+      const reader = new FileReader();
+      const preview = document.getElementById('avatar-preview');
+      
+      reader.onload = function(e) {
+          preview.src = e.target.result;
+      }
+      reader.readAsDataURL(this.files[0]);
+  } else {
+      // Si no es válido, reseteamos la previa a la default
+      document.getElementById('avatar-preview').src = STATIC_URL +'static/img/avatars/default.jpg';
+  }
+});
+
+
+// --- Envío del Formulario ---
+document.getElementById('form-registro-usuario').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const form = e.target;
+  const btnId = 'btn-registrar-usuario';
+  
+  // FormData automáticamente incluirá el archivo del input 'avatar' 
+  // solo si pasó la validación de arriba (porque si falló, limpiamos el input)
+  const formData = new FormData(form); 
+
+  toggleLoading(btnId, true, "Registrando...");
+
+  fetch(BASE_URL + 'api/usuarios.php?tipo=registrar', {
+      method: 'POST',
+      body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+      if (data.estatus === true) {
+          Toast.fire({ icon: "success", title: data.mensaje });
+          form.reset(); 
+          document.getElementById('avatar-preview').src = 'static/img/avatars/default.jpg'; 
+      } else {
+          Toast.fire({ icon: "error", title: data.mensaje });
+      }
+  })
+  .catch(error => {
+      console.error('Error:', error);
+      Toast.fire({ icon: "error", title: "Error en la conexión" });
+  })
+  .finally(() => {
+      toggleLoading(btnId, false);
+  });
+});
+
   

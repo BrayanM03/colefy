@@ -6,9 +6,11 @@ require_once __DIR__ . '/../models/Datatable.php';
  
 class Usuario extends Datatable{
     private $tabla_usuarios = 'vista_usuarios';
-
+    private $fecha;
     public function __construct() {
+       
         $this->db = new Database();
+        $this->fecha = new Date();
     }
 
     public function datatablesUsuarios($id_filtro, $start, $length, $search, $orderColumn, $orderDir)
@@ -45,6 +47,51 @@ class Usuario extends Datatable{
   
     }
 
+    public function registrarUsuario($nombre, $apellidos, $id_escuela, $telefono, $usuario, $password, $rol, $cargo) {
+        // 1. Verificar si el usuario ya existe
+        $existe = $this->obtenerPorUsuario($usuario);
+        if ($existe) {
+            return [
+                'estatus' => false,
+                'mensaje' => "El nombre de usuario '{$usuario}' ya se encuentra registrado."
+            ];
+        }
+    
+        // 2. Encriptar la contraseña
+        // PASSWORD_BCRYPT genera una cadena segura de 60 caracteres
+        $password_encriptada = password_hash($password, PASSWORD_BCRYPT);
+    
+        $fecha_registro = $this->fecha->obtenerFechaRegistro();
+    
+        // 3. Insertar en la BD
+        $id_nuevo = $this->db->insert('usuarios', [
+            'nombre'         => $nombre, 
+            'apellido'       => $apellidos, 
+            'telefono'       => $telefono, 
+            'rol' => $rol,
+            'estatus' => 1,
+            'cargo' => $cargo,
+            'fecha_ingreso' => $fecha_registro,
+            'usuario'        => $usuario, 
+            'contraseña'       => $password_encriptada, // Guardamos la versión segura
+            'id_escuela'     => $id_escuela, 
+            'fecha_registro' => $fecha_registro
+        ]);
+    
+        if (!$id_nuevo) {
+            return ['estatus' => false, 'mensaje' => 'Error al insertar en la base de datos'];
+        }
+    
+        $id_nuevo = intval($id_nuevo);
+        $user_data = $this->obtenerPorIDUsuario($id_nuevo);
+    
+        return [
+            'estatus' => true,
+            'mensaje' => 'Registro insertado correctamente',
+            'nuevo'   => $id_nuevo,
+            'usuario' => $user_data
+        ];
+    }
 
     public function obtenerPorUsuario($username) {
         $stmt = $this->db->query("SELECT u.*, r.nombre as nombre_rol, e.nombre as escuela, e.logo as logo_escuela FROM usuarios u

@@ -45,7 +45,8 @@ switch ($modulo) {
     case 'dashboard':        
         $titulo_vista = 'Dashboard';
         $necesita_datatables = false;
-        $vista_a_cargar = 'src/panel_admin.php';
+        $css_especificos[] = ASSET_PANEL_DIRECTIVOS_CSS;
+        $vista_a_cargar = 'src/panel-directivos.php';
     break;
 
     case 'panel_maestros':     
@@ -137,8 +138,13 @@ switch ($modulo) {
     break;
 
     case 'usuarios':
-       
-        if ($accion === 'editar' && $id) {
+
+        if($accion=='registrar'){
+            $titulo_vista = 'Registrar usuario';
+            $necesita_bootstrap_select = true;
+            $vista_a_cargar = 'src/registrar-usuario.php';
+        }
+        else if ($accion === 'editar' && $id) {
             $titulo_vista = 'Editar usuario';
             $css_especificos[] = ASSET_EDITAR_USUARIO_CSS; 
             $css_especificos[] = ASSET_MENU_USUARIO_CSS; 

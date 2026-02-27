@@ -41,9 +41,11 @@
             <div class="accordion" id="accordionExample2">
                 <div class="accordion-item">
                
-                    <li class="sidebar-item accordion-button" data-bs-toggle="collapse" data-bs-target="#collapseHistory" aria-expanded="true" aria-controls="collapseHistory">
-                        <a class="sidebar-link" href="#">
+                    <li class="sidebar-item accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#collapseHistory" aria-expanded="true" aria-controls="collapseHistory">
+                        <a class="sidebar-link d-flex align-items-center w-100" href="#">
                             <i class="align-middle" data-feather="folder"></i> <span class="align-middle">Historial</span>
+                            <i class="ms-auto arrow-icon" data-feather="chevron-right"></i>
+
                         </a>
                     </li>
        
@@ -72,11 +74,15 @@
             <div class="accordion" id="accordionExample3">
                 <div class="accordion-item">
 
-                    <li class="sidebar-item accordion-button" data-bs-toggle="collapse" data-bs-target="#collapseCatalogos" aria-expanded="true" aria-controls="collapseCatalogos">
-                        <a class="sidebar-link" href="#">
-                            <i class="align-middle" data-feather="clipboard"></i> <span class="align-middle">Catalogos</span>
-                        </a>
-                    </li>
+                <li class="sidebar-item accordion-button collapsed" 
+                data-bs-toggle="collapse" data-bs-target="#collapseCatalogos" 
+                aria-expanded="true" aria-controls="collapseCatalogos">
+                <a class="sidebar-link d-flex align-items-center w-100" href="#">
+                        <i class="align-middle" data-feather="clipboard"></i> 
+                        <span class="align-middle ms-2">Catalogos</span>
+                        <i class="ms-auto arrow-icon" data-feather="chevron-right"></i>
+                    </a>
+                </li>
 
                     <div id="collapseCatalogos" class="accordion-collapse collapse" style="margin-left:13px;" aria-labelledby="headingCatalogo" data-bs-parent="#accordionExample3">
                         <div class="accordion-body">

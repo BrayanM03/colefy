@@ -35,6 +35,7 @@ define('ASSET_MENU_NAVEGACION_RECIBO_CSS', STATIC_URL . 'css/menu-navegacion-pes
 define('ASSET_EDITAR_ROL_CSS', STATIC_URL . 'css/editar-rol.css');
 define('ASSET_EDITAR_RECIBO_CSS', STATIC_URL . 'css/editar-recibo.css');
 define('ASSET_PANEL_MAESTROS_CSS', STATIC_URL . 'css/panel-maestros.css');
+define('ASSET_PANEL_DIRECTIVOS_CSS', STATIC_URL . 'css/panel-director.css');
 define('ASSET_FLUJO_CSS', STATIC_URL . 'css/flujo.css');
 
 //JS

@@ -26,5 +26,10 @@ if($tipo == 'cambiar_contraseña'){
 }
 
 
+if($tipo == 'registrar'){
+    $controller->registrar_usuario(1, $_POST);
+}
+
+
 
 ?>

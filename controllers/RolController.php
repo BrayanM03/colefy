@@ -45,6 +45,35 @@ class RolController extends DataTableController {
         }
     }
 
+    public function combo($tipo_resp, $busqueda = null){
+        if($busqueda){
+            $params =[$_SESSION['id_rol'],'%'.$busqueda.'%'];
+            $sql_where = " AND id = ? AND (nombre LIKE ?)";
+        }else{
+            $params = [];
+            $sql_where = '';//' AND id_escuela = ?';
+        } 
+
+        
+        $total = $this->model->contar($sql_where, $params);
+        if($total > 0){
+            $data = $this->model->obtenerRoles($sql_where, $params);
+            $estatus = true;
+            $mensaje = 'Busqueda con resultados';
+        }else{
+            $mensaje='No se encontraron';
+            $estatus = false;
+            $data = [];
+        }
+
+        $response = array('estatus'=>$estatus, 'mensaje'=>$mensaje, 'data'=>$data, 'sql'=>$sql_where);
+        if($tipo_resp == 1){
+            echo json_encode($response);
+        }else{
+            return ($response);
+        }
+    }
+
 
 }
 ?>

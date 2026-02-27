@@ -16,14 +16,14 @@ include "vistas/general/header.php";
             ?>
 
             <main class="content">
-                <div class="container-fluid p-0">
+                <div class="container-fluid p-0 animate__animated animate__fadeIn animate__faster">
 
                     <div class="row mb-2">
                         <div class="col-12 col-md-6">
                             <h1 class="h3 mb-3">Area de usuarios</h1>
                         </div>
                         <div class="col-12 col-md-6 text-end">
-                            <a href="registrar.php"><div class="btn btn-success">Agregar nuevo</div></a>
+                            <a href="<?= BASE_URL?>usuarios/registrar"><div class="btn btn-success">Agregar nuevo</div></a>
                         </div>
                     </div>
 

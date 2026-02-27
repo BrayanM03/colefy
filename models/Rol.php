@@ -59,6 +59,11 @@ class Rol extends Datatable{
        return array('estatus'=> $estatus, 'mensaje'=> $mensaje, 'data'=>$data);
     }
 
+    public function obtenerRoles($sql_where='', $params=[]) {
+        
+        $stmt = $this->db->query("SELECT * FROM roles WHERE estatus = 1" . $sql_where . ' ORDER BY nombre ASC', $params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
 
 }

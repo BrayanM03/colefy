@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../models/Usuario.php';
+require_once __DIR__ . '/../utils/FileHelper.php';
 require_once __DIR__ . '/../controllers/DataTableController.php';
 
 
@@ -18,7 +19,6 @@ class UsuarioController extends DataTableController {
         $this->current_datatable = 'usuarios';
         $this->datatable_general();
     }
-
 
     // --- Implementación de los métodos de plantilla para la tabla de Recibos ---
     protected function getModelData($id_filtro, $start, $length, $search, $orderColumnName, $orderDir, $filtros) {
@@ -173,6 +173,36 @@ class UsuarioController extends DataTableController {
         }
     
         return $this->enviarRespuesta($respuesta, $tipo_resp);
+    }
+
+    public function registrar_usuario($tipo_resp, $data){
+        $nombre         = $data['nombre'] ?? '';
+        $apellidos      = $data['apellidos'] ?? '';
+        $id_escuela     = $data['id_escuela'] ?? null;
+        $telefono       = $data['telefono'] ?? '';
+        $usuario        = $data['usuario'];
+        $password       = $data['password'];
+        $cargo          = $data['cargo'];
+        $rol            = $data['rol'];
+
+       
+        //Registro de la escuela
+        $response = $this->model->registrarUsuario($nombre, $apellidos, $id_escuela, $telefono, $usuario, $password, $rol, $cargo);
+        if($response['estatus']){
+            $usuario_data = $response['usuario'];
+            $id_usuario_nuevo = $response['nuevo'];
+            $nuevo_foto_perfil = FileHelper::uploadImage($_FILES['avatar'], 'avatars', 'perfil_' . $id_usuario_nuevo, $usuario_data['foto_perfil']);
+            if ($nuevo_foto_perfil) {
+                $datos= ['foto_perfil' =>  $nuevo_foto_perfil];
+                $this->model->actualizarUsuario($id_usuario_nuevo, $datos);
+            }
+        }
+
+         if($tipo_resp==2){
+                    return $response;
+                }else{
+                    echo json_encode($response);
+        }
     }
     
     /**

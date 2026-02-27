@@ -1,6 +1,5 @@
 function iniciarSesion(){
-
-    $("#btn-login").empty().html("<div class='preloader'></div>")
+    toggleLoader()
 
     user = document.getElementById("user").value;
     pass = document.getElementById("pass").value;
@@ -21,20 +20,22 @@ function iniciarSesion(){
         data: datosSesion,
         dataType: "JSON",
         success: function (response) {
-            console.log(response);
             if(response.estado == 2){
+                toggleLoader()
                 animarError('user', 2);
             }else if(response.estado == 3){
+                toggleLoader()
                 animarError('pass', 2);
             }else if(response.estado == 1){
                 localStorage.setItem('rol', response.rol);
                 localStorage.setItem('sucursal', response.sucursal);
                 window.location.href = BASE_URL + 'dashboard'
-            }
+            } 
 
-            $("#btn-login").empty().html("Entrar")
         }
     });
+    }else{
+        toggleLoader()
     }
 
    

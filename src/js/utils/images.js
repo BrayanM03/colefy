@@ -93,4 +93,28 @@ export function subirFoto(endPoint, fieldName, pathImg, tipo, id_reg = null) {
     }
    
     // Quitamos el .finally() para controlar el tiempo manualmente en el éxito
-};
+}
+
+export function validarImagenLocal(event) {
+    const file = event.target.files[0];
+    if (!file) return true; // No hay archivo, no hay nada que validar
+
+    const maxMB = 2;
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+
+    // 1. Validar Tipo
+    if (!allowedTypes.includes(file.type)) {
+        Toast.fire({ icon: "error", title: "Solo se permiten imágenes (JPG, PNG, WEBP)" });
+        event.target.value = ""; // Limpia el input para que FormData no lo mande
+        return false;
+    }
+
+    // 2. Validar Tamaño (file.size en bytes)
+    if (file.size > maxMB * 1024 * 1024) {
+        Toast.fire({ icon: "error", title: `La imagen es muy pesada. Máximo ${maxMB}MB` });
+        event.target.value = ""; // Limpia el input
+        return false;
+    }
+
+    return true; 
+}

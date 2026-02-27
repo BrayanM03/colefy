@@ -131,12 +131,12 @@
 
             <form>
                 <div class="mb-4">
-                    <label class="form-label fw-semibold text-secondary">Usuario</label>
+                    <label for="user" class="form-label fw-semibold text-secondary">Usuario</label>
                     <input class="form-control animate__animated" type="text" name="user" id="user" placeholder="nombre.usuario" required />
                 </div>
                 
                 <div class="mb-4">
-                    <label class="form-label fw-semibold text-secondary">Contraseña</label>
+                    <label for="pass" class="form-label fw-semibold text-secondary">Contraseña</label>
                     <input class="form-control animate__animated" type="password" name="pass" id="pass" placeholder="••••••••" required />
                 </div>
 
@@ -145,7 +145,7 @@
                        href="javascript:void(0)" 
                        class="btn-colefy animate__animated" 
                        onclick="iniciarSesion()">
-                        <span>Entrar al sistema</span>
+                        <span id="text-btn-login">Entrar al sistema</span>
                         <div class="preloader" id="login-loader"></div>
                     </a>
                 </div>

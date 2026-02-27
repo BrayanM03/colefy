@@ -8,8 +8,16 @@
     const roles = {1: 'Admin', 2: 'Profesor', 3: 'Normal', 4: 'Contraloria'};
     const columns = [
       { data: 'id', title: '#' },
-      { data: 'id', title: 'Foto', render:()=>{
-        return `<img class="rounded" style="width:40px" src="${BASE_URL}static/img/icons/not-user-img.jpg">`
+      { data:  'foto_perfil', title: 'Foto', render:(data)=>{
+        let ruta_foto_perfil;
+        if(data){
+          ruta_foto_perfil = BASE_URL+'static/img/avatars/'+data;
+        }else{
+          ruta_foto_perfil = BASE_URL+'static/img/icons/not-user-img.jpg';
+        }
+
+        return `<img class="rounded" style="width:40px; border-radius:8px;" src="${ruta_foto_perfil}">`
+
       }},
       {data: null, title: 'Nombre', render: (data)=>{
         return data['nombre'] + ' ' + data['apellido']
