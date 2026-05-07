@@ -47,7 +47,13 @@ $(document).ready(function () {
         return 'No especificado'
       }
     } },
-    { data: 'telefono', title: 'Teléfono' },
+    { data: 'telefono', title: 'Teléfono', render:(data)=>{
+      if(!data){
+        return ''
+      }else{
+        return data;
+      }
+    }},
     { data: 'created_at', title: 'Fecha reg.' },
     { data: null, title: 'Estatus' , render: (data)=>{
       let estatus_tag=''

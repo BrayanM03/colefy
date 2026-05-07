@@ -35,7 +35,7 @@ class Alumno {
         $sql = "SELECT a.* FROM vista_alumnos_catalogo a WHERE estatus = 1 AND a.id_escuela = :id_escuela";
     
         if (!empty($search)) {
-            $sql .= " AND (a.nombre LIKE :search OR a.apellido LIKE :search)";
+            $sql .= " AND (a.nombre LIKE :search OR a.apellido_paterno LIKE :search OR a.apellido_materno LIKE :search)";
             $params[':search'] = "%$search%";
         }
     
@@ -45,6 +45,7 @@ class Alumno {
         // 3. Agregar paginación
         $sql .= " LIMIT $start, $length";
     
+      
         $stmt = $this->db->query($sql, $params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

@@ -20,7 +20,7 @@ const Toast = Swal.mixin({
 
  
   reloadTable()
-  function reloadTable(){
+  function reloadTable(){ 
     const role = $('#role').attr("role");
   
     const columns = [
