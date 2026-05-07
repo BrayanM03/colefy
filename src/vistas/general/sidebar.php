@@ -86,11 +86,11 @@
 
                     <div id="collapseCatalogos" class="accordion-collapse collapse" style="margin-left:13px;" aria-labelledby="headingCatalogo" data-bs-parent="#accordionExample3">
                         <div class="accordion-body">
-                            <!-- <li class="sidebar-item">
+                            <li class="sidebar-item">
                                 <a class="sidebar-link" href="<?php echo BASE_URL; ?>flujo">
                                     <i class="align-middle" data-feather="share-2"></i> <span class="align-middle">Iniciar flujo</span>
                                 </a>
-                            </li> -->
+                            </li>
                             <li class="sidebar-item">
                                 <a class="sidebar-link" href="<?php echo BASE_URL; ?>grupos">
                                     <i class="align-middle" data-feather="star"></i> <span class="align-middle">Grupos</span>

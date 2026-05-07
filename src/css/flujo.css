@@ -59,7 +59,17 @@
 
 /* Botón Principal */
 .btn-airbnb-primary {
-    background: #1ba594; /* Color distintivo Airbnb */
+    background: #1ba594;
+    color: white;
+    border: none;
+    padding: 14px 32px;
+    border-radius: 12px;
+    font-weight: 700;
+    transition: transform 0.2s active;
+    cursor: pointer;
+}
+.btn-colefy-secondary {
+    background: #FF385C;
     color: white;
     border: none;
     padding: 14px 32px;
@@ -71,6 +81,9 @@
 
 .btn-airbnb-primary:hover {
     background: #17887b;;
+}
+.btn-colefy-secondary:hover {
+    background: #c22642;
 }
 
 .btn-airbnb-primary:active {
@@ -237,4 +250,80 @@
     display: block;
     text-align: center;
     font-weight: bold;
+}
+
+.border-dashed {
+    border: 2px dashed #dee2e6 !important;
+    background: transparent;
+    transition: all 0.3s ease;
+}
+
+.border-dashed:hover {
+    border-color: #007bff !important;
+    background: rgba(0, 123, 255, 0.05);
+    transform: translateY(-5px);
+}
+
+.animate__fadeIn {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.time-slot.ocupado {
+    background-color: #ff385c;
+    color: white;
+    pointer-events: none;   /* no se puede clickear */
+    cursor: not-allowed;
+    border-radius: 8px;
+}
+
+.time-slot.ocupado small {
+    font-size: 0.65rem;
+    font-weight: 600;
+    display: block;
+    text-align: center;
+}
+
+.selectable-card.locked {
+    pointer-events: none;
+    opacity: 0.75;
+    border: 2px solid #ff385c;
+}
+
+.badge-materia {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 600;
+}
+
+.btn-reset-danger {
+    background: transparent;
+    border: 1px solid #e53e3e;
+    color: #e53e3e;
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all .2s;
+}
+.btn-reset-danger:hover {
+    background: #e53e3e;
+    color: white;
+}
+
+.time-slot.ocupado {
+    pointer-events: none;
+    cursor: not-allowed;
+    border-radius: 6px;
+}
+.time-slot.ocupado small {
+    font-size: 0.65rem;
+    font-weight: 700;
+    display: block;
+    text-align: center;
 }

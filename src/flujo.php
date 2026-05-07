@@ -12,6 +12,16 @@ if($permiso_panel_maestros){
 
 $dates = new Date();
 
+require_once __DIR__ . '/../controllers/GrupoController.php';
+
+$controller_grupo = new Grupocontroller();
+$data_combo_niveles =$controller_grupo->combo_niveles();
+$data_combo_ciclos =$controller_grupo->combo_ciclos();
+$data_niveles = $data_combo_niveles['data'];
+$data_ciclos = $data_combo_ciclos['data'];
+
+
+
 include "vistas/general/header.php";
 
 ?>
@@ -49,22 +59,46 @@ include "vistas/general/header.php";
                     <p class="wizard-subtitle">Selecciona el periodo académico y el nivel educativo para comenzar a armar el horario.</p>
                     
                     <div class="row mt-5">
-                        <div class="col-md-6 mb-4">
+                        <div class="col-md-4 mb-4">
                             <label class="form-label-custom">Ciclo Escolar</label>
                             <select class="form-select-airbnb" id="id_ciclo">
                                 <option value="" selected disabled>Elegir ciclo...</option>
-                                <option value="1">2025-2026 (Actual)</option>
-                                <option value="2">2026-2027 (Próximo)</option>
+                                <?php 
+                                    foreach ($data_ciclos as $key => $value) {
+                                        ?>
+                                        <option value="<?= $value['id']?>" 
+                                            <?php
+                                                if($key ==0) { echo 'selected'; }else{ echo ''; }?>>
+                                            <?= $value['nombre']; ?>
+                                         </option>
+                                        <?php
+                                    }
+                                ?>
                             </select>
                         </div>
-                        <div class="col-md-6 mb-4">
+                        <div class="col-md-4 mb-4">
                             <label class="form-label-custom">Nivel Educativo</label>
                             <select class="form-select-airbnb" id="nivel_educativo">
                                 <option value="" selected disabled>Elegir nivel...</option>
-                                <option value="kinder">Preescolar / Kínder</option>
-                                <option value="primaria">Primaria</option>
-                                <option value="secundaria">Secundaria</option>
-                                <option value="prepa">Preparatoria</option>
+                            <?php 
+                                    foreach ($data_niveles as $key => $value) {
+                                        ?>
+                                        <option value="<?= $value['id']?>"
+                                        <?php
+                                            if($key ==1) { echo 'selected'; }else{ echo ''; }?>>
+                                        <?= $value['nombre']?></option>
+                                        <?php
+                                    }
+                                ?>
+                            </select>
+                        </div> 
+                        <div class="col-md-4 mb-4">
+                            <label class="form-label-custom">Nivel Educativo</label>
+                            <select class="form-select-airbnb" id="turno_escolar">
+                                <option>Selecciona uno</option>
+                                <option value="manana" selected>Matutino</option>
+                                <option value="tarde">Vespertino</option>
+                                <option value="ambos">Ambos</option>
                             </select>
                         </div>
                     </div>

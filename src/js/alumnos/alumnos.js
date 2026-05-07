@@ -48,7 +48,7 @@ $(document).ready(function () {
       }
     } },
     { data: 'telefono', title: 'Teléfono' },
-    { data: 'fecha_registro', title: 'Fecha reg.' },
+    { data: 'created_at', title: 'Fecha reg.' },
     { data: null, title: 'Estatus' , render: (data)=>{
       let estatus_tag=''
       if(data.estatus ==1){
@@ -85,7 +85,12 @@ $(document).ready(function () {
   DataTableListener(table_alumnos, 'click', '.btn-editar-alumno', editarAlumno);
   DataTableListener(table_alumnos, 'click', '.btn-cancelar-alumno', cancelarAlumno);
   GeneralEventListener('btn-registrar-alumno', 'click', registrarAlumno);
-});
+}); 
+
+const container = document.getElementById('alumnos-container');
+if (container && container.dataset.autoOpen === 'true') {
+  registrarAlumno()
+}
 
 function registrarAlumno(){
   Swal.fire({
@@ -100,7 +105,7 @@ function registrarAlumno(){
       </div>
       <div class="row mb-3">
             <div class="col-6">
-                <label for="apellido_paterno">Apellido Materno</label>
+                <label for="apellido_paterno">Apellido paterno</label>
                 <input id="apellido_paterno"class="form-control" type="text" placeholder="Apellido paterno..">
             </div>
             <div class="col-6">

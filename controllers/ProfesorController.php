@@ -34,4 +34,21 @@ class ProfesorController {
         $profesor = new Profesor();
         return ($profesor->obtenerGruposProfesor($id_profesor));
     }
+
+    public function  registrar_profesor($tipo_resp, $data){
+        $nombre = $data['nombre'];
+        $apellidos = $data['apellidos'];
+        $especialidad = $data['especialidad'];
+        $telefono = $data['telefono'];
+
+        $profesor = new Profesor;
+        $resp = $profesor->registrarProfesor($nombre, $apellidos, $especialidad, $telefono);
+
+        if($tipo_resp==1){
+            echo json_encode($resp);
+        }else{
+            return $resp;
+        }
+
+    }
 }

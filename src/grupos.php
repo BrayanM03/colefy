@@ -25,7 +25,7 @@ include "vistas/general/header.php";
                             <h1 class="h3 mb-3">Gestor de Grupos </h1>
                         </div>
                         <div class="col-12 col-md-3 text-end">
-                        <a href="<?php echo BASE_URL; ?>nuevo-grupo" style="text-decoration: none; color:white;"> <div class="btn btn-success" >
+                        <a href="<?php echo BASE_URL; ?>grupos/crear" style="text-decoration: none; color:white;"> <div class="btn btn-success" >
                                Crear grupo</div></a>
                         </div>
                     </div>

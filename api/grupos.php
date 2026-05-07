@@ -31,12 +31,24 @@ if($_GET['tipo']=='registrar'){
 if($_GET['tipo']=='actualizar'){
     $controller->actualizarGrupo($_POST['nombre'], $_POST['nivel'], $_POST['grado'], $_POST['ciclo'], $_POST['id_grupo']);
 }
+
+if($_GET['tipo']=='cancelar'){
+    $controller->cancelar_grupo($_POST['id_grupo'], 2);
+}
+
 if($_GET['tipo']=='registrar_alumno'){
     $controller->registrarAlumnoGrupo($_POST['id_alumno'], $_POST['id_grupo'], $_POST['id_ciclo']);
 }
 if($_GET['tipo']== 'cancelar_alumno_grupo'){
     $controller->cancelarAlumnoGrupo($_POST['id_registro'], 0);
 }
+
+
+if($_GET['tipo']== 'desactivar_alumno_grupo'){
+    $controller->cancelarAlumnoGrupo($_POST['id_registro'], 2);
+} 
+
+
 if($_GET['tipo']== 'reactivar_alumno_grupo'){
     $controller->cancelarAlumnoGrupo($_POST['id_registro'], 1);
 } 

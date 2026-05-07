@@ -134,7 +134,13 @@ function registrarGrupo(){
           console.log(response);
           $("#alumno").empty()
           response.data.forEach(element => {
-            $("#alumno").append(`<option value="${element.id}">${element.nombre +' '+ element.apellido_paterno+' '+element.apellido_materno }</option>`)
+            $("#alumno").append(
+              `<option 
+              value="${element.id}" 
+              data-content="<strong>${element.id_interno}</strong>: ${element.nombre} ${element.apellido_paterno} ${element.apellido_materno}">
+              ${element.id_interno}: ${element.nombre} ${element.apellido_paterno} ${element.apellido_materno}
+          </option>`
+            )
           });
           $('#alumno').selectpicker('refresh');
 

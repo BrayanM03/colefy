@@ -21,14 +21,14 @@ include "vistas/general/header.php";
                         <div class="col-12 col-md-6">
                             <h1 class="h3 mb-3">Lista de profesores</h1>
                         </div>
-                        <!-- <div class="col-12 col-md-6 text-end">
-                            <a href="registrar.php"><div class="btn btn-success">Agregar nuevo</div></a>
-                        </div> -->
+                        <div class="col-12 col-md-6 text-end">
+                           <div class="btn btn-success" id="registrar-profesor">Registrar profesor</div>
+                        </div>
                     </div>
 
 
 
-                    <div class="row">
+                    <div class="row" id="profesores-container" data-auto-open="<?php echo $_GET['registrar'] ? 'true' : 'false'; ?>">
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header">

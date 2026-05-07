@@ -56,4 +56,20 @@ class Profesor {
 
         }
     }
+
+    public function registrarProfesor($nombre, $apellidos, $especialidad, $telefono){
+        if(empty($nombre)) return array('estatus'=>false, 'mensaje' => 'Coloca un nombre', 'data'=>[]);
+        if(empty($apellidos)) return array('estatus'=>false, 'mensaje' => 'Coloca unos apellidos', 'data'=>[]);
+
+        $data = array('nombre' =>$nombre, 'apellido'=> $apellidos, 'especialidad'=>$especialidad, 'telefono'=>$telefono,
+        'id_escuela' => $this->id_escuela,'estatus'=>1);
+        $id_profesor = $this->db->insert('profesores', $data);
+
+        if($id_profesor>0){
+            $resp = array('estatus'=>true, 'mensaje' => 'Profesor registrado correctamente', 'data'=>['id_nuevo' => $id_profesor]);
+        }else{
+            $resp = array('estatus'=>false, 'mensaje' => 'No se pudo registrar el profesor', 'data'=>[]);
+        }
+        return $resp;
+    }
 }

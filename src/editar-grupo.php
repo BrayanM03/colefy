@@ -13,7 +13,10 @@ $data_materias =$controller_mate->combos();
 $controller_grupo = new Grupocontroller();
 $id_grupo = $_GET['id_grupo'];
 $data_grupo_resp =$controller_grupo->obtener_grupo(1, $id_grupo);
+$data_combo_niveles =$controller_grupo->combo_niveles();
 $data_grupo = $data_grupo_resp['data'][0];
+$data_niveles = $data_combo_niveles['data'];
+
 
 include "vistas/general/header.php";
 /* 
@@ -65,8 +68,17 @@ $data_grupos =$controller_grup->combos(); */
                                                     <label for="">Nivel</label>
                                                     <select name="" id="nivel" class="form-control selectpicker">
                                                         <option value="">Seleccione un nivel</option>
-                                                        <option value="Preescolar" <?php if($data_grupo['nivel'] == 'Preescolar'){ echo 'selected';}?>>Preescolar</option>
-                                                        <option value="Primaria" <?php if($data_grupo['nivel'] == 'Primaria'){ echo 'selected';}?>>Primaria</option>
+                                                        <?php 
+                                                            foreach ($data_niveles as $key => $value) {
+                                                               
+                                                               ?>
+                                                              
+                                                                <option value="<?= $value['id']; ?>" 
+                                                                <?php if($data_grupo['id_nivel'] == $value['id']){ echo 'selected';}?>><?= $value['nombre']; ?></option>
+                                                               <?php
+                                                            }
+                                                        ?>
+                                                       
                                                        
                                                     </select>
                                             </div>

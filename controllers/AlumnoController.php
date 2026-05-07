@@ -28,12 +28,30 @@ class AlumnoController {
         ]);
     }
 
-    public function combo($busqueda = null){
+    public function combo($busqueda = null){ 
         if($busqueda){
-            $params =[$_SESSION['id_escuela'],'%'.$busqueda.'%',  '%'.$busqueda.'%', '%'.$busqueda.'%'];
-            $sql_where = " AND id_escuela = ? AND (nombre LIKE ? OR apellido_paterno LIKE ? OR apellido_materno LIKE ?)";
+            $palabras = array_filter(explode(' ', trim($busqueda)));
+    
+            $condiciones = [];
+            $params = [];
+        
+            foreach($palabras as $i => $palabra){
+                $key = ':palabra' . $i;
+                $params[$key] = '%' . $palabra . '%';
+        
+                // Cada palabra debe aparecer en ALGUNO de los campos
+                $condiciones[] = "(
+                    nombre           LIKE $key
+                    OR apellido_paterno LIKE $key
+                    OR apellido_materno LIKE $key
+                )";
+            }
+        
+            // Todas las palabras deben encontrarse (AND entre palabras)
+            $sql_where = " AND " . implode(" AND ", $condiciones);
+
         }else{
-            $params = [$_SESSION['id_escuela']];
+            $params = [];
             $sql_where = '';//' AND id_escuela = ?';
         } 
 

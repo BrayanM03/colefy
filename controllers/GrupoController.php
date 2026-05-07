@@ -85,6 +85,16 @@ class GrupoController {
         return ($grupo->combo());
     }
 
+    public function combo_niveles(){
+        $grupo = new Grupo();
+        return ($grupo->comboNiveles());
+    }
+
+    public function combo_ciclos(){
+        $grupo = new Grupo();
+        return ($grupo->comboCiclos());
+    }
+
     public function registrarAlumnoPreGrupo($alumno){
         $grupo = new Grupo();
         $resp = $grupo->registrarAlumnoPreGrupo($alumno, $this->id_sesion);
@@ -101,6 +111,16 @@ class GrupoController {
         $grupo = new Grupo();
         echo json_encode($grupo->procesarGrupo($nombre, $nivel, $grado, $ciclo, $this->id_sesion));
         
+    }
+
+    public function cancelar_grupo($id_grupo, $tipo_resp){
+        $grupo = new Grupo();
+       $resp = ($grupo->cancelarGrupo($id_grupo));
+        if($tipo_resp==1){
+            return $resp;
+        }else{
+            echo json_encode($resp);
+        }
     }
 
     public function obtener_grupo($tipo_resp, $id_grupo){

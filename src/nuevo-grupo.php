@@ -4,17 +4,18 @@ $controller_permiso->validarAcceso(1, CPermiso::CREAR_GRUPOS->value);
 
 require_once __DIR__ . '/../controllers/ProfesorController.php';
 require_once __DIR__ . '/../controllers/MateriaController.php';
+require_once __DIR__ . '/../controllers/GrupoController.php';
 
 $controller_prof = new ProfesorController();
 $data_profesores =$controller_prof->combos();
 $controller_mate = new MateriaController();
 $data_materias =$controller_mate->combos();
+$controller_grupo = new GrupoController();
+$data_niveles = $controller_grupo->combo_niveles();
+$data_ciclos = $controller_grupo->combo_ciclos();
 
-/* 
-
-
-$controller_grup = new GrupoController();
-$data_grupos =$controller_grup->combos(); */
+$niveles_educativos = $data_niveles['data'];
+$ciclos_escolares = $data_ciclos['data'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -76,31 +77,45 @@ $data_grupos =$controller_grup->combos(); */
                                 </div>
                                 <div class="card-body">
                                     <div class="row mb-4">
-                                        <div class="col-12 col-md-6">
-                                            <label for="">Nombre del grupo</label>
-                                            <input type="text" class="form-control" id="nombre-horario" placeholder="Nombre horario">
-                                        </div>
-                                            <div class="col-12 col-md-3">
+                                    <div class="col-12 col-md-4">
+                                                <label for="ciclo">Ciclo escolar</label>
+                                                <select class="form-control" id="ciclo"><?php
+                                                            foreach ($ciclos_escolares as $key => $value) {
+                                                                $nombre_ciclo = $value['nombre'];
+                                                                $id_ciclo = $value['id'];
+                                                                print_r("<option value='$id_ciclo'>$nombre_ciclo</option>");
+                                                            }
+                                                        ?>
+                                                </select>
+                                            </div>
+                                        <div class="col-12 col-md-4">
                                                     <label for="">Nivel</label>
                                                     <select name="" id="nivel" class="form-control selectpicker">
                                                         <option value="">Seleccione un nivel</option>
-                                                        <option value="Preescolar">Preescolar</option>
-                                                        <option value="Primaria">Primaria</option>
+                                                        <?php
+                                                            foreach ($niveles_educativos as $key => $value) {
+                                                                $nombre_nivel = $value['nombre'];
+                                                                $id_nivel = $value['id'];
+                                                                print_r("<option value='$id_nivel'>$nombre_nivel</option>");
+                                                            }
+                                                        ?>
+                                                       
                                                        
                                                     </select>
                                             </div>
-                                        <div class="col-12 col-md-2">
+                                        <div class="col-12 col-md-3">
                                             <label for="">Grado</label>
                                             <select name="" id="grado" class="form-control selectpicker" data-live-search="true">
                                                 <option value="">Seleccione un grado</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
-                                                <option value="6">6</option>
+                                                <option value="">-</option>
                                             </select>
                                         </div>
+                                    </div>
+                                    <div class="row">
+                                            <div class="col-12 col-md-6">
+                                                    <label for="">Nombre del grupo</label>
+                                                    <input type="text" class="form-control" id="nombre-horario" placeholder="Nombre horario">
+                                            </div>
                                     </div>
                                     <hr class="mt-3">
                                     <div class="row justify-content-center">
@@ -121,10 +136,7 @@ $data_grupos =$controller_grup->combos(); */
                                     <div class="row mt-5">
                                         <div class="row mb-3">
                                             <div class="col-12 col-md-4">
-                                                <label class="mb-3"><b>Alumnos del grupo - ciclo escolar</b></label>
-                                                <select class="form-control" id="ciclo">
-                                                    <option value="2025-2026">2025-2026</option>
-                                                </select>
+                                                <label class="mb-3"><b>Alumnos del grupo</b></label>
                                             </div>
                                         </div>
                                         <div class="col-12">
@@ -148,7 +160,7 @@ $data_grupos =$controller_grup->combos(); */
         ?>
         </div>
     </div>
-
+    
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="<?php echo STATIC_URL; ?>js/app.js"></script>
 
@@ -160,7 +172,40 @@ $data_grupos =$controller_grup->combos(); */
     <script src="<?php echo STATIC_URL; ?>js/bootstrap-select.min.js"></script>
     <script src="<?php echo STATIC_URL; ?>js/DataTable/datatables-init.js" type="module"></script>
     <script src="<?php echo STATIC_URL; ?>js/grupos/nuevo-grupo.js" type="module"></script>
-  
+    <script>
+         // Convertimos el array de PHP a un objeto de JS
+         const configuracionNiveles = <?php echo json_encode($niveles_educativos); ?>;
+
+         document.getElementById('nivel').addEventListener('change', function() {
+    const idNivelSeleccionado = this.value;
+    const selectGrado = document.getElementById('grado');
+    
+    // Limpiar opciones actuales
+    selectGrado.innerHTML = '<option value="">Seleccione un grado</option>';
+
+    if (idNivelSeleccionado) {
+        // Buscamos el nivel en nuestro objeto de configuración
+        const nivelEncontrado = configuracionNiveles.find(n => n.id == idNivelSeleccionado);
+
+        if (nivelEncontrado) {
+            const totalGrados = parseInt(nivelEncontrado.duracion_grados);
+            const tipoPeriodo = nivelEncontrado.tipo_periodo; // Por si quieres usarlo luego
+
+            for (let i = 1; i <= totalGrados; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.text = i + '°'; // Ejemplo: 1°, 2°, etc.
+                selectGrado.appendChild(option);
+            }
+        }
+    }
+
+    // IMPORTANTE: Si usas bootstrap-select (selectpicker), hay que refrescarlo
+    if ($('.selectpicker').length > 0) {
+        $('.selectpicker').selectpicker('refresh');
+    }
+});
+    </script>
 
 </body>
 

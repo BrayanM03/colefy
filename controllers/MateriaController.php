@@ -29,4 +29,19 @@ class MateriaController {
             "estatus" => $estatus
         ];
     }
+
+    public function  registrar_materia($tipo_resp, $data){
+        $nombre = $data['nombre_materia'];
+        $codigo = $data['codigo'];
+
+        $profesor = new Materia;
+        $resp = $profesor->registrarMateria($nombre, $codigo);
+
+        if($tipo_resp==1){
+            echo json_encode($resp);
+        }else{
+            return $resp;
+        }
+
+    }
 }

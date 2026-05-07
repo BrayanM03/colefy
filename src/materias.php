@@ -57,7 +57,7 @@ include "vistas/general/header.php";
                     </div>
 
 
-                    <div class="row">
+                    <div class="row" id="materias-container" data-auto-open="<?php echo $_GET['registrar'] ? 'true' : 'false'; ?>">
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header">

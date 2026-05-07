@@ -245,7 +245,13 @@ $(document).ready(function () {
         if(response.estatus){
           $("#f-alumno").empty()
           response.data.forEach(element => {
-            $("#f-alumno").append(`<option value="${element.id}">${element.nombre +' '+ element.apellido_paterno+' '+element.apellido_materno }</option>`)
+            $("#f-alumno").append(
+              `<option 
+                  value="${element.id}" 
+                  data-content="<strong>${element.id_interno}</strong>: ${element.nombre} ${element.apellido_paterno} ${element.apellido_materno}">
+                  ${element.id_interno}: ${element.nombre} ${element.apellido_paterno} ${element.apellido_materno}
+              </option>`
+            )
           });
           $('#f-alumno').selectpicker('refresh');
   

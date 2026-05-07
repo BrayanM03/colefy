@@ -42,7 +42,7 @@ logo = data_logo_bosques_primavera.replace(/[\s"\\]/gm, "");
         doc.addImage(logo_whats, "PNG", 78, 9, 4, 4);
         doc.text(`(868) 274 1147`,95, 12, 'center');
         doc.addImage(logo_addr, "PNG", 76.5, 14, 6, 6);
-        doc.text(`C. España 71, Buena Vista, 87497 
+        doc.text(`Calle Francisco Glz Villarreal  y Av Plan de Ayutla #24 Local 5 Plaza los nogales Col. Buena vista
     Heroica Matamoros, Tamps.`,110, 18, 'center');
       
         doc.setFont("helvetica", "bold"); // set font
@@ -136,7 +136,7 @@ logo = data_logo_bosques_primavera.replace(/[\s"\\]/gm, "");
     doc.addImage(logo_whats, "PNG", 78, 136, 4, 4);
     doc.text(`(868) 274 1147`,95, 139, 'center');
     doc.addImage(logo_addr, "PNG", 76.5, 141, 6, 6);
-    doc.text(`C. España 71, Buena Vista, 87497 
+    doc.text(`Calle Francisco Glz Villarreal  y Av Plan de Ayutla #24 Local 5 Plaza los nogales Col. Buena vista
   Heroica Matamoros, Tamps.`,110, 145, 'center');
   
     doc.setFont("helvetica", "bold"); // set font

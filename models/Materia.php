@@ -40,4 +40,19 @@ class Materia {
         $stmt = $this->db->query($sql, [$this->id_escuela]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function registrarMateria($nombre, $codigo){
+        if(empty($nombre)) return array('estatus'=>false, 'mensaje' => 'Coloca un nombre', 'data'=>[]);
+
+        $data = array('nombre' =>$nombre, 'codigo'=> $codigo,
+        'estatus'=>1, 'id_escuela' => $this->id_escuela);
+        $id_materia = $this->db->insert('materias', $data);
+
+        if($id_materia>0){
+            $resp = array('estatus'=>true, 'mensaje' => 'Materia registrada correctamente', 'data'=>['id_nuevo' => $id_materia]);
+        }else{
+            $resp = array('estatus'=>false, 'mensaje' => 'No se pudo registrar la materia', 'data'=>[]);
+        }
+        return $resp;
+    }
 }

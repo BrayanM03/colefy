@@ -1,5 +1,7 @@
   
   import { initCustomDataTable } from '../DataTable/datatables-init.js';
+  import {GeneralEventListener, DataTableListener} from '../utils/listeners.js';
+
   let tabla;
   let estatus_tag;
   $(document).ready(function () {
@@ -22,33 +24,129 @@
      
       {
         data: null, title: 'Opciones', render: function (data, type, row) {
-          if (role == 1) {
-            return ''
+         
             return `
               <div class='row'>
                 <div class='col-12 col-md-12'>
-                  <div class="btn btn-primary" onclick="editarSolicitud(${row.id}, false)">
+                  <div class="btn btn-primary btn-editar-materia">
                     <i class="fa-solid fa-pen-to-square"></i>
                   </div>
-                  <div class="btn btn-danger" onclick="cancelarUsuario(${row.id})">
+                  <div class="btn btn-danger btn-cancelar-materia">
                     <i class="fa-solid fa-trash"></i>
                   </div>
                 </div>
               </div>`;
-          } else {
-            return '';
-          }
+          
         }
       }
     ];
   
-    tabla = initCustomDataTable('#example', BASE_URL + 'api/materias.php', columns);
+    tabla = initCustomDataTable('#example', BASE_URL + 'api/materias.php?tipo=datatable', columns);
+    GeneralEventListener('btn-agregar-materia', 'click', agregarMateria)
+    DataTableListener(tabla, 'click', '.btn-editar-materia', editarMateria);
+    DataTableListener(tabla, 'click', '.btn-cancelar-materia', cancelarMateria);
+
   });
+
+  const container = document.getElementById('materias-container');
+  if (container && container.dataset.autoOpen === 'true') {
+      agregarMateria();
+  }
+
+  function agregarMateria(){
+    Swal.fire({
+      title: 'Agregar Materia', 
+      html:`
+       <div class="container">
+          
+        <div class="row mb-3">
+              <div class="col-6">
+                  <label for="nombre">Nombre</label>
+                  <input class="form-control" id="nombre" type="text" placeholder="Ingles, Matematicas...">
+              </div>
+              <div class="col-6">
+                  <label for="codigo">Codigo</label>
+                  <input id="codigo" class="form-control" type="text" placeholder="Codigo de la materia..">
+              </div>   
+        </div>
+       
+      </div>
+      `,
+      didOpen:()=>{}, 
+      confirmButtonText: 'Registrar',
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar',
+      showCloseButton: true,
+      preConfirm: (value) => {
+        //Validación
+        let nombre = $("#nombre").val()
   
-  function desactivarMateria(id_materia){
+        if(!nombre){
+          Swal.showValidationMessage('Escribe un nombre para la materia')
+        }
+      }
+  
+    }).then((r)=>{
+      console.log(r);
+      if(r.isConfirmed){
+        let nombre_materia = $("#nombre").val()
+        let codigo = $("#codigo").val()
+  
+        $.ajax({
+          type: "POST",
+          url: BASE_URL +"api/materias.php?tipo=registrar",
+          data: {nombre_materia, codigo},
+          dataType: "JSON",
+          success: function (response) {
+            tabla.ajax.reload(null, false)
+              if(response.estatus == true){
+                  Swal.fire({
+                      icon: 'success',
+                      html: `
+                      ${response.mensaje}<br>
+                      `,
+                      allowOutsideClick: true,
+                      confirmButtonText: "Entendido",
+                      showCancelButton: false,
+                      
+                  }).then((r)=>{
+                      if(r.isConfirmed){
+                        tabla.ajax.reload(false)
+  
+                      }
+                  })
+  
+              }else{
+                  Swal.fire({
+                      icon: 'error',
+                      html: `
+                      Ocurrio un error: ${response.mensaje}
+                      `,
+                      allowOutsideClick: true,
+                      showCancelButton: false,
+                      confirmButtonText: "Entendido",
+  
+                      
+                  }).then((r)=>{
+                      if(r.isConfirmed){
+                        tabla.ajax.reload(false)
+  
+  
+                      }
+                  })
+              }
+  
+              
+          }
+      });
+      }
+    })
+  }
+  
+  function cancelarMateria(id_materia){
     Swal.fire({
       icon: 'question',
-      title: '¿Deseas desactivar esta materia?',
+      title: '¿Deseas cancelar esta materia?',
       showCancelButton:true,
       cancelButtonText: 'No',
       confirmButtonText:'Si',
@@ -108,7 +206,7 @@
   function editarMateria(id_materia){
     $.ajax({
       type: "post",
-      url: BASE_URL + "servidor/materias/obtener-info-materia.php",
+      url: BASE_URL + "api/materias/2",
       data: {id_materia},
       dataType: "json",
       success: function (response) {

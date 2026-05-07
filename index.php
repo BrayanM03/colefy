@@ -84,38 +84,38 @@ switch ($modulo) {
 
     //CATALOGOS
     case 'grupos':
-        $titulo_vista = 'Grupos';
-        $vista_a_cargar = 'src/grupos.php';
-    break;
-
-    case 'editar_grupo':        
-        $titulo_vista = 'Editar grupo';
-
         if ($accion === 'edit' && $id) {
+            $titulo_vista = 'Editar grupo';
             $necesita_bootstrap_select=true;
             $_GET['id_grupo'] = $id; // Lo inyectamos para que el archivo lo use
             $vista_a_cargar = 'src/editar-grupo.php';
-        } else {
+            
+        }else if($accion === 'crear'){
+            $titulo_vista = 'Nuvo grupo';
+            $vista_a_cargar = 'src/nuevo-grupo.php';
+
+        }else {
+            $titulo_vista = 'Grupos';
             $vista_a_cargar = 'src/grupos.php';
         }
-    break;
-
-    case 'nuevo-grupo':
-        $titulo_vista = 'Nuevo grupo';
-        $vista_a_cargar = 'src/nuevo-grupo.php';
-    break;
+        
+    break; 
 
     case 'alumnos':
+        $_GET['registrar'] = $accion=='registrar' ? true : false;
         $titulo_vista = 'Alumnos';
         $vista_a_cargar = 'src/alumnos.php';
     break;  
 
     case 'profesores':
+        $_GET['registrar'] = $accion=='registrar' ? true : false;
         $titulo_vista = 'Profesores';
         $vista_a_cargar = 'src/profesores.php';
     break;
 
     case 'materias':
+      
+        $_GET['registrar'] = $accion=='registrar' ? true : false;
         $titulo_vista = 'Materias';
         $vista_a_cargar = 'src/materias.php';
     break;

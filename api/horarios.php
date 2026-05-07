@@ -17,6 +17,9 @@ if($_GET['tipo']=='horarios'){
     $controller->insertarGruposHorario($_POST['ids_grupos'], $_POST['id_horario']);
 }else if($_GET['tipo']=='eliminar_grupos_horario'){
     $controller->cancelarGruposHorario($_POST['id']);
-}else{
+}
+else{
     responder(false, 'No hay solicitud GET','success', [], true);
 }
+
+

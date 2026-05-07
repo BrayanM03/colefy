@@ -22,6 +22,7 @@ class Alumno {
         $columns = [
             1 => 'id',
             2 => 'nombre',
+            3 => 'id_interno'
         ];
     
         // Validar que la columna solicitada exista, de lo contrario usar una por defecto
@@ -50,7 +51,12 @@ class Alumno {
 
     public function contarAlumnos($sql_where='', $params=[]) {
         /* $params['id_escuela'] = $this->id_escuela; */
-        $stmt = $this->db->query("SELECT COUNT(*) as total FROM alumnos WHERE estatus = 1 " . $sql_where, $params);
+        $params[':id_escuela'] = $this->id_escuela;
+        $sql = "SELECT COUNT(*) AS total FROM alumnos WHERE estatus = 1" . $sql_where;
+       /*  print_r("QUERY FINAL: " . $sql);
+        print_r("PARAMS FINALES: " . print_r($params, true));
+        die(); */
+        $stmt = $this->db->query("SELECT COUNT(*) as total FROM alumnos WHERE estatus = 1 AND id_escuela = :id_escuela " . $sql_where, $params);
         return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
     }
 
@@ -67,17 +73,16 @@ class Alumno {
     }
  */
     public function obtenerAlumnos($sql_where='', $params=[]) {
-        
-        $stmt = $this->db->query("SELECT * FROM alumnos WHERE estatus = 1" . $sql_where . ' ORDER BY nombre ASC', $params);
+        $params[':id_escuela'] = $this->id_escuela;
+        $stmt = $this->db->query("SELECT * FROM alumnos WHERE estatus = 1 AND id_escuela = :id_escuela" . $sql_where . ' ORDER BY nombre ASC', $params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     //Registrando
     public function registrarAlumno($nombre, $apellido_paterno, $apellido_materno, $cumple, $genero, $telefono){
-        $fecha_registro = $this->fecha->obtenerFechaRegistro();
         $id_nuevo = $this->db->insert('alumnos',['nombre' => $nombre, 'apellido_paterno' => $apellido_paterno, 
         'apellido_materno' => $apellido_materno, 'fecha_cumple' => $cumple, 'genero' => $genero,
-        'telefono' => $telefono, 'fecha_registro'=>$fecha_registro, 'estatus'=>1, 'id_escuela' =>$this->id_escuela]);
+        'telefono' => $telefono, 'estatus'=>1, 'id_escuela' =>$this->id_escuela]);
 
         return [
             'estatus' => true,
