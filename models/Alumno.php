@@ -45,7 +45,6 @@ class Alumno {
         // 3. Agregar paginación
         $sql .= " LIMIT $start, $length";
     
-      
         $stmt = $this->db->query($sql, $params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -53,7 +52,6 @@ class Alumno {
     public function contarAlumnos($sql_where='', $params=[]) {
         /* $params['id_escuela'] = $this->id_escuela; */
         $params[':id_escuela'] = $this->id_escuela;
-        $sql = "SELECT COUNT(*) AS total FROM alumnos WHERE estatus = 1" . $sql_where;
        /*  print_r("QUERY FINAL: " . $sql);
         print_r("PARAMS FINALES: " . print_r($params, true));
         die(); */
