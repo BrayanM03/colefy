@@ -1,12 +1,19 @@
 
 <?php
 require_once  __DIR__ .  '/../controllers/ReciboController.php';
+require_once __DIR__ . '/../controllers/GrupoController.php';
+
+$controller = new ReciboController();
+$controller_grupo = new GrupoController();
 
 $controller_permiso->validarAcceso(1, CPermiso::CREAR_RECIBOS->value);
-$controller = new ReciboController();
 $response = $controller->sumatoria_conceptos(1);
+
+$permiso_cambiar_fecha = $controller_permiso->verificarPermiso(2, CPermiso::CAMBIAR_FECHA_NUEVO_RECIBO->value);
+$tiene_permiso_cambiar_fecha = $permiso_cambiar_fecha['estatus'];
+$data_ciclos = $controller_grupo->combo_ciclos();
+$ciclos_escolares = $data_ciclos['data'];
 include "vistas/general/header.php";
- 
 ?>
     <div class="wrapper">
 
@@ -34,13 +41,25 @@ include "vistas/general/header.php";
         <div class="card">
             <div class="card-header">
                 <div class="row">
-                    <div class="col-10">
+                    <div class="col-8">
                         <h5 class="card-title mb-0">En modulo puedes generar una nueva nota o recibo para el alumno</h5>
                     </div>
                     <div class="col-2">
+                        <label for="">Fecha</label>
+                        <input class="form-control" type="date" id="fecha" value="<?= date('Y-m-d')?>" <?= $tiene_permiso_cambiar_fecha == 1 ? '' : 'disabled'?>>
+                        <small id="small_ciclo" style="color:tomato;"></small>
+                    </div>
+                    <div class="col-2">
                         <label for="">Ciclo escolar</label>
-                        <select class="form-control" id="ciclo" disabled>
-                            <option value="1">2025-2026</option>
+                        <select class="form-control" id="ciclo" <?= $tiene_permiso_cambiar_fecha == 1 ? '' : 'disabled'?>>
+                            
+                            <?php
+                                                            foreach ($ciclos_escolares as $key => $value) {
+                                                                $nombre_ciclo = $value['nombre'];
+                                                                $id_ciclo = $value['id'];
+                                                                print_r("<option value='$id_ciclo'>$nombre_ciclo</option>");
+                                                            }
+                                                        ?>
                         </select>
                         <small id="small_ciclo" style="color:tomato;"></small>
 
@@ -88,6 +107,7 @@ include "vistas/general/header.php";
                                     <option value="2">Uniforme</option>
                                     <option value="3">Transporte</option>
                                     <option value="4">Cafeteria</option>
+                                    <option value="5">Recargo</option>
                                 </select>
                                 <small id="small_categoria" style="color:tomato;"></small>
 

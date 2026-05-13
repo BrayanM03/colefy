@@ -11,6 +11,7 @@ enum CPERMISO: string {
     case CREAR_RECIBOS = 'crear_nuevo_recibo';
     case EDITAR_RECIBOS = 'editar_recibo';
     case CANCELAR_RECIBOS = 'cancelar_recibos';
+    case CAMBIAR_FECHA_NUEVO_RECIBO = 'cambiar_fecha_orden_nueva';
 
     // Alumnos
     case VER_ALUMNOS = 'ver_alumnos';

@@ -16,7 +16,7 @@ class PermisoController {
             exit();
         };
     }
-
+ 
     //Funciones para los roles-permisos
     public function getPermisosPorRol($tipo_resp, $rol_id) {
         $resp = $this->model->obtenerTodosPermisosPorRol($rol_id);
@@ -51,6 +51,17 @@ class PermisoController {
         if($tipo_resp==2){
             return $response_permiso;
         }   
+    }
+    public function verificarPermiso($tipo_resp, $slug_permiso){
+        $id_usuario = $_SESSION['id'] ?? null;
+        $id_rol = $_SESSION['rol'] ?? null;
+        $response_permiso = $this->model->verificarPermiso($id_rol, $id_usuario, $slug_permiso);
+        if($tipo_resp == 2){
+            return $response_permiso;
+        } else{
+            echo json_encode($response_permiso);
+        }
+
     }
 
     public function addPermisoARol($rol_id, $permiso_id) {

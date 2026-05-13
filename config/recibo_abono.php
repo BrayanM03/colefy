@@ -15,6 +15,7 @@ if(!$permiso_pdf['estatus']){
 }
 
 $id_recibo = $_GET['id_recibo'];
+$id_pago = $_GET['id_pago'];
 $recibo_resp = $controller_recibo->obtener_recibo($id_recibo, 2);
 if(!$recibo_resp['estatus']){
     $mensaje = urlencode($recibo_resp['mensaje']);
@@ -26,17 +27,16 @@ $recibo = $recibo_resp['data'];
 $estado_recibo = $recibo['estatus'];
 $tipos = [1=>'Contado', 2 =>'Parcial'];
 $tipo_recibo = $tipos[$recibo['tipo']];
- $fecha_vencimiento = $recibo['tipo'] == 2 ?formatearFechaEsp($recibo['fecha_vencimiento']) :null;
- /* echo json_encode($recibo);
+ 
+/* echo json_encode($recibo);
 die(); */
 // Datos de la venta (ejemplo)
 $datos_empresa = [
     'nombre' => $recibo['escuela']['nombre'],
     'direccion' => $recibo['escuela']['direccion'],
     'telefono' => $recibo['escuela']['telefono'],
-    'folio' => 'REC-'.$recibo['folio_escuela'],
+    'folio' => 'PAG-'.$id_pago,
     'fecha' => formatearFechaEsp($recibo['fecha_registro']),
-    'fecha_vencimiento' => $fecha_vencimiento,
     'alumno' => $recibo['alumno'],
     'grupo' => $recibo['grupo'],
     'tipo' => $tipo_recibo,
@@ -46,20 +46,18 @@ $datos_empresa = [
 ];
 
 $GLOBALS['datos_empresa'] = $datos_empresa;
-$productos = $recibo['conceptos']; /* [
-    ['cant' => 1, 'desc' => 'Mensualidad del mes Septiembre ciclo 2025/2026', 'precio' => 1650.00],
-    ['cant' => 2, 'desc' => 'Uniforme', 'precio' => 175.00],
-    ['cant' => 1, 'desc' => 'Cafeteria', 'precio' => 150.00]
-]; */
+$productos = $recibo['conceptos']; 
 
-/* $subtotal = array_sum(array_map(fn($p) => $p['cant'] * $p['precio'], $productos));
-$iva_tasa = 0.16; 
-$iva_monto = $subtotal * $iva_tasa;*/
 
+$pagos = $recibo['pagos'];
 $suma_pagos = $recibo['suma_pagos'];
 $total = $recibo['monto_total']; //array_sum(array_map(fn($p) => $p['cant'] * $p['precio'], $productos));
 $saldo_pendiente = $recibo['saldo_pendiente'];
 $abonado = floatval($total)  - floatval($saldo_pendiente);
+
+$resultado = array_filter($pagos, fn($item) => $item['id'] == $id_pago);
+$pago_el = array_values($resultado)[0] ?? null; // Re-indexa y toma el primero
+
 // Función formatea fecha
 function formatearFechaEsp($fecha) {
     if (!$fecha) return '';
@@ -83,7 +81,7 @@ class PDF extends FPDF
     // Función para dibujar un recibo
     // Solo necesitamos $y_inicio para la posición vertical
     // Función para dibujar un recibo
-    function DibujarRecibo($y_inicio, $datos_empresa, $productos, $suma_pagos, $total, $saldo_pendiente, $abonado, $es_cliente, $estatus = 1)
+    function DibujarRecibo($y_inicio, $datos_empresa, $productos, $suma_pagos, $total, $saldo_pendiente, $abonado, $pago_el, $es_cliente, $estatus = 1)
     {
         $this->SetTitle($datos_empresa['folio']);
 
@@ -112,7 +110,7 @@ class PDF extends FPDF
         $this->SetDrawColor(180, 180, 180); 
 
         // --- ENCABEZADO: FILA 1 (Título) ---
-        $titulo = $es_cliente ? 'RECIBO ORIGINAL - CLIENTE' : 'RECIBO COPIA - COLEGIO';
+        $titulo = $es_cliente ? 'ABONO ORIGINAL - CLIENTE' : 'ABONO COPIA - COLEGIO';
         $this->SetFont('Arial', 'B', 10);
         $this->Cell($ancho_recibo, 5, $fn_iconv($titulo), 'TRL', 1, 'C', true);
 
@@ -163,7 +161,7 @@ class PDF extends FPDF
         // 2. Celda Teléfono (Borde Inferior)
 
         $ancho_telefono = $datos_empresa['id_tipo']== 1 ? 60 : 40;
-        $fechas_sr = $datos_empresa['id_tipo']== 1 ? $fn_iconv('Fecha: ') .' '. $datos_empresa['fecha']: $fn_iconv('Fecha: ') .' '. $datos_empresa['fecha'] . ' -- '.$fn_iconv('Fecha vencimiento: ') . $datos_empresa['fecha_vencimiento'] ;
+        $fechas_sr = $datos_empresa['id_tipo']== 1 ? $fn_iconv('Fecha: ') .' '. $datos_empresa['fecha']: $fn_iconv('Fecha: ') .' '. $datos_empresa['fecha'] . ' -- '.$fn_iconv('Fecha vencimiento: ') . $datos_empresa['fecha'] ;
         $ancho_fechas =($ancho_recibo - $ancho_logo - $ancho_telefono);
         $this->Cell( $ancho_telefono, 7, 'Tel: ' . $datos_empresa['telefono'], 'B', 0, 'R');
         
@@ -231,57 +229,60 @@ class PDF extends FPDF
        /*  print_r($suma_pagos);
         die(); */
         $this->SetFont('Arial', '', 7);
-        if ($suma_pagos['suma_efectivo'] > 0) {
+        if ($pago_el['pago_efectivo'] > 0) {
         $this->Cell(12, 6, $fn_iconv('Efectivo'), 1, 0, 'L', true);
         }
-        if ($suma_pagos['suma_efectivo'] > 0) {
-        $this->Cell(16, 6, number_format($suma_pagos['suma_efectivo'], 2, '.', ','), 1, 0, 'L', true);
+        if ($pago_el['pago_efectivo'] > 0) {
+        $this->Cell(16, 6, number_format($pago_el['pago_efectivo'], 2, '.', ','), 1, 0, 'L', true);
         }
 
-        if ($suma_pagos['suma_tarjeta'] > 0) {
+        if ($pago_el['pago_tarjeta'] > 0) {
         $this->Cell(13, 6, $fn_iconv('Tarjeta'), 1, 0, 'L', true);
-        $this->Cell(16, 6,number_format($suma_pagos['suma_tarjeta'], 2, '.', ','), 1, 0, 'L', true);
+        $this->Cell(16, 6,number_format($pago_el['pago_tarjeta'], 2, '.', ','), 1, 0, 'L', true);
         }
 
-        if ($suma_pagos['suma_transferencia'] > 0) {
+        if ($pago_el['pago_transferencia'] > 0) {
         $this->Cell(12, 6, $fn_iconv('Transf.'), 1, 0, 'L', true);
-        $this->Cell(14, 6, number_format($suma_pagos['suma_transferencia'], 2, '.', ','), 1, 0, 'L', true);
+        $this->Cell(14, 6, number_format($pago_el['pago_transferencia'], 2, '.', ','), 1, 0, 'L', true);
         }
 
-        if ($suma_pagos['suma_deposito'] > 0) {
+        if ($pago_el['pago_deposito'] > 0) {
         $this->Cell(12, 6, $fn_iconv('Deposito'), 1, 0, 'L', true);
-        $this->Cell(15, 6, number_format($suma_pagos['suma_deposito'], 2, '.', ','), 1, 0, 'L', true);
+        $this->Cell(15, 6, number_format($pago_el['pago_deposito'], 2, '.', ','), 1, 0, 'L', true);
         }
 
-        if ($suma_pagos['suma_cheque'] > 0) {
+        if ($pago_el['pago_cheque'] > 0) {
         $this->Cell(12, 6, $fn_iconv('Cheque'), 1, 0, 'L', true);
-        $this->Cell(13, 6, number_format($suma_pagos['suma_cheque'], 2, '.', ','), 1, 0, 'L', true);
+        $this->Cell(13, 6, number_format($pago_el['pago_cheque'], 2, '.', ','), 1, 0, 'L', true);
         }
         //Totales derecha
         $this->SetFont('Arial', 'B', 11);
-       
-        $this->SetFillColor(220, 240, 240); //VERDE
+        $this->SetFillColor(255, 255, 197); //Amarillo
         //$this->Cell($ancho_recibo, 8, '', 0, 0); // Espacio en blanco a la izquierda
         $this->SetX($ancho_recibo -50);
-        $this->Cell(20, 8, $fn_iconv('TOTAL:'), 1, 0, 'L', true);
-        $this->Cell(40, 8, '$ ' . number_format($total, 2, '.', ','), 1, 1, 'R', true);
+        $this->Cell(35, 8, $fn_iconv('ABONO:'), 1, 0, 'L', true);
+        $this->Cell(25, 8, '$ ' . number_format($pago_el['total'], 2, '.', ','), 1, 1, 'R', true);
 
         if($datos_empresa['id_tipo']== 2){
             // Añadir celdas para Abono (Payment/Deposit)
             $this->SetFont('Arial', '', 9);
+            $this->SetX(10); 
+            $this->SetX($ancho_recibo -50);
+            $this->SetFillColor(220, 240, 240); //VERDE
+            $this->Cell(35, 8, $fn_iconv('TOTAL RECIBO:'), 1, 0, 'L', true);
+            $this->Cell(25, 8, '$ ' . number_format($total, 2, '.', ','), 1, 1, 'R', true);
             $this->SetX(10); // Restablecer posición X
             $this->SetFillColor(230, 240, 250); //AZUL
             $this->Cell($ancho_recibo - 60, 8, '', 0, 0); // Espacio en blanco a la izquierda
-            $this->Cell(20, 8, $fn_iconv('PAGADO:'), 1, 0, 'L', true);
-            $this->Cell(40, 8, '$ ' . number_format($abonado, 2, '.', ','), 1, 1, 'R', true); // Se asume una variable $abono
+            $this->Cell(35, 8, $fn_iconv('PAGADO:'), 1, 0, 'L', true);
+            $this->Cell(25, 8, '$ ' . number_format($abonado, 2, '.', ','), 1, 1, 'R', true); // Se asume una variable $abono
 
             // Añadir celdas para Restante (Remaining/Balance)
             $this->SetX(10); // Restablecer posición X
-       
             $this->SetFillColor(255, 230, 230); // ROJO
             $this->Cell($ancho_recibo - 60, 8, '', 0, 0); // Espacio en blanco a la izquierda
-            $this->Cell(20, 8, $fn_iconv('RESTANTE:'), 1, 0, 'L', true);
-            $this->Cell(40, 8, '$ ' . number_format($saldo_pendiente, 2, '.', ','), 1, 1, 'R', true); // Se asume una variable $restante
+            $this->Cell(35, 8, $fn_iconv('RESTANTE:'), 1, 0, 'L', true);
+            $this->Cell(25, 8, '$ ' . number_format($saldo_pendiente, 2, '.', ','), 1, 1, 'R', true); // Se asume una variable $restante
         }
         
         // --- Pie de página del recibo ---
@@ -361,7 +362,7 @@ $pdf->SetAutoPageBreak(false); // Desactivamos el salto de página automático
 
 // --- RECIBO SUPERIOR: Cliente ---
 $y_cliente = 10; // Posición Y inicial
-$pdf->DibujarRecibo($y_cliente, $datos_empresa, $productos, $suma_pagos, $total,  $saldo_pendiente, $abonado, true, $estado_recibo);
+$pdf->DibujarRecibo($y_cliente, $datos_empresa, $productos, $suma_pagos, $total,  $saldo_pendiente, $abonado, $pago_el, true, $estado_recibo);
 
 // --- Línea de Corte Horizontal ---
 // La línea irá justo después del primer recibo, con un poco de espacio
@@ -380,7 +381,7 @@ $pdf->SetLineWidth(0.1);
 
 // --- RECIBO INFERIOR: Vendedor ---
 $y_vendedor = $y_corte + 10; // 10 mm debajo de la línea de corte
-$pdf->DibujarRecibo($y_vendedor, $datos_empresa, $productos, $suma_pagos, $total, $saldo_pendiente, $abonado, false, $estado_recibo);
+$pdf->DibujarRecibo($y_vendedor, $datos_empresa, $productos, $suma_pagos, $total, $saldo_pendiente, $abonado, $pago_el, false, $estado_recibo);
 
 
 // Salida del PDF (mostrar en el navegador)

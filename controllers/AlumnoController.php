@@ -88,4 +88,15 @@ class AlumnoController {
         $response = $alumno->actualizarAlumno($id_alumno, $nombre, $apellido_paterno, $apellido_materno, $cumple, $genero, $telefono);
         echo json_encode($response);
     }
+
+    public function cancelar_alumno($id_alumno, $tipo_resp){
+        $alumno = new Alumno();
+        $response = $alumno->cancelarAlumno($id_alumno);
+
+        if($tipo_resp ==2){
+            return $response;
+        }else{
+            echo json_encode($response);
+        }
+    }
 }

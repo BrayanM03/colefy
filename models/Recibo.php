@@ -448,25 +448,43 @@ class Recibo extends Datatable
 
     public function obtenerRecibo($id_recibo)
     {
-        $count = $this->db->count('recibos', 'id = ?', [$id_recibo]);
+        $count = $this->db->count('recibos', 'id = ? AND id_escuela = ?', [$id_recibo, $this->id_escuela]);
         if ($count == 0) {
             return array('estatus' => false, 'mensaje' => 'No se encontró un recibo con el ID: ' . $id_recibo, 'data' => []);
         } else {
             $recibo_data = $this->db->select('SELECT * FROM recibos WHERE id =?', [$id_recibo]);
+            $pagos_data = $this->db->select('SELECT * FROM pagos WHERE id_recibo = ? AND estatus != 0', [$id_recibo]);
+            $stmt_pagos = $this->db->query('SELECT 
+            SUM(pago_efectivo) as suma_efectivo, 
+            SUM(pago_tarjeta) as suma_tarjeta, 
+            SUM(pago_transferencia) as suma_transferencia, 
+            SUM(pago_deposito) as suma_deposito, 
+            SUM(pago_cheque) as suma_cheque
+             FROM pagos WHERE id_recibo = ? AND estatus != 0', [$id_recibo]);
+            $resumen_pagos_data = $stmt_pagos->fetchAll(PDO::FETCH_ASSOC)[0];
+            $escuela_data = $this->db->select('SELECT * FROM escuelas WHERE id = ? AND estatus != 0', [$this->id_escuela]);
             $recibo_data = $recibo_data[0];
+            $usuario_data = $this->db->select('SELECT * FROM usuarios WHERE id = ?', [$recibo_data['id_usuario']]);
+            $usuario_data = $usuario_data[0];
+            $escuela_data = $escuela_data[0];
+            /* print_r($escuela_data);
+            die(); */
             $id_alumno = $recibo_data['id_alumno'];
-            $count_al = $this->db->count('alumnos', 'id = ? AND id_escuela = ? AND estatus = ?', [$id_alumno, $this->id_escuela, 1]);
+            $count_al = $this->db->count('alumnos', 'id = ? AND id_escuela = ?', [$id_alumno, $this->id_escuela]);
             if ($count_al == 0) {
                 return array('estatus' => false, 'mensaje' => 'No se encontró alumno en la BD del recibo', 'data' => []);
             } else {
                 $alumno_model = new Alumno();
                 $alumno_resp = $alumno_model->traerAlumno($id_alumno);//$this->db->select('SELECT * FROM alumnos WHERE id =?',[$id_alumno]);
                 $alumno = $alumno_resp['data'];
-                /* echo json_encode($alumno_resp['data']['grupo']);
+                /* echo json_encode($alumno);
                 die(); */
+                if(!$alumno['grupo']['estatus']): //No tiene grupo aun asignado
+                    $recibo_data['id_grupo'] = 0;
+                else:
+                    $recibo_data['id_grupo'] = $alumno['grupo']['id_grupo'];
+                endif;
                 $recibo_data['grupo'] = $alumno['grupo']['grupo'];
-                $recibo_data['id_grupo'] = $alumno['grupo']['id_grupo'];
-
             }
 
             $count_conceptos = $this->db->count('recibos', 'id = ?', [$id_recibo]);
@@ -476,7 +494,11 @@ class Recibo extends Datatable
                 $conceptos = $this->db->select('SELECT * FROM detalle_conceptos WHERE id_recibo =?', [$id_recibo]);
             }
 
+            $recibo_data['pagos'] = $pagos_data;
+            $recibo_data['suma_pagos'] = $resumen_pagos_data;
             $recibo_data['conceptos'] = $conceptos;
+            $recibo_data['escuela'] = $escuela_data;
+            $recibo_data['usuario'] = $usuario_data;
             $recibo_data['alumno'] = $alumno['nombre'] .' '. $alumno['apellido_paterno'] . ' '. $alumno['apellido_materno'];
 
             return array('estatus' => true, 'mensaje' => 'Se encontró información de recibo', 'data' => $recibo_data);

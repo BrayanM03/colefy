@@ -1,6 +1,6 @@
 <?php
 session_start();
-
+date_default_timezone_set('America/Matamoros'); 
 require_once 'controllers/PermisoController.php';
 require_once 'config/config.php';
 
@@ -64,9 +64,13 @@ switch ($modulo) {
     break;
 
     case 'recibos':        
-        if ($accion === 'pdf' && $id) {
+        if ($accion === 'normal-pdf' && $id) {
             $_GET['id_recibo'] = $id; // Lo inyectamos para que el archivo lo use
             $vista_a_cargar = 'config/recibo.php';
+        }else if ($accion === 'abono-pdf' && $id) {
+            $_GET['id_pago'] = $id; // Lo inyectamos para que el archivo lo use
+            $_GET['id_recibo'] = $datos[3];
+            $vista_a_cargar = 'config/recibo_abono.php';
         }else if($accion === 'editar' && $id){
             $titulo_vista = 'Editar recibo';
             $_GET['id_recibo'] = $id;
@@ -220,7 +224,16 @@ switch ($modulo) {
         $necesita_sweetalert = false; // Por defecto Si
         $necesita_fontawesome = false;
         $vista_a_cargar = 'src/vistas/error/not_found.php';
+    break;    
 
+    case 'sin_permiso':
+        $titulo_pagina = 'Sin permisos';
+        $necesita_datatables = false;
+        $necesita_animatecss = false;
+        $necesita_sweetalert = false; // Por defecto Si
+        $necesita_fontawesome = false;
+        $_GET['msg'] = $accion;
+        $vista_a_cargar = 'src/vistas/error/error.php';
     break;
 
     default:

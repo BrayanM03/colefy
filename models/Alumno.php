@@ -140,4 +140,20 @@ class Alumno {
         }
         return $response;
     }
+
+    public function cancelarAlumno($id_alumno){
+        $total = $this->contarAlumno($id_alumno);
+        if($total>0){
+            $contar_ag = $this->db->count('alumnos_grupo', 'id_alumno =? AND estatus !=0', [$id_alumno]);
+            $campos = ['estatus'=> 0];
+            if($contar_ag>0){
+                $stmt_ = $this->db->update('alumnos_grupo', $campos, 'id_alumno = ? AND estatus !=0',[$id_alumno]);
+            }
+            $stmt = $this->db->update('alumnos', $campos, 'id=?',[$id_alumno]);
+            $response= array('estatus'=>true, 'mensaje'=> 'Alumno cancelado correctamente');
+        }else{
+            $response= array('estatus'=>false, 'mensaje'=> 'Datos NO encontrados con ese ID en "Alumnos"', 'data'=>[]);
+        }
+        return $response;
+    }
 }

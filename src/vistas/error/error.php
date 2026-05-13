@@ -37,10 +37,10 @@
 $msg = $_GET['msg'] ?? 'Ha ocurrido un error inesperado.';
 ?>
     <div class="error-container">
-        <img src="../../img/logo_2.png" alt="Logo" class="error-logo">
+        <img src="<?= STATIC_URL?>img/logo.png" alt="Logo" class="error-logo">
         <h3 class="text-danger fw-bold">¡Ups! Algo salió mal</h3>
         <p><?php echo htmlspecialchars($msg); ?></p>
-        <a href="../../index.php" class="btn btn-info btn-home">Volver al inicio</a>
+        <a href="<?= BASE_URL?>dashboard" class="btn btn-info btn-home">Volver al inicio</a>
     </div>
 
     <!-- Bootstrap JS (opcional si lo necesitas) -->

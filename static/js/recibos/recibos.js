@@ -101,7 +101,7 @@ $(document).ready(function () {
   });
 
   function mostrarRecibo(id_recibo){
-    window.open('./recibos/pdf/'+id_recibo,'_blank');
+    window.open('./recibos/normal-pdf/'+id_recibo,'_blank');
   }
 
   function cancelarRecibo(id_recibo, tipo_cancelacion){

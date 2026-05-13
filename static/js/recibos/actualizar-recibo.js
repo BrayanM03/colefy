@@ -127,6 +127,7 @@ $(document).ready(function () {
       data: null,
       title: "Opciones",
       render: function (data) {
+        console.log(data);
         let tipo_cancel = data.estatus ? 1 : 2;
         let btn_fa = data.estatus ? "fa-ban" : "fa-rotate-left";
         let class_btn_edit =  data.estatus ? 'btn-primary' : 'btn-secondary'
@@ -164,9 +165,15 @@ $(document).ready(function () {
     BASE_URL + "api/recibos.php?tipo=tabla_pagos&id_recibo=" + id_recibo,
     columns_pagos
   );
-  window.cancelarPago = cancelarPago; 
 
-  //DataTableListener(tabla_pagos, 'click', '.btn-cancelar-pago', cancelarPago)
+  function mostrarReciboPago(id_pago){
+    window.open(BASE_URL + 'recibos/abono-pdf/'+id_pago + '/' + id_recibo,'_blank');
+  }
+ 
+
+
+  window.cancelarPago = cancelarPago; 
+  window.mostrarReciboPago = mostrarReciboPago; 
 
  
   $("#alumno").on("shown.bs.select", function () {

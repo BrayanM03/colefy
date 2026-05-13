@@ -42,3 +42,8 @@ if($_GET['tipo']=='actualizar'){
     $telefono = isset($_POST['telefono']) ? $_POST['telefono'] : '';
     $controller->actualizarAlumno($id_alumno, $nombre, $apellido_paterno, $apellido_materno, $cumple, $genero, $telefono);
 }
+
+if($_GET['tipo']=='cancelar'){
+    $id_alumno = $_POST['id_alumno'];
+    $controller->cancelar_alumno($id_alumno, 1);
+}
