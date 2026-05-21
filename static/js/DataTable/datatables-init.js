@@ -20,6 +20,8 @@ export function initCustomDataTable(selector, ajaxSource, columns, order =[[0, '
         if (!ajaxConfig.type) ajaxConfig.type = 'POST';
     }
 
+    console.log(ajaxConfig);
+
     return $(selector).DataTable({
       processing: true,
       serverSide: true, 

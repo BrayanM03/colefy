@@ -74,4 +74,11 @@ enum CPERMISO: string {
     // Perfil
     case VER_PERFIL = 'ver_perfil';
     case EDITAR_PERFIL = 'editar_perfil';
+
+    // Gastos
+    case VER_GASTOS = 'ver_gastos';
+    case CREAR_GASTOS = 'crear_gastos';
+    case EDITAR_GASTOS = 'editar_gastos';
+    case CANCELAR_GASTOS = 'cancelar_gastos';
+
 }

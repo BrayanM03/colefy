@@ -60,3 +60,142 @@
 .accordion-button::after {
   display: none !important; /* Escondemos la flecha por defecto de Bootstrap si existe */
 }
+
+/* ── BASE ────────────────────────────────────────── */
+/* AdminKit usa 14px o 15px como base, el navegador por defecto usa 16px */
+html {
+  font-size: 14px; /* Prueba entre 13px y 15px */
+}
+
+/* O con rem para que sea proporcional */
+body {
+  font-size: 0.875rem; /* = 14px si el base es 16px */
+}
+
+body.dark {
+  background-color: #1c2333 !important;
+  color: #cfd8e3 !important;
+}
+
+/* ── SIDEBAR ─────────────────────────────────────── */
+body.dark .sidebar {
+  background-color: #151e2d !important; /* más oscuro que el contenido */
+  border-right: 1px solid #1e2d40 !important;
+}
+body.dark .sidebar-brand,
+body.dark .sidebar-brand:hover {
+  background-color: #111826 !important;
+}
+body.dark .sidebar-item .sidebar-link {
+  color: #8fa3b8 !important;
+}
+body.dark .sidebar-item.active > .sidebar-link,
+body.dark .sidebar-item .sidebar-link:hover {
+  color: #ffffff !important;
+  background-color: #1e2d40 !important;
+}
+
+/* ── NAVBAR ──────────────────────────────────────── */
+body.dark .navbar {
+  background-color: #1e2a3a !important; /* un tono intermedio */
+  border-bottom: 1px solid #253447 !important;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3) !important;
+}
+body.dark .navbar .nav-link,
+body.dark .navbar span {
+  color: #cfd8e3 !important;
+}
+
+/* ── MAIN CONTENT ────────────────────────────────── */
+body.dark .main {
+  background-color: #1c2333 !important;
+}
+
+/* ── CARDS ───────────────────────────────────────── */
+body.dark .card {
+  background-color: #243044 !important; /* más claro que el fondo */
+  border: 1px solid #2e3f57 !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
+}
+body.dark .card-header {
+  background-color: #1e2d40 !important; /* ← fix del header blanco */
+  border-bottom: 1px solid #2e3f57 !important;
+  color: #cfd8e3 !important;
+}
+body.dark .card-body {
+  background-color: #243044 !important;
+}
+
+/* ── FORMULARIOS ─────────────────────────────────── */
+body.dark .form-control,
+body.dark .form-select {
+  background-color: #1e2d40 !important;
+  color: #cfd8e3 !important;
+  border-color: #2e3f57 !important;
+}
+body.dark .form-control::placeholder {
+  color: #5a7080 !important;
+}
+body.dark .form-control:focus {
+  background-color: #1e2d40 !important;
+  border-color: #1ba594 !important;
+  box-shadow: 0 0 0 0.2rem rgba(27,165,148,0.25) !important;
+  color: #cfd8e3 !important;
+}
+body.dark label {
+  color: #8fa3b8 !important;
+}
+
+body.dark h1, h2, h3, h4 {
+  color: #8fa3b8 !important;
+}
+body.dark .progress-step.active{
+  background: #ebebeb;
+
+}
+body.dark .progress-step{
+  background: #67707a 
+}
+
+body.dark .progress-track{
+  background:#67707a 
+
+}
+
+/* ── TABLAS ──────────────────────────────────────── */
+body.dark .table {
+  color: #cfd8e3 !important;
+  border-color: #2e3f57 !important;
+}
+body.dark .table thead th {
+  background-color: #1e2d40 !important;
+  border-color: #2e3f57 !important;
+}
+body.dark .table tbody tr:hover {
+  background-color: #1e2d40 !important;
+}
+
+body.dark .list-group .list-group-item{
+  background-color: #243044 !important;
+  color: #cfd8e3 !important;
+}
+
+
+/* ── SELECTPICKER ────────────────────────────────── */
+body.dark .bootstrap-select .dropdown-toggle,
+body.dark .dropdown-menu {
+  background-color: #1e2d40 !important;
+  color: #cfd8e3 !important;
+  border-color: #2e3f57 !important;
+}
+body.dark .dropdown-item {
+  color: #cfd8e3 !important;
+}
+body.dark .dropdown-item:hover {
+  background-color: #253447 !important;
+}
+
+body.dark footer{
+  background-color: #253447 !important;
+color: #cfd8e3 !important;
+}

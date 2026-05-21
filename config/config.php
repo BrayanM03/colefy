@@ -43,7 +43,8 @@ define('ASSET_FONTAWESOME_JS', 'https://kit.fontawesome.com/5c955c6e98.js');
 define('ASSET_SWEETALERT_JS','https://cdn.jsdelivr.net/npm/sweetalert2@11');
 define('ASSET_DATATABLES_JS', 'https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js');
 define('ASSET_DATATABLES_RESPONSIVE_JS', 'https://cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js');
-define('ASSET_BOOTSTRAP_SELECT_JS', STATIC_URL . 'js/bootstrap-select.min.js');
+define('ASSET_BOOTSTRAP_SELECT_JS', STATIC_URL . 'js/bootstrap-select-new.js');
+//define('ASSET_BOOTSTRAP_SELECT_JS', STATIC_URL . 'js/bootstrap-select.min.js');
 
 
 ?>

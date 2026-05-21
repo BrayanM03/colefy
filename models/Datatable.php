@@ -41,7 +41,7 @@ class Datatable {
         $orderDir = strtolower($orderDir) === 'desc' ? 'DESC' : 'ASC';
 
         $sql .= " ORDER BY $orderColumn $orderDir LIMIT $start, $length";
-
+     
         return $this->db->select($sql, $params); // usa tu wrapper
     }
 

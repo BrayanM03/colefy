@@ -33,6 +33,14 @@
                 </a>
             </li>
             <?php  endif; ?>
+
+            <?php if($permiso_recibos['estatus']): ?>
+            <li class="sidebar-item accordion-button" aria-expanded="true">
+                <a class="sidebar-link" href="<?php echo BASE_URL; ?>nuevo_gasto">
+                    <i class="align-middle" data-feather="shopping-bag"></i> <span class="align-middle">Nuevo gasto</span>
+                </a>
+            </li>
+            <?php  endif; ?>
            <!--  <li class="sidebar-item accordion-button" aria-expanded="true">
                 <a class="sidebar-link" href="<?php echo BASE_URL; ?>asistencia">
                     <i class="align-middle" data-feather="clock"></i> <span class="align-middle">Asistencia</span>
@@ -45,10 +53,10 @@
                         <a class="sidebar-link d-flex align-items-center w-100" href="#">
                             <i class="align-middle" data-feather="folder"></i> <span class="align-middle">Historial</span>
                             <i class="ms-auto arrow-icon" data-feather="chevron-right"></i>
-
                         </a>
                     </li>
        
+                    
                     <div id="collapseHistory" class="accordion-collapse collapse" style="margin-left:13px;" aria-labelledby="headingHistory" data-bs-parent="#accordionExample2">
                         <div class="accordion-body">
                            <!--  <li class="sidebar-item">
@@ -60,6 +68,14 @@
                             <li class="sidebar-item">
                                 <a class="sidebar-link" href="<?php echo BASE_URL; ?>recibos">
                                     <i class="align-middle" data-feather="book"></i> <span class="align-middle">Recibos</span>
+                                </a>
+                            </li>
+                            <?php } ?>
+
+                            <?php if($permiso_recibos['estatus']){?>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="<?php echo BASE_URL; ?>gastos">
+                                    <i class="align-middle" data-feather="tag"></i> <span class="align-middle">Gastos</span>
                                 </a>
                             </li>
                             <?php } ?>
@@ -79,7 +95,7 @@
                 aria-expanded="true" aria-controls="collapseCatalogos">
                 <a class="sidebar-link d-flex align-items-center w-100" href="#">
                         <i class="align-middle" data-feather="clipboard"></i> 
-                        <span class="align-middle ms-2">Catalogos</span>
+                        <span class="align-middle">Catalogos</span>
                         <i class="ms-auto arrow-icon" data-feather="chevron-right"></i>
                     </a>
                 </li>

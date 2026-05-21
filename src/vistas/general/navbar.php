@@ -7,6 +7,25 @@
 	$usuarios_p = $controller_permiso->validarAcceso(2, CPermiso::VER_USUARIOS->value);
 	$recibos_p = $controller_permiso->validarAcceso(2, CPermiso::VER_RECIBOS->value);
 ?>
+<style>
+	/* Transición suave al cambiar tema */
+body {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Tamaño del switch */
+#darkmode-switch {
+    width: 2.5rem;
+    height: 1.25rem;
+    cursor: pointer;
+}
+
+/* Ícono de luna */
+#darkmode-switch ~ label {
+    cursor: pointer;
+    margin-left: .3rem;
+}
+</style>
 <nav class="navbar navbar-expand navbar-light navbar-bg">
 				<a class="sidebar-toggle js-sidebar-toggle">
 					<i class="hamburger align-self-center"></i>
@@ -15,7 +34,15 @@
 				<div class="navbar-collapse collapse">
 					<ul class="navbar-nav navbar-align">
 					
-						
+						<!-- Switch Dark Mode -->
+						<li class="nav-item d-flex align-items-center me-2">
+							<div class="form-check form-switch mb-0" title="Modo oscuro">
+								<input class="form-check-input" type="checkbox" id="darkmode-switch" role="switch">
+								<label class="form-check-label" for="darkmode-switch">
+									<i class="align-middle" data-feather="moon"></i>
+								</label>
+							</div>
+						</li>
 						<li class="nav-item dropdown">
 							<a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#" data-bs-toggle="dropdown">
 								<i class="align-middle" data-feather="settings"></i>
@@ -57,5 +84,33 @@
 				can_view_usuarios: <?php echo $usuarios_p['estatus'] ? 'true' : 'false'; ?>,
 				can_view_pagos: <?php echo $recibos_p['estatus'] ? 'true' : 'false'; ?>
 			};
+
+			// ── Dark Mode ─────────────────────────────────────────────
+			document.addEventListener('DOMContentLoaded', function () {
+
+const THEME_KEY = 'adminkit_theme';
+const switchEl  = document.getElementById('darkmode-switch');
+
+function aplicarTema(tema) {
+    document.body.classList.toggle('dark', tema === 'dark');
+    switchEl.checked = (tema === 'dark');
+
+    const icon = switchEl.nextElementSibling.querySelector('i');
+    if (icon) {
+        icon.setAttribute('data-feather', tema === 'dark' ? 'sun' : 'moon');
+        if (typeof feather !== 'undefined') feather.replace();
+    }
+}
+
+const temaGuardado = localStorage.getItem(THEME_KEY) || 'light';
+aplicarTema(temaGuardado);
+
+switchEl.addEventListener('change', function () {
+	const nuevoTema = this.checked ? 'dark' : 'light';
+	localStorage.setItem(THEME_KEY, nuevoTema);
+	aplicarTema(nuevoTema);
+});
+
+});
 			</script>  
 			<script type="module" src="<?php echo STATIC_URL; ?>js/config/configuraciones.js"></script>

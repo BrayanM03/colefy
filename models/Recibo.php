@@ -452,7 +452,7 @@ class Recibo extends Datatable
         if ($count == 0) {
             return array('estatus' => false, 'mensaje' => 'No se encontró un recibo con el ID: ' . $id_recibo, 'data' => []);
         } else {
-            $recibo_data = $this->db->select('SELECT * FROM recibos WHERE id =?', [$id_recibo]);
+            $recibo_data = $this->db->select('SELECT * FROM recibos WHERE id =? AND id_escuela = ?', [$id_recibo, $this->id_escuela]);
             $pagos_data = $this->db->select('SELECT * FROM pagos WHERE id_recibo = ? AND estatus != 0', [$id_recibo]);
             $stmt_pagos = $this->db->query('SELECT 
             SUM(pago_efectivo) as suma_efectivo, 

@@ -86,6 +86,33 @@ switch ($modulo) {
         }
     break;
 
+
+    case 'nuevo_gasto':        
+        $titulo_vista = 'Nuevo gasto';
+        $necesita_bootstrap_select =true;
+        $css_especificos[] = ASSET_NUEVO_RECIBO_CSS; 
+        $vista_a_cargar = 'src/nuevo-gasto.php';
+    break;
+
+ 
+
+    case 'gastos':        
+        if ($accion === 'normal-pdf' && $id) {
+            $_GET['id_recibo'] = $id; // Lo inyectamos para que el archivo lo use
+            $vista_a_cargar = 'config/recibo.php';
+        }else if($accion === 'editar' && $id){
+            $titulo_vista = 'Editar gasto';
+            $_GET['id_gasto'] = $id;
+            $necesita_bootstrap_select = true;
+            $vista_a_cargar = 'src/editar-gasto.php';
+        }else {
+            $necesita_bootstrap_select = true;
+            $titulo_vista = 'Gastos';
+            $necesita_animatecss = true;
+            $vista_a_cargar = 'src/historial-gastos.php';
+        }
+    break;
+
     //CATALOGOS
     case 'grupos':
         if ($accion === 'edit' && $id) {
