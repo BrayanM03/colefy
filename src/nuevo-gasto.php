@@ -60,12 +60,13 @@ include "vistas/general/header.php";
                                 <div class="row">
                                     <div class="col-12 col-md-6 mb-2">
                                         <label for="proveedor">Proveedor / Beneficiario</label>
-                                        <input type="text" id="proveedor" value="CFE" class="form-control" placeholder="Ej. Papelería Martínez o CFE">
+                                        <input type="text" id="proveedor" class="form-control" placeholder="Ej. Papelería Martínez o CFE">
                                         <small id="small_proveedor" style="color:tomato;"></small>
                                     </div>
                                     <div class="col-12 col-md-6 mb-2">
                                         <label for="tipo_comprobante">Tipo de comprobante</label>
                                         <select id="tipo_comprobante" class="form-control selectpicker">
+                                            <option value="">Selecciona un tipo</option>
                                         <option value="factura_cfdi">Factura (CFDI) ✓ Deducible</option>
                                         <option value="nota_remision">Nota de remisión</option>
                                         <option value="ticket_recibo">Ticket / Recibo</option>
@@ -120,11 +121,11 @@ include "vistas/general/header.php";
                                 <div class="row mt-3">
                                     <div class="col-12 col-md-6">
                                         <label for="concepto">Concepto específico</label>
-                                        <input type="text" class="form-control" id="concepto" value="Pago de luz" placeholder="Ej. Pago de luz mes de mayo">
+                                        <input type="text" class="form-control" id="concepto" placeholder="Ej. Pago de luz mes de mayo">
                                     </div>
                                     <div class="col-12 col-md-3">
                                         <label for="monto">Monto Total</label>
-                                        <input type="number" class="form-control" id="monto" value="490" placeholder="0.00">
+                                        <input type="number" class="form-control" id="monto" placeholder="0.00">
                                         <small id="small_monto" style="color:tomato;"></small>
                                     </div>
                                     <div class="col-12 col-md-3">
@@ -141,7 +142,7 @@ include "vistas/general/header.php";
                                 <div class="row mt-4">
                                     <div class="col-12 col-md-8">
                                         <label for="observaciones">Observaciones adicionales</label>
-                                        <textarea class="form-control" id="observaciones" value="Se pagan 2 meses" rows="2" placeholder="Detalles extra sobre el gasto..."></textarea>
+                                        <textarea class="form-control" id="observaciones" rows="2" placeholder="Detalles extra sobre el gasto..."></textarea>
                                     </div>
                                     <div class="col-12 col-md-4 text-end">
                                         <div style="margin-top: 30px;">
