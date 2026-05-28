@@ -15,7 +15,20 @@ let estatus_tag;
       { data: 'id', title: '#' },
       {
         data: 'nombre', title: 'Nombre'},
-     
+      {data: 'tipo', title: 'tipo', render: (data)=>{
+        switch (data) {
+          case 1:
+              return 'Escolarizado'
+            break;
+            case 2:
+              return 'Flexible'
+            break;
+        
+          default: return 'Sin tipo'
+            break;
+        }
+      }},
+      {data: 'asignado', title: 'Asignado a'},
       { data: 'fecha_registro', title: 'Fecha reg.' },
       { data: null, title: 'Estatus' , render: (data)=>{
         if(data.estatus ==1){
@@ -27,22 +40,22 @@ let estatus_tag;
       }},
       {
         data: null, title: 'Opciones', render: function (data, type, row) {
-          return '';
-          if (role == 1) {
             return `
               <div class='row'>
                 <div class='col-12 col-md-12'>
                   <div class="btn btn-primary" onclick="editarSolicitud(${row.id}, false)">
                     <i class="fa-solid fa-pen-to-square"></i>
                   </div>
-                  <div class="btn btn-danger" onclick="cancelarUsuario(${row.id})">
-                    <i class="fa-solid fa-trash"></i>
+                  <div class="btn btn-warning" onclick="cancelarUsuario(${row.id})">
+                    <i class="fa-solid fa-ban"></i>
                   </div>
+                  <div class="btn btn-danger" onclick="mostrarHorarioPDF(${row.id})">
+                    <i class="fa-solid fa-file-pdf"></i>
+                  </div>
+                  
                 </div>
               </div>`;
-          } else {
-            return '';
-          }
+          
         }
       }
     ];
@@ -109,3 +122,10 @@ let estatus_tag;
       }
     })
   }
+
+
+  function mostrarHorarioPDF(id_horario){
+    window.open(BASE_URL + 'horarios/pdf/'+id_horario,'_blank'); 
+  }
+
+  window.mostrarHorarioPDF = mostrarHorarioPDF

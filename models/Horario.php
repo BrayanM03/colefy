@@ -25,7 +25,8 @@ class Horario
         $start = (int)$start;
         $length = (int)$length;
         $params = [];
-        $sql = "SELECT * FROM horarios WHERE id_escuela = :id_escuela AND estatus= 1";
+        $sql = "SELECT h.*, g.nombre as asignado FROM horarios h INNER JOIN grupos_horarios gh ON h.id  = gh.id_horario
+        INNER JOIN grupos g ON gh.id_grupo = g.id  WHERE h.id_escuela = :id_escuela AND h.estatus= 1";
         $params[':id_escuela'] = $this->id_escuela;
         if (!empty($search)) {
             $sql .= " AND (nombre LIKE :search)";
@@ -73,7 +74,6 @@ class Horario
         $stmt = $this->db->query($sql, $params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
 
     public function obtenerGruposHorarioDataTable($start, $length, $search, $id_sesion, $orderColumn, $orderDir)
     {
@@ -228,7 +228,8 @@ class Horario
             'nombre' => $nombre,
             'estatus' => 1,
             'fecha_registro' => $fecha_registro,
-            'id_escuela' => $this->id_escuela
+            'id_escuela' => $this->id_escuela,
+            'tipo' =>1 //Por ahora para horarios escolarizados sera 1 
         ];
         $id_horario = $this->db->insert('horarios', $data);
         $select = $this->db->select("SELECT * FROM detalle_prehorario WHERE id_usuario =?", [$id_sesion]);
@@ -237,12 +238,17 @@ class Horario
             $id_profesor = $row['id_profesor'];
             $id_materia = $row['id_materia'];
             $dia = $row['dia'];
+            $id_ciclo = $row['id_ciclo'];
             $hora = $row['hora'];
             $re = $this->insertarDetalle($id_materia, $dia, $hora, $id_horario, $id_profesor);
             if (!$re['estatus']) {
                 return array('estatus' => false, 'mensaje' => 'Ocurrio un error al insertar el detalle', 'data' => $nombre);
             }
         }
+
+        $campos = ['id_ciclo'=> $id_ciclo];
+        $stmt_ = $this->db->update('horarios', $campos, 'id_horario = ?',[$id_horario]);
+        
 
         return array('estatus' => true, 'mensaje' => 'El horario se registró con exito', 'data' => $nombre);
     }
@@ -309,5 +315,43 @@ class Horario
             'mensaje' => 'Registro eliminado correctamente',
             'data'   => $stmt
         ];
+    }
+
+    public function obtenerHorario($id_horario, $tipo_horario){
+        if($tipo_horario==1){
+            $horario = $this->db->select('SELECT h.*, g.nombre as grupo, e.nombre as nombre_escuela, e.direccion as direccion_escuela, e.logo, 
+            e.telefono as telefono_escuela, c.nombre as ciclo FROM horarios h 
+            INNER JOIN escuelas e ON h.id_escuela = e.id
+            INNER JOIN ciclos_escolares c ON h.id_ciclo = c.id
+            INNER JOIN grupos_horarios gh ON gh.id_horario = h.id
+            INNER JOIN grupos g ON gh.id_grupo = g.id
+            WHERE h.id = ? AND h.id_escuela =?', [$id_horario, $this->id_escuela]);
+            $mensaje = 'Datos encontrados';
+            $estatus = true;
+        }else{
+            $horario =[]; //Este apartado de codigo será para los horarios flexibles
+        }
+        
+        if(!empty($horario)){
+
+            $detalle = $this->db->select('
+            SELECT dh.*, 
+                   concat(p.nombre, " ", p.apellido) as profesor, 
+                   m.nombre as materia 
+            FROM detalle_horario dh 
+            LEFT JOIN materias m ON dh.id_materia = m.id 
+            LEFT JOIN profesores p ON dh.id_profesor = p.id
+            WHERE dh.id_horario = ?
+        ', [$id_horario]);
+            
+        }else{
+            return array('estatus'=> false, 'mensaje' => 'No se encontró un horario valido');
+        }
+
+        $data['horario'] = $horario;
+        $data['detalle'] = $detalle;
+       
+        return array('estatus'=> true, 'mensaje' => 'Se encontró informacion', 'data' => $data);
+
     }
 }

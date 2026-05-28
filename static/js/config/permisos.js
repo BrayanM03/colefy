@@ -124,4 +124,126 @@ $(document).ready(function () {
       },
     });
   }
+
+  function nuevoPermiso() {
+    Swal.fire({
+        title: 'Nuevo permiso',
+        width: '600px', // Un poco más ancho para acomodar las columnas
+        html: `
+            <form id="form-nuevo-permiso" class="text-start mt-3">
+                <div class="row mb-3">
+                    <div class="col-12 col-md-6">
+                        <label for="permiso_nombre" class="form-label fw-bold">Nombre del Permiso</label>
+                        <input type="text" id="permiso_nombre" class="form-control" placeholder="Ej. Ver reportes">
+                    </div>
+                    <div class="col-12 col-md-6 mt-3 mt-md-0">
+                        <label for="permiso_slug" class="form-label fw-bold">Slug (Identificador)</label>
+                        <input type="text" id="permiso_slug" class="form-control" placeholder="Ej. ver_reportes">
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="permiso_descripcion" class="form-label fw-bold">Descripción</label>
+                    <textarea id="permiso_descripcion" class="form-control" rows="2" placeholder="Describe para qué sirve este permiso..."></textarea>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-12 col-md-4">
+                        <label for="permiso_tipo" class="form-label fw-bold">Tipo</label>
+                        <select id="permiso_tipo" class="form-select">
+                            <option value="SELECT">SELECT (Ver)</option>
+                            <option value="CREATE">CREATE (Crear)</option>
+                            <option value="UPDATE">UPDATE (Editar)</option>
+                            <option value="CANCEL">CANCEL (Eliminar)</option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-5 mt-3 mt-md-0">
+                        <label for="permiso_categoria" class="form-label fw-bold">Categoría</label>
+                        <select id="permiso_categoria" class="form-select">
+                            <option value="" selected disabled>Selecciona...</option>
+                            <option value="1">Panel educativo</option>
+                            <option value="2">Recibos de pago</option>
+                            <option value="3">Catalogos</option>
+                            <option value="4">Alumnos</option>
+                            <option value="5">Profesores</option>
+                            <option value="6">Materias</option>
+                            <option value="7">Horarios</option>
+                            <option value="8">Permisos</option>
+                            <option value="9">Usuarios</option>
+                            <option value="10">Escuelas</option>
+                            <option value="11">Grupos</option>
+                            <option value="12">Roles</option>
+                            <option value="13">Gastos</option>
+                        </select>
+                    </div>
+                  
+                </div>
+            </form>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Guardar permiso',
+        cancelButtonText: 'Cancelar',
+        didOpen: () => {
+            // Generador automático de slug mientras el usuario escribe el nombre
+            const inputNombre = document.getElementById('permiso_nombre');
+            const inputSlug = document.getElementById('permiso_slug');
+            
+            inputNombre.addEventListener('input', function() {
+                let slug = this.value.toLowerCase().trim();
+                slug = slug.replace(/[\s\W-]+/g, '_'); // Reemplaza espacios y caracteres raros por '_'
+                inputSlug.value = slug;
+            });
+        },
+        preConfirm: () => {
+            // Extraer los valores cuando el usuario presiona "Guardar"
+            const nombre = document.getElementById('permiso_nombre').value;
+            const slug = document.getElementById('permiso_slug').value;
+            const descripcion = document.getElementById('permiso_descripcion').value;
+            const tipo = document.getElementById('permiso_tipo').value;
+            const categoria = document.getElementById('permiso_categoria').value;
+
+            // Validaciones básicas
+            if (!nombre || !slug || !descripcion || !categoria) {
+                Swal.showValidationMessage('Por favor, completa todos los campos requeridos');
+                return false;
+            }
+
+            return {
+                permiso: nombre,
+                slug: slug,
+                descripcion: descripcion,
+                tipo: tipo,
+                id_categoria: categoria,
+                // Nota: 'estatus' lo defines en el backend por defecto como 1
+            };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const dataFormulario = result.value;
+            
+            // Aquí haces tu fetch POST hacia el controlador
+            console.log("Datos listos para enviar:", dataFormulario);
+           $.ajax({
+            type: "post",
+            url: BASE_URL + "api/permisos.php?tipo=registrar_permiso",
+            data: dataFormulario,
+            dataType: "json",
+            success: function (response) {
+                if(response.estatus){
+                    Swal.fire({
+                        icon: 'success',
+                        title: response.mensaje
+                    })
+                }else if(!response.estatus){
+                    Swal.fire({
+                        icon: 'error',
+                        title: response.mensaje
+                    })
+                }
+            }
+           });
+        }
+    });
+}
+  window.nuevoPermiso = nuevoPermiso
 });

@@ -37,6 +37,8 @@ enum CPERMISO: string {
     case EDITAR_HORARIOS = 'editar_horarios';
     case CANCELAR_HORARIOS = 'cancelar_horarios';
     case ASIGNAR_HORARIOS = 'asignar_horarios';
+    case VER_REPORTE_HORARIO = 'ver_reporte_horario';
+
 
     // Escuelas
     case VER_GRUPOS = 'ver_grupos';

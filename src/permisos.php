@@ -25,8 +25,8 @@ include "vistas/general/header.php";
                             <h1 class="h3 mb-3">Gestor de permisos </h1>
                         </div>
                         <div class="col-12 col-md-3 text-end">
-                        <a href="nuevo-recibo.php" style="text-decoration: none; color:white;"> <div class="btn btn-success" >
-                               Nuevo permiso</div></a>
+                        <div style="text-decoration: none; color:white;" onclick="nuevoPermiso()"> <div class="btn btn-success" >
+                               Nuevo permiso</div></div>
                         </div>
                     </div>
 

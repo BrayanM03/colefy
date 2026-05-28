@@ -27,9 +27,9 @@ function iniciarSesion(){
                 toggleLoader()
                 animarError('pass', 2);
             }else if(response.estado == 1){
-                localStorage.setItem('rol', response.rol);
+                localStorage.setItem('id_rol', response.rol);
                 localStorage.setItem('sucursal', response.sucursal);
-                window.location.href = BASE_URL + 'dashboard'
+                window.location.href = BASE_URL + 'panel'
             } 
 
         }

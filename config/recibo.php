@@ -7,7 +7,6 @@ $controller_permiso = new PermisoController();
 $controller_recibo = new ReciboController(); 
 
 $controller_permiso->verificarSesion();
-$id_rol = $_SESSION['rol'];
 $permiso_pdf = $controller_permiso->validarAcceso(2, CPermiso::VER_RECIBO_PDF->value);
 
 if(!$permiso_pdf['estatus']){
@@ -88,7 +87,7 @@ class PDF extends FPDF
         $this->SetTitle($datos_empresa['folio']);
 
         $ancho_recibo = 195; 
-        
+         
         // --- CONFIGURACIÓN PARA LOGO Y FOLIO ---
         $ancho_logo = 26; 
         $alto_logo = 28;  

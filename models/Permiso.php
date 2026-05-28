@@ -304,6 +304,17 @@ class Permiso {
 
     }
 
+    function registrarPermiso($d){
+
+        $select = $this->db->select('SELECT * FROM categorias_permisos cp INNER JOIN permisos p ON p.id_categoria = cp.id WHERE p.id_categoria = ?', [$d['id_categoria']]);
+        $banderas = array_column($select, 'bandera');
+        $nueva_bandera = !empty($banderas) ? max($banderas) + 1 : 1;
+
+        $id_nuevo = $this->db->insert('permisos',['slug' => $d['slug'], 'permiso' => $d['permiso'], 
+        'descripcion' => $d['descripcion'], 'tipo' => $d['tipo'], 'estatus' =>1, 'id_categoria' => $d['id_categoria'], 'bandera' => $nueva_bandera]);
+        return array('estatus' => true, 'mensaje' => 'Permiso registrado exitosamente ID: ' . $id_nuevo, 'data' => ['id_permiso' => $id_nuevo]);
+    }
+
    /*  public function agregarPermisoXUsuario($id_usuario, $ids_permisos) {
         // Validamos que sea un arreglo, si es un solo ID lo convertimos a arreglo
         if (!is_array($ids_permisos)) {

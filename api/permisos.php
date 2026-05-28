@@ -23,6 +23,18 @@ if($_GET['tipo']=='ver_lista_permisos'){
     $controller->obtener_permisos_existentes(1);
 }
 
+if($_GET['tipo']=='registrar_permiso'){
+    /**
+ * Obtiene los permisos existentes
+ * 
+ * @param int   si el tipo de respuesta será 1: un echo o 2 un return
+ *
+ * @return array respuesta de los permisos existentes
+ */
+    $controller->registrar_permiso($_POST,1);
+}
+
+
 if($_GET['tipo']=='ver_lista_permisos_x_rol'){
     $id_rol = $_POST['id_rol'];
     /**

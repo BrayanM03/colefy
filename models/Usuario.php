@@ -68,7 +68,7 @@ class Usuario extends Datatable{
             'nombre'         => $nombre, 
             'apellido'       => $apellidos, 
             'telefono'       => $telefono, 
-            'rol' => $rol,
+            'id_rol' => $rol,
             'estatus' => 1,
             'cargo' => $cargo,
             'fecha_ingreso' => $fecha_registro,
@@ -95,14 +95,14 @@ class Usuario extends Datatable{
 
     public function obtenerPorUsuario($username) {
         $stmt = $this->db->query("SELECT u.*, r.nombre as nombre_rol, e.nombre as escuela, e.logo as logo_escuela FROM usuarios u
-        INNER JOIN roles r ON u.rol = r.id 
+        INNER JOIN roles r ON u.id_rol = r.id 
         INNER JOIN escuelas e ON e.id = u.id_escuela WHERE usuario = ?", [$username]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     
     public function obtenerPorIDUsuario($id_usuario) {
         $stmt = $this->db->query("SELECT u.*, r.nombre as nombre_rol, e.nombre as escuela, e.logo as logo_escuela  FROM usuarios u 
-        INNER JOIN roles r ON u.rol = r.id 
+        INNER JOIN roles r ON u.id_rol = r.id 
         INNER JOIN escuelas e ON e.id = u.id_escuela WHERE u.id = ?", [$id_usuario]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }

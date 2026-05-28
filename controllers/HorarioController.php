@@ -81,7 +81,6 @@ class HorarioController
         ]);
     }
 
-
     public function agregarDetallePreHorario()
     {
         $id_profesor = $_POST['profesor'];
@@ -153,6 +152,16 @@ class HorarioController
         $horario = new Horario();
         $res= $horario->cancelarGruposHorario($id_asignacion);
         echo json_encode($res);
+    }
+
+    public function obtenerHorario($id_horario, $tipo_horario, $tipo_resp) {
+        $horario = new Horario();
+        $res= $horario->obtenerHorario($id_horario, $tipo_horario);
+        if($tipo_resp==2){
+            return $res;
+        }else{
+            echo json_encode($res);
+        }
     }
 
 }

@@ -7,7 +7,7 @@ require_once 'config/config.php';
 $controller_permiso = new PermisoController(); 
 
 // Obtener la URL, por ejemplo: "usuarios/editar/6"
-$url = isset($_GET['url']) ? $_GET['url'] : 'dashboard';
+$url = isset($_GET['url']) ? $_GET['url'] : 'panel';
 $datos = explode('/', $url);
 
 $modulo = $datos[0];
@@ -42,11 +42,20 @@ $titulo_pagina = "Colefy";
 //ROUTER
 switch ($modulo) {
 
-    case 'dashboard':        
-        $titulo_vista = 'Dashboard';
+    case 'panel':        
+       
+        $id_rol = ($_SESSION)['id_rol'];
         $necesita_datatables = false;
-        $css_especificos[] = ASSET_PANEL_DIRECTIVOS_CSS;
-        $vista_a_cargar = 'src/panel-directivos.php';
+        if($id_rol ==1 || $id_rol ==3){
+            $titulo_vista = 'Panel';
+            $css_especificos[] = ASSET_PANEL_DIRECTIVOS_CSS;
+            $vista_a_cargar = 'src/panel-directivos.php';
+        }else if($id_rol ==2){
+            $titulo_vista = 'Panel profesor';
+            $css_especificos[] = ASSET_PANEL_MAESTROS_CSS;
+            $vista_a_cargar = 'src/panel-maestros.php';
+        }
+        
     break;
 
     case 'panel_maestros':     
@@ -152,8 +161,15 @@ switch ($modulo) {
     break;
         
     case 'horarios':
-        $titulo_vista = 'Horarios';
-        $vista_a_cargar = 'src/horarios.php';
+        if ($accion === 'pdf' && $id) {
+            $_GET['id_horario'] = $id; // Lo inyectamos para que el archivo lo use
+            $_GET['tipo_horario'] = 1;
+            $vista_a_cargar = 'config/reporte-horario.php';
+        }else{
+            $titulo_vista = 'Horarios';
+            $vista_a_cargar = 'src/horarios.php';
+        }
+       
     break;
 
     case 'asignar_horario':

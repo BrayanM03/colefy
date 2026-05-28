@@ -18,6 +18,7 @@ class AuthController {
             return ['estado' => 3]; // Contraseña incorrecta
         }
       
+       
         // Guardar sesión
         $_SESSION['sistema'] = 'colefy';
         $_SESSION["id"] = $usuario['id'];
@@ -25,7 +26,7 @@ class AuthController {
         $_SESSION['apellido'] = $usuario['apellido'];
         $_SESSION['user'] = $usuario['usuario'];
         $_SESSION['fecha_ingreso'] = $usuario['fecha_ingreso'];
-        $_SESSION['rol'] = $usuario['rol'];
+        $_SESSION['id_rol'] = $usuario['id_rol'];
         $_SESSION['rol_nombre'] = $usuario['nombre_rol'];
         $_SESSION['escuela'] = $usuario['escuela'];
         $_SESSION['estatus'] = $usuario['estatus'];
@@ -35,10 +36,11 @@ class AuthController {
         $_SESSION['cargo'] = $usuario['cargo'];
         $_SESSION['foto_perfil'] = $usuario['foto_perfil'];
         $_SESSION['logo_escuela'] = $usuario['logo_escuela'];
-       
+      
         return [
             "estado" => 1,
-            "rol" => $usuario['rol']
+            "id_rol" => $usuario['id_rol'],
+            "rol" => $usuario['nombre_rol']
         ];
     }
 }

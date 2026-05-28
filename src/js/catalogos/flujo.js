@@ -26,7 +26,8 @@ const horarioData = {
     docente: null,
     grupo: null,
     materia: null,
-    bloques: [] // Aquí guardaremos las horas del Paso 4
+    bloques: [], // Aquí guardaremos las horas del Paso 4
+    escuela: null
 };
 
 const asignacionesGuardadas = [];
@@ -444,8 +445,15 @@ function renderStep3(data) {
     
 }
 
-function renderStep4() {
+async function renderStep4() {
+    console.log(horarioData);
+    const materia = horarioData.materia
+    if(!materia){
+        Swal.fire({icon: 'warning', title:'Selecciona un materia'})
+        return false
+    }
     // Si ya tenemos asignaciones en memoria, renderizamos directo
+    await cargarPlantillaDeEscuela();
     if (asignacionesGuardadas.length > 0) {
         _dibujarGrilla();
         return;
@@ -470,14 +478,22 @@ function renderStep4() {
                 showConfirmButton: false
             });
         }
+
         _dibujarGrilla();
     });
 }
 
 function _dibujarGrilla() {
     const cardBody = document.querySelector('.wizard-card .card-body');
-    const horas = TURNOS[horarioData.turno] ?? TURNOS.manana;
-    const dias  = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
+    const horas = horarioData.estructuraHorasDinámicas ?? [
+        { numero_bloque: 1, hora_inicio: "07:00", hora_fin: "08:00", tipo: "clase", label: "07:00 - 08:00" },
+        { numero_bloque: 2, hora_inicio: "08:00", hora_fin: "09:00", tipo: "clase", label: "08:00 - 09:00" },
+        { numero_bloque: 2, hora_inicio: "09:00", hora_fin: "10:00", tipo: "clase", label: "09:00 - 10:00" },
+        { numero_bloque: 3, hora_inicio: "10:00", hora_fin: "10:30", tipo: "descanso", label: "10:00 - 10:30" },
+        { numero_bloque: 4, hora_inicio: "10:30", hora_fin: "11:30", tipo: "clase", label: "10:30 - 11:30" },
+        { numero_bloque: 5, hora_inicio: "11:30", hora_fin: "12:30", tipo: "clase", label: "11:30 - 12:30" },
+        { numero_bloque: 6, hora_inicio: "12:30", hora_fin: "13:30", tipo: "clase", label: "12:30 - 13:30" }
+    ];    const dias  = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
     const paleta = getPaletaActual();
 
     // Map de slot ocupado → asignación
@@ -488,11 +504,10 @@ function _dibujarGrilla() {
             ocupados[`${b.dia}-${hora_ft}`] = a;
         });
     });
-    console.log(ocupados);
     const materiaActualNombre = stepDataCache.step3?.materias
         .find(m => m.id == horarioData.materia)?.nombre ?? '';
 
-    const gridHTML = `
+        const gridHTML = `
         <div class="table-responsive">
             <table class="table table-bordered schedule-grid">
                 <thead>
@@ -502,32 +517,54 @@ function _dibujarGrilla() {
                     </tr>
                 </thead>
                 <tbody>
-                    ${horas.map(h => `
-                        <tr>
-                            <td class="time-column">${h}</td>
-                            ${dias.map(d => {
-                                const key  = `${d}-${h}`;
-                                const asig = ocupados[key];
-                                console.log(key);
-                                console.log(asig);
-                                if (asig) {
-                                    const color = getColorMateria(asig.materia_id);
+                    ${horas.map(h => {
+                        // 1. Extraemos la hora limpia en formato "HH:mm" (ej: "07:00")
+                        const horaFormateada = h.hora_inicio.substring(0, 5);
+                        
+                        // 2. Definimos qué texto se mostrará en la columna izquierda
+                        const textoHoraAMostrar = h.label ?? `${horaFormateada} - ${h.hora_fin.substring(0,5)}`;
+
+                        // NUEVO: Si el bloque actual es de tipo 'descanso', bloqueamos toda la fila de inmediato
+                        if (h.tipo === 'descanso') {
+                            return `
+                                <tr class="fila-descanso bg-light">
+                                    <td class="time-column fw-bold text-muted">${textoHoraAMostrar}</td>
+                                    <td colspan="5" class="text-muted text-center fw-bold align-middle" style="letter-spacing: 3px; background-color: #f8f9fa;">
+                                         ☕ RECESO / DESCANSO
+                                    </td>
+                                </tr>
+                            `;
+                        }
+
+                        // Si es clase regular, dibujamos las celdas interactivas por día
+                        return `
+                            <tr>
+                                <td class="time-column fw-bold text-secondary">${textoHoraAMostrar}</td>
+                                ${dias.map(d => {
+                                    // CORREGIDO: Armamos la llave usando el string "HH:mm" en lugar del objeto
+                                    const key  = `${d}-${horaFormateada}`;
+                                    const asig = ocupados[key];
+                                    
+                                    if (asig) {
+                                        const color = getColorMateria(asig.materia_id);
+                                        return `
+                                            <td class="time-slot ocupado"
+                                                data-dia="${d}" data-hora="${horaFormateada}"
+                                                style="background:${color.bg}; color:${color.text};"
+                                                title="${asig.materia_nombre}">
+                                                <div class="slot-inner">
+                                                    <small>${asig.materia_nombre}</small>
+                                                </div>
+                                            </td>`;
+                                    }
                                     return `
-                                        <td class="time-slot ocupado"
-                                            data-dia="${d}" data-hora="${h}"
-                                            style="background:${color.bg}; color:${color.text};"
-                                            title="${asig.materia_nombre}">
-                                            <div class="slot-inner">
-                                                <small>${asig.materia_nombre}</small>
-                                            </div>
-                                        </td>`;
-                                }
-                                return `<td class="time-slot libre" data-dia="${d}" data-hora="${h}">
+                                        <td class="time-slot libre" data-dia="${d}" data-hora="${horaFormateada}">
                                             <div class="slot-inner"></div>
                                         </td>`;
-                            }).join('')}
-                        </tr>
-                    `).join('')}
+                                }).join('')}
+                            </tr>
+                        `;
+                    }).join('')}
                 </tbody>
             </table>
         </div>`;
@@ -545,13 +582,23 @@ function _dibujarGrilla() {
         <span class="badge-step">Paso 4 de 4</span>
         <div class="d-flex justify-content-between align-items-center mt-3">
             <h2 class="wizard-title m-0">Define el horario</h2>
-            <button class="btn-reset-danger" onclick="resetearPrehorario()">
-                <i class="fas fa-trash-alt me-1"></i> Reiniciar
-            </button>
         </div>
-        <p class="wizard-subtitle">
-            Materia actual: <strong>${materiaActualNombre}</strong>
-        </p>
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="col-4">
+                <p class="wizard-subtitle">
+                    Materia actual: <strong>${materiaActualNombre}</strong>
+                </p>
+            </div>
+            <div class="col-8 text-end">
+                <button class="btn-config-primary mb-3" onclick="configHorario()">
+                    <i class="fas fa-gear me-1"></i> Config
+                </button>
+                <button class="btn-reset-danger mb-3" onclick="resetearPrehorario()">
+                    <i class="fas fa-trash-alt me-1"></i> Reiniciar
+                </button>
+            </div>
+        </div>
+       
         ${leyendaHTML}
         ${gridHTML}
         <div class="row mt-5">
@@ -722,7 +769,7 @@ function resetearPrehorario() {
         });
     });
 }
-
+ 
 // Genera un color único por materia_id con buen contraste
 function getColorMateria(materiaId) {
     // Ángulo áureo: distribuye los colores uniformemente en el círculo
@@ -745,7 +792,7 @@ function getPaletaActual() {
     return paleta;
 }
 
-function guardarHorarioFinal() {
+/* function guardarHorarioFinal() {
     // Si hay bloques sin guardar en el borrador actual, primero los persistimos
     const promesaGuardar = horarioData.bloques.length > 0
         ? fetch(BASE_URL + 'api/catalogos.php?tipo=guardar_bloques', {
@@ -760,49 +807,154 @@ function guardarHorarioFinal() {
             })
           })
         : Promise.resolve();
+        promesaGuardar.then(() => {
+            Swal.fire({
+                title: 'Guardar y Finalizar',
+                text:  'Asigna un nombre para identificar este horario:',
+                input: 'text', // Convierte la alerta en un campo de texto
+                inputValue: `Horario ${new Date().toLocaleDateString('es-MX')}`, // Valor por defecto
+                icon:  'question',
+                showCancelButton:  true,
+                confirmButtonText: 'Sí, guardar',
+                cancelButtonText:  'Cancelar',
+                inputValidator: (value) => {
+                    if (!value) {
+                        return '¡Necesitas escribir un nombre para el horario!';
+                    }
+                }
+            }).then(result => {
+                // Si el usuario da en cancelar o cierra la alerta
+                if (!result.isConfirmed) return;
+        
+                // Recuperamos lo que el usuario escribió en el SweetAlert
+                const nombreDelHorario = result.value;
+        
+                fetch(BASE_URL + 'api/catalogos.php?tipo=finalizar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        id_grupo:       horarioData.grupo,
+                        id_ciclo:       horarioData.ciclo,
+                        nombre_horario: nombreDelHorario // Mandamos el nombre capturado
+                    })
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.estatus) {
+                        // ÉXITO: Limpiar estado en memoria
+                        asignacionesGuardadas.length = 0;
+                        horarioData.bloques  = [];
+                        horarioData.materia  = null;
+                        horarioData.docente  = null;
+        
+                        Swal.fire({
+                            icon:  'success',
+                            title: '¡Horario guardado!',
+                            text:  `El horario "${nombreDelHorario}" se ha guardado y asignado.`,
+                            timer: 2500,
+                            showConfirmButton: false
+                        });
+                    } else {
+                        // ERROR: Aquí cae si el profe choca o si la materia se repite en el mismo día (Validaciones de PHP)
+                        Swal.fire({ 
+                            icon: 'warning', // Un warning queda mejor para validaciones
+                            title: 'No se puede guardar', 
+                            text: data.error 
+                        });
+                    }
+                }).catch(err => {
+                    console.error(err);
+                    Swal.fire({ icon: 'error', title: 'Error interno', text: 'Error de comunicación con el servidor.'});
+                });
+            });
+        });
+} */
 
-    promesaGuardar.then(() => {
-        Swal.fire({
-            title: '¿Finalizar horario?',
-            text:  'El horario quedará guardado y asignado al grupo.',
-            icon:  'question',
-            showCancelButton:  true,
-            confirmButtonText: 'Sí, guardar',
-            cancelButtonText:  'Cancelar'
-        }).then(result => {
-            if (!result.isConfirmed) return;
-
-            fetch(BASE_URL + 'api/catalogos.php?tipo=finalizar', {
+async function guardarHorarioFinal() {
+    try {
+        // 1. Si hay bloques sin guardar en el borrador, los persistimos primero
+        if (horarioData.bloques.length > 0) {
+            const resBloques = await fetch(BASE_URL + 'api/catalogos.php?tipo=guardar_bloques', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    id_grupo:       horarioData.grupo,
-                    id_ciclo:       horarioData.ciclo,
-                    nombre_horario: `Horario ${new Date().toLocaleDateString('es-MX')}`
+                    id_materia:  horarioData.materia,
+                    id_profesor: horarioData.docente,
+                    id_grupo:    horarioData.grupo,
+                    id_ciclo:    horarioData.ciclo,
+                    bloques:     horarioData.bloques
                 })
-            })
-            .then(r => r.json())
-            .then(data => {
-                if (data.estatus) {
-                    // Limpiar estado en memoria
-                    asignacionesGuardadas.length = 0;
-                    horarioData.bloques  = [];
-                    horarioData.materia  = null;
-                    horarioData.docente  = null;
-
-                    Swal.fire({
-                        icon:  'success',
-                        title: '¡Horario guardado!',
-                        text:  `Asignado como horario #${data.id_horario}`,
-                        timer: 2500,
-                        showConfirmButton: false
-                    });
-                } else {
-                    Swal.fire({ icon: 'error', title: 'Error', text: data.error });
-                }
             });
+            
+            const dataBloques = await resBloques.json();
+            
+            // CANDADO: Si falló el guardado del borrador, abortamos todo el proceso
+            if (!dataBloques.estatus) {
+                Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudieron guardar los últimos bloques seleccionados.' });
+                return; 
+            }
+        }
+
+        // 2. Pedimos el nombre del horario con SweetAlert
+        const result = await Swal.fire({
+            title: 'Guardar y Finalizar',
+            text:  'Asigna un nombre para identificar este horario:',
+            input: 'text',
+            inputValue: `Horario ${new Date().toLocaleDateString('es-MX')}`,
+            icon:  'question',
+            showCancelButton:  true,
+            confirmButtonText: 'Sí, guardar',
+            cancelButtonText:  'Cancelar',
+            inputValidator: (value) => {
+                if (!value) return '¡Necesitas escribir un nombre para el horario!';
+            }
         });
-    });
+
+        // Si el usuario cancela la alerta, salimos de la función
+        if (!result.isConfirmed) return;
+        const nombreDelHorario = result.value;
+
+        // 3. Finalizamos y pasamos el horario a producción
+        const resFinal = await fetch(BASE_URL + 'api/catalogos.php?tipo=finalizar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                id_grupo:       horarioData.grupo,
+                id_ciclo:       horarioData.ciclo,
+                nombre_horario: nombreDelHorario
+            })
+        });
+
+        const dataFinal = await resFinal.json();
+
+        // 4. Evaluamos la respuesta final
+        if (dataFinal.estatus) {
+            // ÉXITO: Limpiar estado en memoria
+            asignacionesGuardadas.length = 0;
+            horarioData.bloques  = [];
+            horarioData.materia  = null;
+            horarioData.docente  = null;
+
+            Swal.fire({
+                icon:  'success',
+                title: '¡Horario guardado!',
+                text:  `El horario "${nombreDelHorario}" se ha guardado y asignado.`,
+                timer: 2500,
+                showConfirmButton: false
+            });
+        } else {
+            // ERROR: Empalmes de docentes o grupos
+            Swal.fire({ 
+                icon: 'warning', 
+                title: 'No se puede guardar', 
+                text: dataFinal.error 
+            });
+        }
+
+    } catch (err) {
+        console.error("Error en guardarHorarioFinal:", err);
+        Swal.fire({ icon: 'error', title: 'Error interno', text: 'Error de comunicación con el servidor.'});
+    }
 }
 
 document.addEventListener('input', function (e) {
@@ -850,7 +1002,386 @@ document.addEventListener('click', function (e) {
         }
     }
 });
+/* 
+function configHorario() {
+    Swal.fire({
+        title: 'Configuración de la Cuadrícula',
+        width: '800px',
+        html: `
+            <div class="text-start mb-3">
+                <p class="text-muted">Define la estructura del horario. Añade las clases y los descansos en orden cronológico.</p>
+            </div>
+            <div class="table-responsive text-start">
+                <table class="table table-sm table-bordered align-middle" id="tablaConfigHorario">
+                    <thead class="table-light text-center">
+                        <tr>
+                            <th>#</th>
+                            <th>Inicio</th>
+                            <th>Fin</th>
+                            <th>Tipo</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bodyConfigHorario" class="text-center">
+                        <tr class="fila-bloque">
+                            <td class="num-bloque fw-bold">1</td>
+                            <td><input type="time" class="form-control form-control-sm in-inicio" value="07:00" required></td>
+                            <td><input type="time" class="form-control form-control-sm in-fin" value="08:00" required></td>
+                            <td><select class="form-select form-select-sm sel-tipo"><option value="clase" selected>Clase</option><option value="descanso">Descanso</option></select></td>
+                            <td><button type="button" class="btn btn-sm btn-danger" onclick="eliminarFilaBloque(this)"><i class="fas fa-trash"></i></button></td>
+                        </tr>
+                        <tr class="fila-bloque">
+                            <td class="num-bloque fw-bold">2</td>
+                            <td><input type="time" class="form-control form-control-sm in-inicio" value="08:00" required></td>
+                            <td><input type="time" class="form-control form-control-sm in-fin" value="09:00" required></td>
+                            <td><select class="form-select form-select-sm sel-tipo"><option value="clase" selected>Clase</option><option value="descanso">Descanso</option></select></td>
+                            <td><button type="button" class="btn btn-sm btn-danger" onclick="eliminarFilaBloque(this)"><i class="fas fa-trash"></i></button></td>
+                        </tr>
+                        <tr class="fila-bloque">
+                            <td class="num-bloque fw-bold">3</td>
+                            <td><input type="time" class="form-control form-control-sm in-inicio" value="10:00" required></td>
+                            <td><input type="time" class="form-control form-control-sm in-fin" value="10:30" required></td>
+                            <td><select class="form-select form-select-sm sel-tipo"><option value="clase">Clase</option><option value="descanso" selected>Descanso</option></select></td>
+                            <td><button type="button" class="btn btn-sm btn-danger" onclick="eliminarFilaBloque(this)"><i class="fas fa-trash"></i></button></td>
+                        </tr>
+                        <tr class="fila-bloque">
+                            <td class="num-bloque fw-bold">4</td>
+                            <td><input type="time" class="form-control form-control-sm in-inicio" value="10:30" required></td>
+                            <td><input type="time" class="form-control form-control-sm in-fin" value="11:30" required></td>
+                            <td><select class="form-select form-select-sm sel-tipo"><option value="clase" selected>Clase</option><option value="descanso">Descanso</option></select></td>
+                            <td><button type="button" class="btn btn-sm btn-danger" onclick="eliminarFilaBloque(this)"><i class="fas fa-trash"></i></button></td>
+                        </tr>
+                        <tr class="fila-bloque">
+                            <td class="num-bloque fw-bold">5</td>
+                            <td><input type="time" class="form-control form-control-sm in-inicio" value="11:30" required></td>
+                            <td><input type="time" class="form-control form-control-sm in-fin" value="12:30" required></td>
+                            <td><select class="form-select form-select-sm sel-tipo"><option value="clase" selected>Clase</option><option value="descanso">Descanso</option></select></td>
+                            <td><button type="button" class="btn btn-sm btn-danger" onclick="eliminarFilaBloque(this)"><i class="fas fa-trash"></i></button></td>
+                        </tr>
+                        <tr class="fila-bloque">
+                            <td class="num-bloque fw-bold">6</td>
+                            <td><input type="time" class="form-control form-control-sm in-inicio" value="12:30" required></td>
+                            <td><input type="time" class="form-control form-control-sm in-fin" value="13:30" required></td>
+                            <td><select class="form-select form-select-sm sel-tipo"><option value="clase" selected>Clase</option><option value="descanso">Descanso</option></select></td>
+                            <td><button type="button" class="btn btn-sm btn-danger" onclick="eliminarFilaBloque(this)"><i class="fas fa-trash"></i></button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-start mt-2">
+                <button type="button" class="btn btn-sm btn-success" onclick="agregarFilaBloque()">
+                    <i class="fas fa-plus me-1"></i> Agregar Bloque
+                </button>
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: '<i class="fas fa-save me-1"></i> Guardar Plantilla',
+        cancelButtonText: 'Cancelar',
+        preConfirm: () => {
+            const filas = document.querySelectorAll('#bodyConfigHorario .fila-bloque');
+            const bloques = [];
+            let hayError = false;
 
+            filas.forEach((fila, index) => {
+                const inicio = fila.querySelector('.in-inicio').value;
+                const fin = fila.querySelector('.in-fin').value;
+                const tipo = fila.querySelector('.sel-tipo').value;
+
+                if (!inicio || !fin) {
+                    Swal.showValidationMessage('Todas las horas de inicio y fin son obligatorias.');
+                    hayError = true;
+                }
+
+                bloques.push({
+                    numero_bloque: index + 1,
+                    hora_inicio: inicio,
+                    hora_fin: fin,
+                    tipo: tipo
+                });
+            });
+
+            if (hayError) return false; 
+            return bloques; 
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Mandar a guardar y actualizar UI
+            guardarPlantilla(result.value);
+        }
+    });
+} */
+
+function configHorario() {
+    // 1. Construimos las filas basándonos en lo que la escuela ya tiene configurado
+    let filasHTML = '';
+
+    if (horarioData.estructuraHorasDinámicas && horarioData.estructuraHorasDinámicas.length > 0) {
+        // Recorremos la plantilla actual cargada desde la BD y generamos sus filas
+        horarioData.estructuraHorasDinámicas.forEach((bloque, index) => {
+            const selClase = bloque.tipo === 'clase' ? 'selected' : '';
+            const selDescanso = bloque.tipo === 'descanso' || bloque.tipo === 'descanso' ? 'selected' : '';
+            
+            // Aseguramos formato compatible con input type="time" (HH:mm)
+            const horaInicio = bloque.hora_inicio.substring(0, 5); 
+            const horaFin = bloque.hora_fin.substring(0, 5);
+
+            filasHTML += `
+                <tr class="fila-bloque">
+                    <td class="num-bloque fw-bold">${index + 1}</td>
+                    <td><input type="time" class="form-control form-control-sm in-inicio" value="${horaInicio}" required></td>
+                    <td><input type="time" class="form-control form-control-sm in-fin" value="${horaFin}" required></td>
+                    <td>
+                        <select class="form-select form-select-sm sel-tipo">
+                            <option value="clase" ${selClase}>Clase</option>
+                            <option value="descanso" ${selDescanso}>Descanso</option>
+                        </select>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="eliminarFilaBloque(this)">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
+    } else {
+        // FALLBACK: Si no hay configuración en la BD, cargamos la plantilla por defecto (7 bloques)
+        const plantillaDefault = [
+            { inicio: "07:00", fin: "08:00", tipo: "clase" },
+            { inicio: "08:00", fin: "09:00", tipo: "clase" },
+            { inicio: "09:00", fin: "10:00", tipo: "clase" },
+            { inicio: "10:00", fin: "10:30", tipo: "descanso" },
+            { inicio: "10:30", fin: "11:30", tipo: "clase" },
+            { inicio: "11:30", fin: "12:30", tipo: "clase" },
+            { inicio: "12:30", fin: "13:30", tipo: "clase" }
+        ];
+
+        plantillaDefault.forEach((b, index) => {
+            const selClase = b.tipo === 'clase' ? 'selected' : '';
+            const selDescanso = b.tipo === 'descanso' ? 'selected' : '';
+
+            filasHTML += `
+                <tr class="fila-bloque">
+                    <td class="num-bloque fw-bold">${index + 1}</td>
+                    <td><input type="time" class="form-control form-control-sm in-inicio" value="${b.inicio}" required></td>
+                    <td><input type="time" class="form-control form-control-sm in-fin" value="${b.fin}" required></td>
+                    <td>
+                        <select class="form-select form-select-sm sel-tipo">
+                            <option value="clase" ${selClase}>Clase</option>
+                            <option value="descanso" ${selDescanso}>Descanso</option>
+                        </select>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-danger" onclick="eliminarFilaBloque(this)">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    // 2. Disparamos el SweetAlert inyectando nuestras filas dinámicas (Mismo comportamiento)
+    Swal.fire({
+        title: 'Configuración de la Cuadrícula',
+        width: '800px',
+        html: `
+            <div class="text-start mb-3">
+                <p class="text-muted">Define la estructura del horario. Añade las clases y los descansos en orden cronológico.</p>
+            </div>
+            <div class="table-responsive text-start">
+                <table class="table table-sm table-bordered align-middle" id="tablaConfigHorario">
+                    <thead class="table-light text-center">
+                        <tr>
+                            <th>#</th>
+                            <th>Inicio</th>
+                            <th>Fin</th>
+                            <th>Tipo</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bodyConfigHorario" class="text-center">
+                        ${filasHTML} 
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-start mt-2">
+                <button type="button" class="btn btn-sm btn-success" onclick="agregarFilaBloque()">
+                    <i class="fas fa-plus me-1"></i> Agregar Bloque
+                </button>
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: '<i class="fas fa-save me-1"></i> Guardar Plantilla',
+        cancelButtonText: 'Cancelar',
+        preConfirm: () => {
+            const filas = document.querySelectorAll('#bodyConfigHorario .fila-bloque');
+            const bloques = [];
+            let hayError = false;
+
+            filas.forEach((fila, index) => {
+                const inicio = fila.querySelector('.in-inicio').value;
+                const fin = fila.querySelector('.in-fin').value;
+                const tipo = fila.querySelector('.sel-tipo').value;
+
+                if (!inicio || !fin) {
+                    Swal.showValidationMessage('Todas las horas de inicio y fin son obligatorias.');
+                    hayError = true;
+                }
+
+                bloques.push({
+                    numero_bloque: index + 1,
+                    hora_inicio: inicio,
+                    hora_fin: fin,
+                    tipo: tipo
+                });
+            });
+
+            if (hayError) return false; 
+            return bloques; 
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            guardarPlantilla(result.value);
+        }
+    });
+}
+
+// Agrega una nueva fila al final de la tabla
+function agregarFilaBloque() {
+    const tbody = document.getElementById('bodyConfigHorario');
+    const tr = document.createElement('tr');
+    tr.className = 'fila-bloque';
+    
+    tr.innerHTML = `
+        <td class="num-bloque fw-bold text-center">#</td>
+        <td><input type="time" value="7:00" class="form-control form-control-sm in-inicio" required></td>
+        <td><input type="time" value="8:00" class="form-control form-control-sm in-fin" required></td>
+        <td>
+            <select class="form-select form-select-sm sel-tipo">
+                <option value="clase" selected>Clase</option>
+                <option value="descanso">Descanso</option>
+            </select>
+        </td>
+        <td class="text-center">
+            <button type="button" class="btn btn-sm btn-danger" onclick="eliminarFilaBloque(this)">
+                <i class="fas fa-trash"></i>
+            </button>
+        </td>
+    `;
+    tbody.appendChild(tr);
+    actualizarNumerosBloque();
+}
+
+// Elimina la fila correspondiente y reordena
+function eliminarFilaBloque(boton) {
+    const fila = boton.closest('tr');
+    fila.remove();
+    actualizarNumerosBloque();
+}
+
+// Reasigna los números de bloque (1, 2, 3...) para mantener el orden
+function actualizarNumerosBloque() {
+    const filas = document.querySelectorAll('#bodyConfigHorario .fila-bloque');
+    filas.forEach((fila, index) => {
+        fila.querySelector('.num-bloque').textContent = index + 1;
+    });
+}
+
+async function guardarPlantilla(plantilla) {
+    try {
+        // Muestra un loader mientras guarda
+        Swal.fire({
+            title: 'Guardando plantilla...',
+            allowOutsideClick: false,
+            didOpen: () => { Swal.showLoading(); }
+        });
+
+        // Hacemos la petición a PHP
+        const response = await fetch(BASE_URL + 'api/catalogos.php?tipo=guardar_plantilla', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                id_escuela: horarioData.escuela, // Asume que tienes el ID de la escuela actual aquí
+                bloques: plantilla
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.estatus) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Plantilla guardada',
+                text: 'La estructura del horario ha sido actualizada.',
+                timer: 2000,
+                showConfirmButton: false
+            });
+
+            // 1. Convertimos el arreglo al formato que usa tu grilla
+            // Agregando el "label" para que se vea bonito (ej. "07:00 - 08:00")
+            const nuevaEstructura = plantilla.map(bloque => {
+                return {
+                    numero_bloque: bloque.numero_bloque,
+                    hora_inicio: bloque.hora_inicio,
+                    hora_fin: bloque.hora_fin,
+                    tipo: bloque.tipo,
+                    label: `${bloque.hora_inicio} - ${bloque.hora_fin}`
+                };
+            });
+
+            // 2. Actualizamos la variable global que usas para armar la tabla
+            // (Asegúrate de que tu función de dibujo utilice esta variable en vez de la constante quemada)
+            horarioData.estructuraHorasDinámicas = nuevaEstructura;
+
+            // 3. Limpiamos las asignaciones en memoria porque cambió la estructura
+            horarioData.bloques = [];
+            asignacionesGuardadas.length = 0; 
+
+            // 4. Redibujamos la tabla de horarios
+            // Llamas a la función exacta que genera tus <tr> y <td>
+            _dibujarGrilla(); 
+
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'No se pudo guardar',
+                text: data.error || 'Ocurrió un error en el servidor.'
+            });
+        }
+    } catch (err) {
+        console.error("Error al guardar la plantilla:", err);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error de conexión',
+            text: 'No se pudo comunicar con el servidor.'
+        });
+    }
+}
+
+async function cargarPlantillaDeEscuela() {
+    try {
+        const response = await fetch(`${BASE_URL}api/catalogos.php?tipo=obtener_plantilla`);
+        const data = await response.json();
+        console.log(data);
+        if (data.estatus && data.plantilla.length > 0) {
+            // Mapeamos lo que viene de la BD para meterle el "label" que usa la UI
+            horarioData.estructuraHorasDinámicas = data.plantilla.map(b => ({
+                numero_bloque: b.numero_bloque,
+                hora_inicio: b.hora_inicio,
+                hora_fin: b.hora_fin,
+                tipo: b.tipo,
+                label: `${b.hora_inicio.substring(0,5)} - ${b.hora_fin.substring(0,5)}`
+            }));
+        } else {
+            // Si el endpoint no devuelve nada, la dejamos como null para que _dibujarGrilla use el default
+            horarioData.estructuraHorasDinámicas = null;
+        }
+    } catch (error) {
+        console.error("Error al cargar la plantilla de la escuela:", error);
+        horarioData.estructuraHorasDinámicas = null; // Fallback ante caídas de servidor
+    }
+}
 // ─── Exponer funciones al scope global (requerido por type="module") ───
 window.regresarAtras   = regresarAtras;
 window.irAlPasoDos     = irAlPasoDos;
@@ -859,4 +1390,10 @@ window.renderStep4     = renderStep4;
 window.continuarConfiguracion = continuarConfiguracion;
 window.resetearPrehorario = resetearPrehorario;
 window.guardarHorarioFinal = guardarHorarioFinal;
+window.configHorario = configHorario;
+window.agregarFilaBloque = agregarFilaBloque
+window.eliminarFilaBloque = eliminarFilaBloque;
+window.actualizarNumerosBloque = actualizarNumerosBloque;
+window.guardarPlantilla = guardarPlantilla
+window.cargarPlantillaDeEscuela = cargarPlantillaDeEscuela
 //window.guardarHorarioFinal = guardarHorarioFinal;

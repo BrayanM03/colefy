@@ -23,9 +23,9 @@ include "vistas/general/header.php";
                             <h1 class="h3 mb-3">Gestor de horarios </h1>
                         </div>
                         <div class="col-12 col-md-4 text-end">
-                        <a href="<?php echo BASE_URL; ?>asignar_horario" class="ml-2" style="text-decoration: none; color:white;"> <div class="btn btn-info" >
-                               Asignar horario</div></a>
-                        <a href="<?php echo BASE_URL; ?>nuevo_horario" style="text-decoration: none; color:white;"> <div class="btn btn-success" >
+                        <!-- <a href="<?php echo BASE_URL; ?>asignar_horario" class="ml-2" style="text-decoration: none; color:white;"> <div class="btn btn-info" >
+                               Asignar horario</div></a> -->
+                        <a href="<?php echo BASE_URL; ?>flujo" style="text-decoration: none; color:white;"> <div class="btn btn-success" >
                                Crear horario</div></a>
                         </div>
                     </div>

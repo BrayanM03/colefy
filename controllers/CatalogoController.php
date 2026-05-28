@@ -67,4 +67,24 @@ class CatalogoController {
             echo json_encode($response);
         }
     }
+
+    public function guardar_plantilla($datos, $tipo_resp){
+        $catalogo = new Catalogo();
+        $response = $catalogo->guardarPlantilla($datos);
+        if($tipo_resp==2){
+            return $response;
+        }else{
+            echo json_encode($response);
+        }
+    }
+
+    public function obtener_plantilla($tipo_resp){
+        $catalogo = new Catalogo();
+        $response = $catalogo->obtenerPlantilla();
+        if($tipo_resp==2){
+            return $response;
+        }else{
+            echo json_encode($response);
+        }
+    }
 }

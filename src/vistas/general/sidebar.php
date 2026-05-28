@@ -6,11 +6,13 @@
     $controller_permiso->verificarSesion(); */
     $permiso_catalogo = $controller_permiso->validarAcceso(2, CPermiso::VER_CATALOGOS->value); 
     $permiso_recibos = $controller_permiso->validarAcceso(2, CPermiso::VER_RECIBOS->value);
+    $permiso_crear_gasto = $controller_permiso->validarAcceso(2, CPermiso::VER_GASTOS->value);
+    $permiso_ver_historial_gasto = $controller_permiso->validarAcceso(2, CPermiso::CREAR_GASTOS->value);
   
 ?> 
 <nav id="sidebar" class="sidebar js-sidebar">
     <div class="sidebar-content js-simplebar">
-        <a class="sidebar-brand text-center mb-2" style="border-bottom:1px solid gray" href="<?php echo BASE_URL; ?>dashboard" id="role" role="<?php /* echo $rol */ ?>">
+        <a class="sidebar-brand text-center mb-2" style="border-bottom:1px solid gray" href="<?php echo BASE_URL; ?>panel" id="role" role="<?php /* echo $rol */ ?>">
 <!--    <img src="./img/logo_2.png" alt="" style="width:80px; border-radius:7px; margin-right:1rem;"><br> -->
         <img src="<?php echo STATIC_URL; ?>/img/colefy-logo.png" alt="logo" class="bord" style="width:150px; border-radius:7px; margin-right:1rem; margin-bottom:0px;"><br>
         <span style="font-size:10px; position: absolute; top:5.2rem; right: 80px; font-weight: 100">Gestion escolar</span>
@@ -20,7 +22,7 @@
             
             <?php /* if (verificarPermiso($con, $rol, 'index.php', 'ver')):  */?>
                 <li class="sidebar-item">
-                    <a class="sidebar-link" href="<?php echo BASE_URL; ?>dashboard">
+                    <a class="sidebar-link" href="<?php echo BASE_URL; ?>panel">
                         <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Panel</span>
                     </a>
                 </li>
@@ -34,7 +36,7 @@
             </li>
             <?php  endif; ?>
 
-            <?php if($permiso_recibos['estatus']): ?>
+            <?php if($permiso_crear_gasto['estatus']): ?>
             <li class="sidebar-item accordion-button" aria-expanded="true">
                 <a class="sidebar-link" href="<?php echo BASE_URL; ?>nuevo_gasto">
                     <i class="align-middle" data-feather="shopping-bag"></i> <span class="align-middle">Nuevo gasto</span>
@@ -72,7 +74,7 @@
                             </li>
                             <?php } ?>
 
-                            <?php if($permiso_recibos['estatus']){?>
+                            <?php if($permiso_ver_historial_gasto['estatus']){?>
                             <li class="sidebar-item">
                                 <a class="sidebar-link" href="<?php echo BASE_URL; ?>gastos">
                                     <i class="align-middle" data-feather="tag"></i> <span class="align-middle">Gastos</span>

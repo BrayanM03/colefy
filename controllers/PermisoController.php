@@ -29,7 +29,7 @@ class PermisoController {
 
     public function validarAcceso($tipo_resp, $slug_permiso) {
         $id_usuario = $_SESSION['id'] ?? null;
-        $id_rol = $_SESSION['rol'] ?? null;
+        $id_rol = $_SESSION['id_rol'] ?? null;
        
        if (!$id_usuario || !$id_rol) {
         header("Location: " . BASE_URL . "login");
@@ -54,7 +54,7 @@ class PermisoController {
     }
     public function verificarPermiso($tipo_resp, $slug_permiso){
         $id_usuario = $_SESSION['id'] ?? null;
-        $id_rol = $_SESSION['rol'] ?? null;
+        $id_rol = $_SESSION['id_rol'] ?? null;
         $response_permiso = $this->model->verificarPermiso($id_rol, $id_usuario, $slug_permiso);
         if($tipo_resp == 2){
             return $response_permiso;
@@ -123,6 +123,15 @@ class PermisoController {
 
     public function actualizar_permiso_rol($tipo_resp, $id_rol, $id_permiso, $valor) {
         $resp = $this->model->actualizarPermisoRol($id_rol, $id_permiso, $valor);
+        if($tipo_resp==1){
+            echo json_encode($resp);
+        }else{
+            return $resp;
+        }
+    }
+
+    public function registrar_permiso($data, $tipo_resp){
+        $resp = $this->model->registrarPermiso($data);
         if($tipo_resp==1){
             echo json_encode($resp);
         }else{

@@ -3,7 +3,7 @@
 <?php
 session_start();
 
-if (empty($_SESSION["id"] || $_SESSION['rol'] !== 'manager')) {
+if (empty($_SESSION["id"] || $_SESSION['id_rol'] !== 1)) {
     header("Location:login.php");
 } ?>
 <head>

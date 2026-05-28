@@ -4,7 +4,7 @@ require_once  __DIR__ . '/../controllers/ProfesorController.php';
 require_once  __DIR__ . '/../config/dates.php';
 
 $controller_permiso->verificarSesion();
-$permiso_panel_maestros = $controller_permiso->validarAcceso(2, CPermiso::VER_PANEL_MAESTROS->value);
+$permiso_panel_maestros = $controller_permiso->validarAcceso(1, CPermiso::CREAR_HORARIOS->value);
 if($permiso_panel_maestros){
     $controller_prof = new ProfesorController();
     $resp_grupos = $controller_prof->obtenerGruposProfesor($_SESSION['id']);
@@ -93,7 +93,7 @@ include "vistas/general/header.php";
                             </select>
                         </div> 
                         <div class="col-md-4 mb-4">
-                            <label class="form-label-custom">Nivel Educativo</label>
+                            <label class="form-label-custom">Turno</label>
                             <select class="form-select-airbnb" id="turno_escolar">
                                 <option>Selecciona uno</option>
                                 <option value="manana" selected>Matutino</option>

@@ -1,10 +1,33 @@
 <?php
 
-$redireccion = $controller_permiso->redirigirMaestros($_SESSION['rol']);
+$redireccion = $controller_permiso->redirigirMaestros($_SESSION['id_rol']);
 include "vistas/general/header.php";
 
 ?>
+<style>
+    /* Skeleton loader */
+.skeleton {
+    display       : inline-block;
+    background    : linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+    background-size: 200% 100%;
+    animation     : skeleton-shimmer 1.5s infinite;
+    border-radius : 4px;
+}
+.skeleton-text    { width: 80px;  height: 2rem;   }
+.skeleton-text-sm { width: 120px; height: 1rem;   }
+.skeleton-line    { width: 100%;  height: 3.5rem; }
 
+@keyframes skeleton-shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* Dark mode */
+body.dark .skeleton {
+    background: linear-gradient(90deg, #2c3e50 25%, #34495e 50%, #2c3e50 75%);
+    background-size: 200% 100%;
+}
+</style>
 <body>
     <div class="wrapper">
 
@@ -34,8 +57,8 @@ include "vistas/general/header.php";
                             </div>
                         </div>
                     </div>
-                    <h1 class="mt-1 mb-3">1,250</h1>
-                    <div class="mb-0">
+                    <h1 class="mt-1 mb-3" id="stat-estudiantes">1,250</h1>
+                    <div class="mb-0" id="stat-estudiantes-sub">
                         <span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i> +5.2% </span>
                         <span class="text-muted">Desde el mes pasado</span>
                     </div>
@@ -56,8 +79,8 @@ include "vistas/general/header.php";
                             </div>
                         </div>
                     </div>
-                    <h1 class="mt-1 mb-3">48</h1>
-                    <div class="mb-0">
+                    <h1 class="mt-1 mb-3" id="stat-profesores">48</h1>
+                    <div class="mb-0" id="stat-profesores-sub">
                         <span class="text-muted">8 Departamentos</span>
                     </div>
                 </div>
@@ -77,8 +100,8 @@ include "vistas/general/header.php";
                             </div>
                         </div>
                     </div>
-                    <h1 class="mt-1 mb-3">24</h1>
-                    <div class="mb-0">
+                    <h1 class="mt-1 mb-3" id="stat-grupos">24</h1>
+                    <div class="mb-0" id="stat-grupos-sub">
                         <span class="text-danger"> <i class="mdi mdi-arrow-bottom-right"></i> -1 </span>
                         <span class="text-muted">Ciclo actual</span>
                     </div>
@@ -99,8 +122,8 @@ include "vistas/general/header.php";
                             </div>
                         </div>
                     </div>
-                    <h1 class="mt-1 mb-3">$45,200</h1>
-                    <div class="mb-0">
+                    <h1 class="mt-1 mb-3" id="stat-ingresos">$45,200</h1>
+                    <div class="mb-0" id="stat-ingresos-sub">
                         <span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i> Al corriente </span>
                     </div>
                 </div>
@@ -122,19 +145,8 @@ include "vistas/general/header.php";
                         </div>
                     </div>
                     <table class="table mb-0">
-                        <tbody>
-                            <tr>
-                                <td><i class="fas fa-circle text-primary fa-fw"></i> Primaria</td>
-                                <td class="text-end">450</td>
-                            </tr>
-                            <tr>
-                                <td><i class="fas fa-circle text-warning fa-fw"></i> Secundaria</td>
-                                <td class="text-end">380</td>
-                            </tr>
-                            <tr>
-                                <td><i class="fas fa-circle text-danger fa-fw"></i> Preparatoria</td>
-                                <td class="text-end">420</td>
-                            </tr>
+                        <tbody id="distribucion-nivel">
+                           
                         </tbody>
                     </table>
                 </div>
@@ -148,7 +160,7 @@ include "vistas/general/header.php";
                 <h5 class="card-title mb-0">Alertas del Sistema</h5>
             </div>
             <div class="card-body">
-                <ul class="list-group list-group-flush">
+                <ul class="list-group list-group-flush" id="lista-alertas">
                     <li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0">
                         <div class="d-flex align-items-center">
                             <div class="stat text-danger me-3" style="width: 35px; height: 35px;">
@@ -213,12 +225,11 @@ include "vistas/general/header.php";
     <script src="https://cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
 
     <!-- Mis scripts -->
-    <script src="<?php echo STATIC_URL; ?>js/solicitudes/traer-lista-solicitudes.js"></script>
-    <script src="<?php echo STATIC_URL; ?>js/solicitudes/editar-solicitud.js"></script>
+    <script src="<?php echo STATIC_URL; ?>js/panel/directivos.js"></script>
     <!-- <script src="js/usuarios/eliminar-usuario.js"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-document.addEventListener('DOMContentLoaded', () => {
+/* document.addEventListener('DOMContentLoaded', () => {
     const ctx = document.getElementById('chartjs-dashboard-pie');
 
     if (!ctx) return;
@@ -241,7 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
             maintainAspectRatio: false
         }
     });
-});
+}); */
 </script>
 
 </body>

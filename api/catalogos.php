@@ -46,3 +46,12 @@ if($_GET['tipo']=='resetear'){
 if($_GET['tipo']=='finalizar'){
     $controller->guardar_horario(1);
 }
+
+
+if($_GET['tipo']=='guardar_plantilla'){
+    $controller->guardar_plantilla($_POST, 1);
+}
+
+if($_GET['tipo']=='obtener_plantilla'){
+    $controller->obtener_plantilla(1);
+}
