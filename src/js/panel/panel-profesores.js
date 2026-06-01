@@ -1,9 +1,12 @@
-
+ 
 
 function setearTablaGrupo(id_grupo){
     let area = $("#area-grupo")
     let id_ciclo = $("#ciclo").attr('id_ciclo');
-    
+    document.querySelectorAll('.tarjeta-grupo').forEach(tarjeta => {
+        tarjeta.classList.remove('tarjeta_activa');
+    });
+    const tarjeta = $("#tarjeta-" + id_grupo).addClass('tarjeta_activa')
     area.empty();
     area.append(`
         <div class="row">

@@ -19,6 +19,11 @@
 
 }
 
+.tarjeta_activa{
+    background-color: #c1fffd;
+    border: #3c9693 2px solid;
+}
+
 .mensaje{
     font-weight: 100;
     color: gray;

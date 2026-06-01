@@ -68,14 +68,14 @@ class Usuario extends Datatable{
             'nombre'         => $nombre, 
             'apellido'       => $apellidos, 
             'telefono'       => $telefono, 
-            'id_rol' => $rol,
             'estatus' => 1,
             'cargo' => $cargo,
             'fecha_ingreso' => $fecha_registro,
             'usuario'        => $usuario, 
             'contraseña'       => $password_encriptada, // Guardamos la versión segura
             'id_escuela'     => $id_escuela, 
-            'fecha_registro' => $fecha_registro
+            'fecha_registro' => $fecha_registro,
+            'id_rol' => $rol,
         ]);
     
         if (!$id_nuevo) {

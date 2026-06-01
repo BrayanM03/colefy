@@ -62,19 +62,27 @@ include "vistas/general/header.php";
                                              ?></h3>
                                         </div>
                                     </div>
-                                    <div class="row mt-3">
+                                    <div class="row mt-3" id="tarjetas-grupos">
                                         <div class="col-12 mb-3">
                                             <label>Grupos asignados, puedes seleccionar uno</labe>
                                         </div>
                                         <?php
+                                        if($resp_grupos['data'] != []){
+
                                             foreach($resp_grupos['data'] as $element){
                                                 print_r('
                                                  <div class="col-12 col-md-2">
-                                                    <div onclick="setearTablaGrupo('. $element['id'] .')" class="tarjeta-grupo d-flex justify-content-center align-items-center">
+                                                    <div id="tarjeta-'.$element['id'].'" onclick="setearTablaGrupo('. $element['id'] .')" class="tarjeta-grupo d-flex justify-content-center align-items-center">
                                                         <span>'. $element['nombre'] .'</span>
                                                     </div>
                                                 </div>');
                                             }
+                                        }else{
+                                            print_r('
+                                                 <div class="col-12 col-md-2">
+                                                        <span>Sin grupos asignados</span>
+                                                </div>');
+                                        }
                                         ?>
                                        
                                         
