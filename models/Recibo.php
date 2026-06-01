@@ -16,12 +16,14 @@ class Recibo extends Datatable
     private $tabla_pagos = 'pagos';
     private $allowedColumns = ['id', 'concepto'];
     private $id_escuela;
+    private $id_sesion;
 
     public function __construct($nombre_tabla = 'tabla_conceptos')
     {
         $this->db = new Database();
         $this->fecha = new Date();
         $this->id_escuela = $_SESSION['id_escuela'];
+        $this->id_sesion = $_SESSION['id'];
         $this->tabla_conceptos = $nombre_tabla;
       
     }
@@ -382,7 +384,8 @@ class Recibo extends Datatable
                 'saldo_pendiente' => $saldo_pendiente,
                 'estatus' => 1,
                 'comentario' => $comentario,
-                'id_escuela' => $this->id_escuela
+                'id_escuela' => $this->id_escuela,
+                'id_usuario' => $this->id_sesion
             );
             $id_recibo =  $this->db->insert('recibos', $data);
 
