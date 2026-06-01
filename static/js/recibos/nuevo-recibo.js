@@ -201,7 +201,9 @@ function setearCategoria(){
               placeholder="Selecciona un año"
               data-live-search="true">
               <option value="2024">2024</option>
-              <option value="2025" selected>2025</option>
+              <option value="2025" >2025</option>
+              <option value="2026" selected>2026</option>
+              <option value="2027" >2027</option>
           </select>
           <small id="small_year" style="color:tomato;"></small>
 
