@@ -108,6 +108,11 @@ include "vistas/general/header.php";
                                     <option value="3">Transporte</option>
                                     <option value="4">Cafeteria</option>
                                     <option value="5">Recargo</option>
+                                    <option value="6">Inscripción</option>
+                                    <option value="7">Libros</option>
+                                    <option value="8">Seguro escolar</option>
+                                    <option value="9">Mantenimiento</option>
+                                    <option value="10">Uniforme de invierno</option>
                                 </select>
                                 <small id="small_categoria" style="color:tomato;"></small>
 
