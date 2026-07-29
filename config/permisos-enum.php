@@ -57,6 +57,7 @@ enum CPERMISO: string {
     case CREAR_ESCUELAS = 'crear_escuelas';
     case EDITAR_ESCUELAS = 'editar_escuelas';
     case CANCELAR_ESCUELAS = 'cancelar_escuelas';
+    case CAMBIAR_ESCUELA = 'cambiar_escuela';
 
     // Configuración y Permisos
     case VER_CATALOGOS = 'ver_catalogos';
@@ -82,5 +83,9 @@ enum CPERMISO: string {
     case CREAR_GASTOS = 'crear_gastos';
     case EDITAR_GASTOS = 'editar_gastos';
     case CANCELAR_GASTOS = 'cancelar_gastos';
+
+    //Asistencias
+    case VER_CONTROL_ASISTENCIAS = 'ver_control_asistencias';
+    case VER_ASISTENCIA_QR = 'ver_asistencia_qr';
 
 }
