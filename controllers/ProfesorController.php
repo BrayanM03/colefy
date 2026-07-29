@@ -30,9 +30,9 @@ class ProfesorController {
         ];
     } 
 
-    public function obtenerGruposProfesor($id_profesor){
+    public function obtenerGruposProfesor($id_sesion){
         $profesor = new Profesor();
-        return ($profesor->obtenerGruposProfesor($id_profesor));
+        return ($profesor->obtenerGruposProfesor($id_sesion));
     }
 
     public function  registrar_profesor($tipo_resp, $data){

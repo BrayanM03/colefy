@@ -95,6 +95,16 @@ class GrupoController {
         return ($grupo->comboCiclos());
     }
 
+    public function combo_grupos_profesor($tipo_resp){
+        $grupo = new Grupo();
+        $resp = $grupo->comboGruposProfesor($this->id_sesion);
+        if($tipo_resp==1){
+            return $resp;
+        }else{
+            echo json_encode($resp);
+        }
+    }
+
     public function registrarAlumnoPreGrupo($alumno){
         $grupo = new Grupo();
         $resp = $grupo->registrarAlumnoPreGrupo($alumno, $this->id_sesion);
@@ -152,5 +162,12 @@ class GrupoController {
         $grupo = new Grupo();
         echo json_encode($grupo->obtenerGrupoCalificaciones($id_grupo, $id_ciclo));
     }
-        
+
+    public function obtener_alumnos_grupo_asistencia($id_grupo, $id_ciclo, $id_dh, $tipo_modalidad){
+        $grupo = new Grupo();
+        echo json_encode($grupo->obtenerAlumnosGrupoAsistencia($id_grupo, $id_ciclo, $id_dh, $tipo_modalidad));
+    }
+
+    
+   
     }

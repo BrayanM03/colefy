@@ -354,4 +354,128 @@ class Horario
         return array('estatus'=> true, 'mensaje' => 'Se encontró informacion', 'data' => $data);
 
     }
+
+    public function obtenerHorarioProfesor($datos, $id_sesion){
+        // Asumo que tienes el id del maestro en la sesión
+        $id_profesor = $this->obtenerIDProfesor($id_sesion);
+
+        // La Query que trae todo cruzado
+        $query = "
+            SELECT 
+                dh.dia, 
+                dh.hora, 
+                dh.hora_fin, 
+                m.nombre AS materia, 
+                g.nombre AS grupo
+            FROM detalle_horario dh
+            INNER JOIN materias m ON dh.id_materia = m.id
+            INNER JOIN grupos_horarios gh ON dh.id_horario = gh.id_horario
+            INNER JOIN grupos g ON gh.id_grupo = g.id
+            WHERE dh.id_profesor = ? 
+            AND gh.estatus = 1
+            ORDER BY 
+                FIELD(dh.dia, 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'),
+                dh.hora
+        ";
+
+        $resultados = $this->db->select($query, [$id_profesor]);
+
+        // Agrupamos por día en PHP para que sea más fácil armar el HTML en JavaScript
+        $horario_agrupado = [];
+        foreach ($resultados as $row) {
+            // Esto creará un arreglo como: ['Lunes' => [...clases], 'Martes' => [...clases]]
+            $horario_agrupado[$row['dia']][] = [
+                'hora'    => $row['hora'],
+                'hora_fin'    => $row['hora_fin'],
+                'materia' => $row['materia'],
+                'grupo'   => $row['grupo']
+            ];  
+        }
+
+        // Devuelves el JSON
+        return (['estatus' => true, 'data' => $horario_agrupado]);
+    }
+
+    public function obtenerClases($datos, $id_sesion){
+        $id_profesor = $this->obtenerIDProfesor($id_sesion);
+        
+        // 1. Configurar zona horaria para precisión
+        date_default_timezone_set('America/Matamoros'); 
+        
+        // 2. Obtener el día de hoy en español
+        $dias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+        $dia_hoy = $dias[date('w')];
+        $fecha_hoy =$this->fecha->fecha(); // Fecha actual YYYY-MM-DD
+        $hora_actual = 1785352254;//time(); // Timestamp actual para comparar
+        /* print_r($dia_hoy);
+        print_r($hora_actual);
+        die(); */
+        // 3. Consultar las clases EXCLUSIVAMENTE del día de hoy
+        $query = "
+            SELECT 
+                dh.id as id_dh,
+                dh.hora, 
+                dh.hora_fin, 
+                m.id AS id_materia,
+                m.nombre AS materia, 
+                g.nombre AS grupo,
+                g.id AS id_grupo,
+                h.tipo AS tipo_asistencia
+            FROM detalle_horario dh
+            INNER JOIN materias m ON dh.id_materia = m.id
+            INNER JOIN grupos_horarios gh ON dh.id_horario = gh.id_horario
+            INNER JOIN grupos g ON gh.id_grupo = g.id
+            INNER JOIN horarios h ON dh.id_horario = h.id
+            WHERE dh.id_profesor = ? 
+              AND gh.estatus = 1
+              AND dh.dia = ?
+            ORDER BY dh.hora ASC
+        ";
+        
+        $clases = $this->db->select($query, [$id_profesor, $dia_hoy]);
+    
+
+        // 4. Procesar el estado de cada clase (Pasada, Actual, Próxima)
+        $clases_procesadas = [];
+        foreach ($clases as $clase) {
+            // Separamos el rango "08:00 - 09:00"
+            $hora_inicio = strtotime($clase['hora']);
+            $hora_fin = strtotime($clase['hora_fin']);
+            
+            $estado = 'proxima';
+          
+            if ($hora_actual >= $hora_inicio && $hora_actual <= $hora_fin) {
+                $estado = 'actual';
+            } elseif ($hora_actual > $hora_fin) {
+                $estado = 'pasada';
+            }
+            $clase['estado'] = $estado;
+
+            $tipo_modalidad = (int)$clase['tipo_asistencia'];
+
+            if ($tipo_modalidad === 1) {
+                // MODALIDAD 1: POR DÍA (Kínder / Primaria)
+                // Revisa si ya hay al menos un registro de asistencia para el grupo el día de hoy
+                $date_asis = $this->db->select(
+                    'SELECT id FROM asistencias WHERE id_grupo = ? AND fecha = ? LIMIT 1', 
+                    [$clase['id_grupo'], $fecha_hoy]
+                );
+            } else {
+                // MODALIDAD 2: POR MATERIA (Secundaria / Prepa / Uni)
+                // Revisa si hay asistencia para esa materia específica + grupo + fecha
+                $date_asis = $this->db->select(
+                    'SELECT id FROM asistencias WHERE id_grupo = ? AND id_dh = ? AND fecha = ? LIMIT 1', 
+                    [$clase['id_grupo'], $clase['id_dh'], $fecha_hoy]);
+            }
+            // Asignamos la bandera a la tarjeta
+            $clase['asistencia_tomada'] = (count($date_asis) > 0) ? 1 : 0;
+            $clases_procesadas[] = $clase;
+        }
+        return ['estatus' => true, 'dia' => $dia_hoy, 'data' => $clases_procesadas];
+    }
+    //Funcion auxiliar para obtener el ID del profesor
+    public function obtenerIDProfesor($id_sesion){
+       $data = $this->db->select('SELECT * FROM profesores WHERE id_usuario = ?', [$id_sesion]);
+       return $data[0]['id'];
+    }
 }

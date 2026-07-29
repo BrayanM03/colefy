@@ -17,6 +17,11 @@ function obtenerCicloActual() {
     return $this->db->select('SELECT * FROM ciclos_escolares WHERE estatus = 1');
 }
 
+
+function fecha() {
+    return date('Y-m-d');
+}
+
 /**
  * Convierte Y-m-d a "18 de Febrero 2026"
  */

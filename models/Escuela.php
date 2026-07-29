@@ -96,4 +96,16 @@ class Escuela {
 
     }
 
+    public function cambiarEscuela($id_escuela, $id_usuario){
+
+        $data = ['id_escuela' => $id_escuela];
+        try {
+            $this->db->update('usuarios', $data, ' id = ?', [$id_usuario]);
+            return array('estatus' =>true, 'mensaje'=>'Actualizado correctamente');
+
+        } catch (\Throwable $th) {
+            return array('estatus' =>false, 'mensaje'=>$th);
+        }
+    }
+
 }

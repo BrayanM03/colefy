@@ -19,7 +19,7 @@
     <link href="<?php echo STATIC_URL; ?>css/app.css" rel="stylesheet">
     <link href="<?php echo STATIC_URL; ?>css/ui.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-
+    <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/animations/scale.css"/>
     <?php if (isset($css_especificos)): ?>
         <?php foreach ($css_especificos as $url): ?>
             <link rel="stylesheet" href="<?php echo $url; ?>"></link>

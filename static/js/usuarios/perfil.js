@@ -4,6 +4,7 @@ import { toggleLoading } from '../utils/ui.js';
 GeneralEventListener('input-avatar', 'change', cambiarFotoPerfil);
 GeneralEventListener('btn-guardar-datos', 'click', guardarDatosGenerales);
 GeneralEventListener('btn-cambiar-pass', 'click', cambiarContraseña);
+GeneralEventListener('btn-cambiar-escuela', 'click', cambiarEscuela);
 
 
 function cambiarFotoPerfil() {
@@ -237,6 +238,63 @@ function cambiarContraseña(){
             toggleLoading(idBtn, false);
         }
     });
+}
+
+function cambiarEscuela(){
+    let id_escuela = $("#btn-cambiar-escuela").attr('id_escuela')
+    console.log(id_escuela);
+    Swal.fire({
+        title: 'Cambiar escuela del usuario',
+        html: `
+        <div class="container">
+            <label for="sel_escuela">Elige la escuela a la que quieres asignarte:</label></br>
+            <select id="sel_escuela" class="form-control"></select>
+        </div>
+        `,
+        didOpen: ()=>{
+            $.ajax({
+                type: "post",
+                url: BASE_URL + "api/escuelas.php?tipo=combo",
+                data: {"busqueda:":''},
+                dataType: "json",
+                success: function (response) {
+                    if(response.estatus){
+                        let select_escuelas = $('#sel_escuela')
+                        response.data.forEach(element => {
+                            let selected = id_escuela == element.id ? 'selected': '';
+                            select_escuelas.append(`
+                                <option value="${element.id}" ${selected}>${element.nombre}</option>
+                            `)
+                        });
+                    }
+                }
+            });
+        },
+        confirmButtonText: 'Cambiar',
+    }).then((r)=>{
+        if(r.isConfirmed){
+            let id_escuela_sel = $('#sel_escuela').val()
+            $.ajax({
+                type: "post",
+                url: BASE_URL + "api/escuelas.php?tipo=cambiar_escuela",
+                data: {id_escuela_sel},
+                dataType: "json",
+                success: function (response) {
+                    if(response.estatus){
+                        Toast.fire({
+                            icon: "success",
+                            title: response.mensaje
+                          });
+                    }else{
+                        Toast.fire({
+                            icon: "error",
+                            title: response.mensaje
+                          });
+                    }
+                }
+            });
+        }
+    })
 }
 
 // Ejecutar la función cada vez que el usuario escribe

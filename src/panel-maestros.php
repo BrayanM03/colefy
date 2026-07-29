@@ -5,7 +5,7 @@ require_once  __DIR__ . '/../config/dates.php';
 
 $controller_permiso->verificarSesion();
 $permiso_panel_maestros = $controller_permiso->validarAcceso(2, CPermiso::VER_PANEL_MAESTROS->value);
-if($permiso_panel_maestros){
+if ($permiso_panel_maestros) {
     $controller_prof = new ProfesorController();
     $resp_grupos = $controller_prof->obtenerGruposProfesor($_SESSION['id']);
 };
@@ -31,12 +31,22 @@ include "vistas/general/header.php";
                 <div class="container-fluid p-0">
 
                     <div class="row mb-2">
-                        <div class="col-12 col-md-6">
-                            <h1 class="h3 mb-3">Panel de información</h1>
+                        <div class="col-12 col-md-8 d-flex align-items-end">
+                            <h1 class="h3">Panel de información</h1>
                         </div>
-                        <!-- <div class="col-12 col-md-6 text-end">
-                            <a href="registrar.php"><div class="btn btn-success">Agregar nuevo</div></a>
-                        </div> -->
+                        <div class="col-12 col-md-2">
+                            <h5 class="card-title mb-2">Ciclo escolar actual</h5>
+                            <h3 id="ciclo" id_ciclo="2">2026-2027</h3>
+                        </div>
+                        <div class="col-12 col-md-2">
+                            <h5 class="card-title mb-2">Fecha actual:</h5>
+                            <h3 id="fecha_actual" id_ciclo="1"><?php
+                                                                $fecha_hoy = date('Y-m-d');
+                                                               
+                                                                $fecha_ft = $dates->formatearFechaEspanol($fecha_hoy);
+                                                                echo $fecha_ft;
+                                                                ?></h3>
+                        </div>
                     </div>
 
 
@@ -44,56 +54,47 @@ include "vistas/general/header.php";
                     <div class="row">
                         <div class="col-12">
                             <div class="card">
-                               <!--  <div class="card-header">
-                                    <h5 class="card-title mb-0">Ciclo escolar actual</h5>
-                                </div> -->
                                 <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-12 col-md-3">
-                                            <h5 class="card-title mb-2">Ciclo escolar actual</h5>
-                                            <h3 id="ciclo" id_ciclo="1">2025-2026</h3>
-                                        </div>
-                                        <div class="col-12 col-md-3">
-                                            <h5 class="card-title mb-2">Fecha actual:</h5>
-                                            <h3 id="fecha_actual" id_ciclo="1"><?php
-                                             $fecha_hoy = date('Y-m-d');
-                                             $fecha_ft = $dates->formatearFechaEspanol($fecha_hoy);
-                                             echo $fecha_ft;
-                                             ?></h3>
+                                    <div class="row mb-3">
+                                        <div class="col-12">
+                                            <div class="btn btn-primary" onclick="verHorarioProfesor()">Ver horario asignado</div>
+                                            <div class="btn btn-info" onclick="pasarLista()">Pase de lista por día</div>
                                         </div>
                                     </div>
+                                    <hr>
+                                    <div id="contenedor-clases-hoy"></div>
                                     <div class="row mt-3" id="tarjetas-grupos">
                                         <div class="col-12 mb-3">
                                             <label>Grupos asignados, puedes seleccionar uno</labe>
                                         </div>
                                         <?php
-                                        if($resp_grupos['data'] != []){
+                                        if ($resp_grupos['data'] != []) {
 
-                                            foreach($resp_grupos['data'] as $element){
+                                            foreach ($resp_grupos['data'] as $element) {
                                                 print_r('
                                                  <div class="col-12 col-md-2">
-                                                    <div id="tarjeta-'.$element['id'].'" onclick="setearTablaGrupo('. $element['id'] .')" class="tarjeta-grupo d-flex justify-content-center align-items-center">
-                                                        <span>'. $element['nombre'] .'</span>
+                                                    <div id="tarjeta-' . $element['id'] . '" onclick="setearTablaGrupo(' . $element['id'] . ')" class="tarjeta-grupo d-flex justify-content-center align-items-center">
+                                                        <span>' . $element['nombre'] . '</span>
                                                     </div>
                                                 </div>');
                                             }
-                                        }else{
+                                        } else {
                                             print_r('
                                                  <div class="col-12 col-md-2">
                                                         <span>Sin grupos asignados</span>
                                                 </div>');
                                         }
                                         ?>
-                                       
-                                        
+
+
                                     </div>
 
                                     <div class="row mt-4">
                                         <div class="col-8">
-                                        <div class="border p-4" style="border-radius:8px;">
+                                            <div class="border p-4" style="border-radius:8px;">
                                                 <label for="">Alumnos asignados</label></br>
                                                 <div id="area-grupo">
-                                                <span class="mensaje">Selecciona un grupo</span>
+                                                    <span class="mensaje">Selecciona un grupo</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -115,11 +116,13 @@ include "vistas/general/header.php";
             </main>
 
             <?php
-        include "vistas/general/footer.php"
-        ?>
+            include "vistas/general/footer.php"
+            ?>
         </div>
     </div>
+
     
+
     <?php
     include "vistas/general/scripts.php";
     ?>
@@ -127,9 +130,9 @@ include "vistas/general/header.php";
     <!-- Mis scripts -->
     <script src="<?php echo STATIC_URL; ?>js/panel/panel-profesores.js"></script>
     <!-- <script src="js/usuarios/eliminar-usuario.js"></script> -->
-    <script> 
- //alert('La resolución de pantalla que tienes en este momento es de: ' + screen.width + ' x ' + screen.height) 
- </script>
+    <script>
+        //alert('La resolución de pantalla que tienes en este momento es de: ' + screen.width + ' x ' + screen.height) 
+    </script>
 </body>
 
 </html>

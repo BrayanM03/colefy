@@ -164,4 +164,30 @@ class HorarioController
         }
     }
 
+    public function obtener_horario_profesor($datos, $tipo_resp) {
+        $horario = new Horario();
+        $res= $horario->obtenerHorarioProfesor($datos, $this->id_sesion);
+        if($tipo_resp==2){
+            return $res;
+        }else{
+            echo json_encode($res);
+        }
+    }
+
+    public function obtener_clases($datos, $tipo_resp) {
+        $horario = new Horario();
+        if($_SESSION['es_profesor'] !=1){
+            return array('estatus'=>false, 'mensaje'=> 'El usuario no es un profesor');
+        }
+
+        $res= $horario->obtenerClases($datos, $this->id_sesion);
+        if($tipo_resp==2){
+            return $res;
+        }else{
+            echo json_encode($res);
+        }
+    }
+
+    
+
 }

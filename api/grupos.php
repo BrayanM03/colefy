@@ -56,3 +56,7 @@ if($_GET['tipo']== 'reactivar_alumno_grupo'){
 if($_GET['tipo']== 'grupo_calificaciones'){
     $controller->obtenerGrupoCalificaciones($_POST['id_grupo'], $_POST['id_ciclo']);
 } 
+
+if($_GET['tipo']== 'obtener_alumnos_grupo'){ 
+    $controller->obtener_alumnos_grupo_asistencia($_GET['id_grupo'], $_GET['id_ciclo'],  $_GET['id_dh'], $_GET['tipo_modalidad']);
+} 

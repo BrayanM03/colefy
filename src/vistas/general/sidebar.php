@@ -8,6 +8,7 @@
     $permiso_recibos = $controller_permiso->validarAcceso(2, CPermiso::VER_RECIBOS->value);
     $permiso_crear_gasto = $controller_permiso->validarAcceso(2, CPermiso::VER_GASTOS->value);
     $permiso_ver_historial_gasto = $controller_permiso->validarAcceso(2, CPermiso::CREAR_GASTOS->value);
+    $permisos_ver_control_asistencias = $controller_permiso->validarAcceso(2, CPERMISO::VER_CONTROL_ASISTENCIAS->value);
   
 ?> 
 <nav id="sidebar" class="sidebar js-sidebar">
@@ -61,11 +62,14 @@
                     
                     <div id="collapseHistory" class="accordion-collapse collapse" style="margin-left:13px;" aria-labelledby="headingHistory" data-bs-parent="#accordionExample2">
                         <div class="accordion-body">
-                           <!--  <li class="sidebar-item">
-                                <a class="sidebar-link" href="documentos-subidos.php">
-                                    <i class="align-middle" data-feather="book"></i> <span class="align-middle">Documentos subidos</span>
+                            <?php if($permisos_ver_control_asistencias['estatus']){?>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="<?php echo BASE_URL; ?>control_asistencia">
+                                    <i class="align-middle" data-feather="book"></i> <span class="align-middle">Control de asistencia</span>
                                 </a>
-                            </li> -->
+                            </li>
+                            <?php } ?>
+
                            <?php if($permiso_recibos['estatus']){?>
                             <li class="sidebar-item">
                                 <a class="sidebar-link" href="<?php echo BASE_URL; ?>recibos">

@@ -136,5 +136,14 @@ class EscuelaController {
      }
     }
 
+    public function cambiar_escuela($tipo_resp, $id_escuela){
+        $response = $this->model->cambiarEscuela($id_escuela, $this->id_sesion);
+        if($tipo_resp==2){
+            return $response;
+        }else{
+            echo json_encode($response);
+        }
+    }
+
 
 }

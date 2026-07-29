@@ -41,15 +41,20 @@ class Profesor {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function obtenerGruposProfesor($id_profesor){
+    public function obtenerGruposProfesor($id_sesion){
+        $data = $this->db->select('SELECT * FROM profesores WHERE id_usuario = ?', [$id_sesion]);
+        $id_profesor = $data[0]['id'];
+   
         $stmt = $this->db->query('SELECT count(DISTINCT g.id) as total FROM grupos g JOIN grupos_horarios gh ON g.id = gh.id_grupo JOIN detalle_horario dh ON gh.id_horario = dh.id_horario WHERE dh.id_profesor = ?;
         ', [$id_profesor]);
         $total_ =  $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+       
         if($total_ > 0){
 
         $stmt = $this->db->query('SELECT DISTINCT g.* FROM grupos g JOIN grupos_horarios gh ON g.id = gh.id_grupo 
         JOIN detalle_horario dh ON gh.id_horario = dh.id_horario WHERE dh.id_profesor = ?;', [$id_profesor]);
         $data =  $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
         return array('estatus'=>true, 'mensaje'=>'Grupos encontrados', 'data'=> $data);
         }else{
             return array('estatus'=>false, 'mensaje'=>'Grupos no encontrados para este profesor(a)', 'data'=> []);

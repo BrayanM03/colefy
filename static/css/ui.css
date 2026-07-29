@@ -109,14 +109,21 @@ body.dark .navbar span {
 /* ── MAIN CONTENT ────────────────────────────────── */
 body.dark .main {
   background-color: #1c2333 !important;
-}
+} 
 
 /* ── CARDS ───────────────────────────────────────── */
 body.dark .card {
   background-color: #243044 !important; /* más claro que el fondo */
   border: 1px solid #2e3f57 !important;
   box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
+
 }
+
+body.dark .border-primary{
+  border: 2px solid #a0c0ec !important;
+
+}
+
 body.dark .card-header {
   background-color: #1e2d40 !important; /* ← fix del header blanco */
   border-bottom: 1px solid #2e3f57 !important;
@@ -125,6 +132,8 @@ body.dark .card-header {
 body.dark .card-body {
   background-color: #243044 !important;
 }
+
+
 
 /* ── FORMULARIOS ─────────────────────────────────── */
 body.dark .form-control,
@@ -162,6 +171,39 @@ body.dark .progress-track{
 
 }
 
+/*---SWEET ALERT---*/
+body.dark .swal2-html-container{
+  background-color: #1e2d40 !important;
+  color: #cfd8e3 !important;
+  margin-bottom: 0px !important;
+  padding-bottom: 0px !important;
+}
+
+body.dark .swal2-popup, body.dark .swal2-modal, body.dark .swal2-show{
+  background-color: #1e2d40 !important;
+
+}
+
+body.dark .swal2-container{
+  padding-bottom: 0px !important;
+ 
+}
+
+
+body.dark .swal2-html-container h6{
+  color: #cfd8e3 !important;
+}
+
+body.dark .swal2-html-container label{
+  color: #cfd8e3 !important;
+}
+
+body.dark .list-group-item:hover{
+  cursor: pointer;
+  background-color: #3d587f !important;
+
+}
+
 /* ── TABLAS ──────────────────────────────────────── */
 body.dark .table {
   color: #cfd8e3 !important;
@@ -170,6 +212,8 @@ body.dark .table {
 body.dark .table thead th {
   background-color: #1e2d40 !important;
   border-color: #2e3f57 !important;
+  color: #cfd8e3 !important;
+
 }
 body.dark .table tbody tr:hover {
   background-color: #1e2d40 !important;

@@ -870,7 +870,7 @@ function getPaletaActual() {
         });
 } */
 
-async function guardarHorarioFinal() {
+async function guardarHorarioFinal() { 
     try {
         // 1. Si hay bloques sin guardar en el borrador, los persistimos primero
         if (horarioData.bloques.length > 0) {
@@ -890,7 +890,7 @@ async function guardarHorarioFinal() {
             
             // CANDADO: Si falló el guardado del borrador, abortamos todo el proceso
             if (!dataBloques.estatus) {
-                Swal.fire({ icon: 'error', title: 'Error', text: 'No se pudieron guardar los últimos bloques seleccionados.' });
+                Swal.fire({ icon: 'error', title: 'Error', text: dataBloques.error});
                 return; 
             }
         }

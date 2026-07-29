@@ -14,6 +14,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $auth = new AuthController();
     $response = $auth->login($username, $pass);
     
-    echo json_encode($response);
+    echo json_encode($response); 
 }
  

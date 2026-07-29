@@ -6,6 +6,7 @@ $escuela_p = $controller_permiso->validarAcceso(2, CPermiso::VER_ESCUELAS->value
 $permisos_p = $controller_permiso->validarAcceso(2, CPermiso::VER_PANEL_PERMISOS->value);
 $usuarios_p = $controller_permiso->validarAcceso(2, CPermiso::VER_USUARIOS->value);
 $recibos_p = $controller_permiso->validarAcceso(2, CPermiso::VER_RECIBOS->value);
+$user_P = $controller_permiso->obtener_permisos_x_usuario(2, $_SESSION['id'])['data'];
 ?>
 <style>
 	/* Transición suave al cambiar tema */
@@ -85,6 +86,7 @@ $recibos_p = $controller_permiso->validarAcceso(2, CPermiso::VER_RECIBOS->value)
 		can_view_usuarios: <?php echo $usuarios_p['estatus'] ? 'true' : 'false'; ?>,
 		can_view_pagos: <?php echo $recibos_p['estatus'] ? 'true' : 'false'; ?>
 	};
+	const permisos_usuario = <?= json_encode($user_P,  JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);?> // En esta const se guardaron todos los permisos del usuario
 
 	// ── Dark Mode ─────────────────────────────────────────────
 	document.addEventListener('DOMContentLoaded', function() {

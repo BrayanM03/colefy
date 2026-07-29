@@ -8,35 +8,36 @@ require_once __DIR__ . '/../controllers/DataTableController.php';
 class UsuarioController extends DataTableController {
     private $id_sesion;
     protected $current_datatable;
-    
+    private $id_escuela;
     public function __construct(){
         $this->id_sesion = $_SESSION['id'];
+        $this->id_escuela = $_SESSION['id_escuela'];
         parent::__construct();
-        $this->model = new Usuario();
+        $this->model = new Usuario($this->id_escuela);
     }
 
     public function datatable_usuarios() {
-        $this->current_datatable = 'usuarios';
+        $this->current_datatable = 'vista_usuarios';
         $this->datatable_general();
     }
 
     // --- Implementación de los métodos de plantilla para la tabla de Recibos ---
     protected function getModelData($id_filtro, $start, $length, $search, $orderColumnName, $orderDir, $filtros) {
-        if ($this->current_datatable === 'usuarios') {
+        if ($this->current_datatable === 'vista_usuarios') {
             return $this->model->datatablesUsuarios($id_filtro, $start, $length, $search, $orderColumnName, $orderDir);
         } 
         return [];
     }
 
     protected function getModelTotal($id_filtro, $filtros) {
-        if ($this->current_datatable === 'usuarios') {
+        if ($this->current_datatable === 'vista_usuarios') {
             return $this->model->contarUsuarios($id_filtro);
         } 
         return 0;
     }
 
     protected function getModelFilteredTotal($id_filtro,$search, $filtros) {
-        if ($this->current_datatable === 'usuarios') {
+        if ($this->current_datatable === 'vista_usuarios') {
             return $this->model->contarUsuariosFiltrados($id_filtro, $search);
         }
         return 0;
@@ -214,6 +215,37 @@ class UsuarioController extends DataTableController {
             exit; // Cortamos ejecución en AJAX
         }
         return $data; // Retornamos el array para uso interno en PHP
+    }
+
+    public function combo($tipo_resp){
+        $data = $this->model->combo();
+        if ($tipo_resp == 1) {
+            echo json_encode($data);
+            exit; // Cortamos ejecución en AJAX
+        }else{
+             return $data;
+        } 
+    }
+
+    public function combo_licencia($tipo_resp){
+        $data = $this->model->combo_licencia();
+        if ($tipo_resp == 1) {
+            echo json_encode($data);
+            exit; // Cortamos ejecución en AJAX
+        }else{
+             return $data;
+        } 
+    }
+
+    public function enlazar_licencia($tipo_resp, $post){
+    
+        $data = $this->model->enlazarLicencia($post);
+        if ($tipo_resp == 1) {
+            echo json_encode($data);
+            exit; // Cortamos ejecución en AJAX
+        }else{
+             return $data;
+        } 
     }
 }
  

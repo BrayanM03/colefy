@@ -30,6 +30,18 @@ if($tipo == 'registrar'){
     $controller->registrar_usuario(1, $_POST);
 }
 
+if($tipo == 'combo'){
+    $controller->combo(1, $_POST);
+}
+
+if($tipo == 'combo_licencia'){
+    $controller->combo_licencia(1);
+}
+
+if($tipo == 'enlazar_licencia'){
+   
+    $controller->enlazar_licencia(1, $_POST);
+}
 
 
 ?>

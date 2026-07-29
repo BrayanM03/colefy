@@ -54,6 +54,22 @@ class Catalogo {
     public function guardarBloques(){
         $b = json_decode(file_get_contents('php://input'), true);
 
+        // 1. VALIDACIÓN: Comprobar si la escuela tiene una plantilla de turnos configurada
+            $plantilla = $this->db->select("
+            SELECT id 
+            FROM plantilla_turnos 
+            WHERE id_escuela = ? 
+            LIMIT 1
+        ", [$this->id_escuela]);
+
+        // Si el arreglo viene vacío, significa que no hay registros para esta escuela
+        if (empty($plantilla)) {
+            return [
+                'estatus' => false, 
+                'error'   => 'Aún no se ha configurado la plantilla de turnos de la escuela (horas de clase y descansos). Por favor, configúrala antes de armar el horario.'
+            ];
+        }
+
         // Borrar bloques anteriores de esa materia (permite re-editar)
         $this->db->query("
             DELETE FROM detalle_prehorario
@@ -127,7 +143,7 @@ class Catalogo {
         $choqueProfesor = $this->db->select("
                 SELECT dp.dia, dp.hora, dp.id_profesor, p.nombre, p.apellido
                 FROM detalle_horario dh  
-                INNER JOIN detalle_prehorario dp ON dp.id_profesor = dh.id_profesor AND dp.dia = dh.dia AND dp.hora = dp.hora
+                INNER JOIN detalle_prehorario dp ON dp.id_profesor = dh.id_profesor AND dp.dia = dh.dia AND dp.hora = dh.hora
                 INNER JOIN grupos_horarios gh ON dh.id_horario = gh.id_horario
                 INNER JOIN horarios h ON dh.id_horario = h.id
                 LEFT JOIN profesores p ON dp.id_profesor = p.id 
@@ -136,12 +152,15 @@ class Catalogo {
                 LIMIT 1;
             ", [$b['id_grupo'], $b['id_ciclo']]);
 
+
             if (!empty($choqueProfesor)) {
                 $nombreProfe = trim($choqueProfesor[0]['nombre'] . ' ' . $choqueProfesor[0]['apellido']);
                 // Si por alguna razón no trae nombre, le ponemos un texto genérico
                 if (empty($nombreProfe)) $nombreProfe = "Este docente";
                 return ['estatus' => false, 'error' => 'Empalme de Profesor: ' . $nombreProfe . ' ya tiene clase asignada el día ' . $choqueProfesor[0]['dia'] . ' a la hora ' . $choqueProfesor[0]['hora'] . ' en otro grupo.'];
             }
+
+
             $choqueHoraGrupo = $this->db->select("
             SELECT dia, hora, COUNT(*) as repeticiones
             FROM detalle_prehorario
@@ -160,7 +179,7 @@ class Catalogo {
 
     
         try {
-            $this->db->beginTransaction();
+            $this->db->beginTransaction(); 
     
             // 1. ¿Ya existe un horario activo para este grupo?
             $existing = $this->db->select(" 
@@ -169,7 +188,7 @@ class Catalogo {
                 WHERE id_grupo = ? AND estatus = 1 
                 LIMIT 1
             ", [$b['id_grupo']]);
-    
+           
             if (!empty($existing)) {
                 // Reutilizar el horario y limpiar sus detalles anteriores
                 $id_horario = $existing[0]['id_horario'];
@@ -193,9 +212,9 @@ class Catalogo {
                     'estatus'    => 1
                 ]);
             }
-    
+          
             // 2. Copiar borrador → detalle_horario en una sola operación
-            $this->db->query("
+            $rre= $this->db->query("
             INSERT INTO detalle_horario (id_materia, dia, hora, hora_fin, id_horario, id_profesor, tipo)
             SELECT dp.id_materia, dp.dia, dp.hora, pt.hora_fin, ?, dp.id_profesor, 1
             FROM detalle_prehorario dp
@@ -203,7 +222,7 @@ class Catalogo {
             WHERE dp.id_usuario = ? AND dp.id_grupo = ? AND dp.id_ciclo = ?
         ", [$id_horario, $this->id_escuela, $id_usuario, $b['id_grupo'], $b['id_ciclo']]);
     
-            
+
         // 2.5 Insertar descansos (INCLUYENDO HORA_FIN)
         $this->db->query("
             INSERT INTO detalle_horario (id_materia, dia, hora, hora_fin, id_horario, id_profesor, tipo)
@@ -252,6 +271,7 @@ class Catalogo {
     
         } catch (Exception $e) {
             $this->db->rollBack();
+            print_r($e->getMessage());
             return (['estatus' => false, 'error' => $e->getMessage()]);
         }
     }

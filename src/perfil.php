@@ -61,7 +61,8 @@ include "vistas/general/header.php";
                     <div class="card-body">
                         <h5 class="h6 card-title">Sobre mí</h5>
                         <ul class="list-unstyled mb-0">
-                            <li class="mb-1"><span data-feather="home" class="feather-sm me-1"></span> Colegio: <a href="#"><?= $usuario['escuela']?></a></li>
+                           
+                            <li class="mb-1"><span data-feather="home" class="feather-sm me-1"></span> Colegio: <a href="#" id="btn-cambiar-escuela" id_escuela=" <?=$usuario['id_escuela']?>"><?= $usuario['escuela']?></a></li>
                             <li class="mb-1"><span data-feather="briefcase" class="feather-sm me-1"></span> Cargo: <?= $usuario['cargo']?></li>
                         </ul>
                     </div>

@@ -5,7 +5,6 @@
   $(document).ready(function () {
     const role = $('#role').attr("role");
     const options =   [{ width: '10%' }, null, null, null, null]
-    const roles = {1: 'Admin', 2: 'Profesor', 3: 'Normal', 4: 'Contraloria'};
     const columns = [
       { data: 'id', title: '#' },
       { data:  'foto_perfil', title: 'Foto', render:(data)=>{
@@ -23,7 +22,7 @@
         return data['nombre'] + ' ' + data['apellido']
       }},
       { data: null, title: 'Rol', render: (data)=>{
-        return roles[data.rol]
+        return data.nombre_rol
       }},
       { data: 'nombre_escuela', title: 'Colegio' },
       { data: null, title: 'Logo', render: (data)=>{

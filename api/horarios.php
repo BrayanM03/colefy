@@ -17,9 +17,13 @@ if($_GET['tipo']=='horarios'){
     $controller->insertarGruposHorario($_POST['ids_grupos'], $_POST['id_horario']);
 }else if($_GET['tipo']=='eliminar_grupos_horario'){
     $controller->cancelarGruposHorario($_POST['id']);
+}else if($_GET['tipo'] == 'obtener_mi_horario'){
+    $controller->obtener_horario_profesor($_POST, 1);
+}else if($_GET['tipo'] == 'obtener_clases_hoy'){
+    $controller->obtener_clases($_POST, 1);
 }
 else{
-    responder(false, 'No hay solicitud GET','success', [], true);
+    echo json_encode(array('estatus' =>false, 'mensaje' => 'La solicitud no tiene un Tipo Valido'));
 }
 
 

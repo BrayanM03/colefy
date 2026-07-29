@@ -21,7 +21,6 @@ if ($modulo === 'login') {
 }
 
 
-
 // 4. VERIFICAR SESIÓN (Para todo lo que no sea login)
 $controller_permiso->verificarSesion();
 
@@ -65,6 +64,23 @@ switch ($modulo) {
         $vista_a_cargar = 'src/panel-maestros.php';
     break;
 
+    case 'control_asistencia':     
+        $titulo_vista = 'Control de asistencia';
+        $necesita_datatables = false;
+        $css_especificos[] = [];
+        $vista_a_cargar = 'src/control-asistencia.php';
+    break;
+
+    case 'asistencia_qr':     
+        $titulo_vista = 'Control de asistencia por QR';
+        $necesita_datatables = false;
+        $css_especificos[] = [];
+        //Se asignan porque en la url estan asi los parametros
+        $_GET['id_grupo'] = $accion;
+        $_GET['id_dh'] = $id;
+        $vista_a_cargar = 'src/asistencia_qr.php';
+    break;
+
     case 'nuevo_recibo':        
         $titulo_vista = 'Nuevo recibo';
         $necesita_bootstrap_select =true;
@@ -102,8 +118,6 @@ switch ($modulo) {
         $css_especificos[] = ASSET_NUEVO_RECIBO_CSS; 
         $vista_a_cargar = 'src/nuevo-gasto.php';
     break;
-
- 
 
     case 'gastos':        
         if ($accion === 'normal-pdf' && $id) {

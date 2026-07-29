@@ -97,6 +97,8 @@ class PermisoController {
         $resp = $this->model->obtenerPermisosXUsuario($id_usuario);
         if($tipo_resp==1){
             echo json_encode($resp);
+        }else{
+            return $resp;
         }
 
     }

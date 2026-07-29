@@ -140,6 +140,24 @@ class Grupo {
         };
     }
 
+    public function comboGruposProfesor($id_profesor){
+                    // Usamos DISTINCT para que no se repitan los grupos si el profe tiene varias clases con ellos
+                $query = "
+                SELECT DISTINCT g.* 
+                FROM detalle_horario dh
+                INNER JOIN grupos_horarios gh ON gh.id_horario = dh.id_horario
+                INNER JOIN grupos g ON g.id = gh.id_grupo
+                WHERE dh.id_profesor = ?
+            ";
+
+            $res = $this->db->select($query, [$id_profesor]);
+
+            // Imprimimos para que veas el resultado en tus pruebas
+            
+            // Y recuerda retornarlo para cuando lo uses en tu API real
+            return array('data' => $res, 'mensaje'=> 'Consulta exitosa');
+    }
+
     public function contarGrupos()
     {
         $stmt = $this->db->query("SELECT COUNT(*) as total FROM grupos WHERE estatus = 1 AND id_escuela =?", [$this->id_escuela]);
@@ -392,15 +410,15 @@ class Grupo {
         
         $total = $this->contarDetalleGrupo($id_grupo, $id_ciclo);
         if($total >0){
-          $data = $this->db->select('SELECT * FROM vista_detalle_grupo WHERE id_grupo = ? AND ciclo_escolar =?', [$id_grupo, $id_ciclo]);
-           return array('estatus'=>true, 'mensaje'=>'Se encontraron datos', 'data'=>$data);
+            $data = $this->db->select('SELECT * FROM vista_detalle_grupo WHERE id_grupo = ? AND ciclo_escolar =? AND estatus = 1', [$id_grupo, $id_ciclo]);
+            return array('estatus'=>true, 'mensaje'=>'Se encontraron datos', 'data'=>$data);
         }else{
            return array('estatus'=>false, 'mensaje'=>'No se encontraron datos', 'data'=>[]);
 
         }
-    }
+    }   
 
-    public function obtenerGrupo($id_grupo){
+    public function obtenerGrupo($id_grupo){ 
         $stmt = $this->db->query("SELECT COUNT(*) as total FROM grupos WHERE id = ? AND estatus = 1", [$id_grupo]);
         $total = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
         if($total>0){
@@ -411,6 +429,23 @@ class Grupo {
             return array('estatus'=>false, 'mensaje'=>'No hay grupos con ese ID', 'id_grupo'=>$id_grupo);
         }
 
+    }
+
+    public function obtenerAlumnosGrupoAsistencia($id_grupo, $id_ciclo, $id_dh, $tipo_modalidad){
+        $total = $this->contarDetalleGrupo($id_grupo, $id_ciclo);
+       
+        if($total >0){
+            if($tipo_modalidad == 1){
+                $date_asis = $this->db->select('SELECT * FROM asistencias WHERE id_grupo = ? AND fecha = ?', [$id_grupo, $this->fecha->fecha()]);
+            }else if($tipo_modalidad == 2){
+                $date_asis = $this->db->select('SELECT * FROM asistencias WHERE id_grupo = ? AND fecha = ? AND id_dh = ?', [$id_grupo, $this->fecha->fecha(), $id_dh]);
+            }
+            $data = $this->db->select('SELECT * FROM vista_detalle_grupo WHERE id_grupo = ? AND ciclo_escolar =? AND estatus = 1', [$id_grupo, $id_ciclo]);
+            return array('estatus'=>true, 'mensaje'=>'Se encontraron datos', 'data'=>$data, 'data_asis' => $date_asis);
+        }else{
+           return array('estatus'=>false, 'mensaje'=>'No se encontraron datos', 'data'=>[]);
+
+        }
     }
 
 

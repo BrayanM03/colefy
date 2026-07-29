@@ -1,5 +1,6 @@
 import { initCustomDataTable } from '../DataTable/datatables-init.js';
 import {GeneralEventListener} from '../utils/listeners.js';
+import {tienePermiso, enlazarLicencia} from '../utils/permisos.js';
 
 let table;
 $(document).ready(function () {
@@ -22,36 +23,55 @@ $(document).ready(function () {
       }
       return estatus_tag;
     }},
-   /* {
-      data: null, title: 'Ciudad', render: function (data, type, row) {
-        return row['ciudad'] + ', ' + row['estado'];
+    { data: null, title: 'Licencia' , render: (data)=>{
+      if(data.id_usuario != null){
+        estatus_tag = '<span class="badge bg-info">Con Licencia</span>'
+      }else{
+        estatus_tag = '<span class="badge bg-warning">Sin licencia</span>'
       }
-    }, */
-   /*  { data: 'telefono', title: 'Teléfono' },
-    { data: 'correo', title: 'Correo' }, */
+      return estatus_tag;
+    }},
+
     {
       data: null, title: 'Opciones', render: function (data, type, row) {
-        if (role == 1) {
-          return `
-            <div class='row'>
-              <div class='col-12 col-md-12'>
-                <div class="btn btn-primary" onclick="editarSolicitud(${row.id}, false)">
+        var btn_editar ='';
+          var btn_cancelar='';
+          var btn_enlazar ='';
+        if (tienePermiso('editar_profesores')) {
+         btn_editar = `
+                <div class="btn btn-primary" onclick="editarProfesor(${row.id}, false)">
                   <i class="fa-solid fa-pen-to-square"></i>
-                </div>
-                <div class="btn btn-danger" onclick="cancelarUsuario(${row.id})">
-                  <i class="fa-solid fa-trash"></i>
-                </div>
-              </div>
-            </div>`;
-        } else {
-          return '';
+                </div>`;
         }
+        if(tienePermiso('cancelar_profesores')){
+         btn_cancelar = `
+          <div class="btn btn-danger" onclick="cancelarProfesor${row.id})">
+          <i class="fa-solid fa-trash"></i>
+        </div>`
+        }
+        if(tienePermiso('enlazar_licencia')){
+          btn_enlazar = `
+           <div class="btn btn-info" onclick="enlazarLicencia(${row.id}, ${row.id_usuario}, '${row.usuario}')">
+           <i class="fa-solid fa-circle-nodes"></i>
+         </div>`
+         }
+
+        return `
+        <div class='row'>
+          <div class='col-12 col-md-12'>
+            ${btn_editar}${btn_cancelar} ${btn_enlazar}
+          </div>
+        </div>`;
       }
     }
   ];
 
   table = initCustomDataTable('#example', BASE_URL + 'api/profesores.php?tipo=datatable', columns);
-
+ 
+   // Escuchar el evento que viene del otro archivo
+    document.addEventListener('licenciaActualizada', function() {
+      table.ajax.reload(null, false);
+  });
   GeneralEventListener('registrar-profesor', 'click', registrarProfesor)
 });
 
@@ -113,7 +133,6 @@ function registrarProfesor(){
     }
 
   }).then((r)=>{
-    console.log(r);
     if(r.isConfirmed){
       let nombre = $("#nombre").val()
       let apellidos = $("#apellidos").val()
@@ -171,7 +190,7 @@ function registrarProfesor(){
   })
 }
 
-function cancelarUsuario(id_usuario){
+function cancelarProfesor(id_usuario){
   Swal.fire({
     icon: 'question',
     title: '¿Deseas desactivar este usuario?',
@@ -230,5 +249,8 @@ function cancelarUsuario(id_usuario){
     }
   })
 }
+
+window.enlazarLicencia = enlazarLicencia
+
 
 

@@ -174,6 +174,7 @@ $(document).ready(function () {
                             <option value="11">Grupos</option>
                             <option value="12">Roles</option>
                             <option value="13">Gastos</option>
+                            <option value="14">Asistencias</option>
                         </select>
                     </div>
                   

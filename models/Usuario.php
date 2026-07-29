@@ -7,10 +7,13 @@ require_once __DIR__ . '/../models/Datatable.php';
 class Usuario extends Datatable{
     private $tabla_usuarios = 'vista_usuarios';
     private $fecha;
-    public function __construct() {
+    private $id_escuela;
+    public function __construct($id_escuela = null) {
        
         $this->db = new Database();
         $this->fecha = new Date();
+        $this->id_escuela = $id_escuela ?? null;
+
     }
 
     public function datatablesUsuarios($id_filtro, $start, $length, $search, $orderColumn, $orderDir)
@@ -111,4 +114,54 @@ class Usuario extends Datatable{
       
         return $this->db->update('usuarios', $data_update, 'id  = ?', [$id_usuario]);
     }
+
+    public function combo($sql_where=''){
+        $params[':id_escuela'] = $this->id_escuela;
+        $stmt = $this->db->query("SELECT * FROM vista_usuarios WHERE estatus = 1 AND id_escuela = :id_escuela" . $sql_where . ' ORDER BY nombre ASC', $params);
+        $data =$stmt->fetchAll(PDO::FETCH_ASSOC);
+        return array('estatus' =>true, 'mensaje' => 'Usuarios encontrados', 'data'=> $data);
+    }
+  
+    public function combo_licencia($sql_where = '')
+{
+    $params[':id_escuela'] = $this->id_escuela;
+
+    $stmt = $this->db->query("
+        SELECT u.*
+        FROM usuarios u
+        LEFT JOIN profesores p
+            ON p.id_usuario = u.id
+        WHERE
+            u.estatus = 1
+            AND u.es_profesor = 1
+            AND u.id_escuela = :id_escuela
+            AND p.id_usuario IS NULL
+            $sql_where
+        ORDER BY u.nombre ASC
+    ", $params);
+
+    $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    return [
+        'estatus' => true,
+        'mensaje' => 'Usuarios encontrados',
+        'data' => $data
+    ];
+}
+
+public function enlazarLicencia($data){
+  
+    $enlazar = $data['enlazar'];
+    $id_profesor = $data['id_profesor'];
+    if($enlazar=='true'){
+        $id_usuario_nuevo = $data['id_usuario_nuevo'];
+        $update = $this->db->update('profesores',['id_usuario'=>$id_usuario_nuevo],'id=?', [$id_profesor]);
+        $response = array('estatus' => true, 'mensaje' => 'Profesor enlazado a usuario correctamente');
+    }else{
+       $update = $this->db->update('profesores',['id_usuario'=>null],'id=?', [$id_profesor]);
+       $response = array('estatus' => true, 'mensaje' => 'Profesor desenlazado de usuario correctamente');
+    }
+
+    return $response;
+}
 }

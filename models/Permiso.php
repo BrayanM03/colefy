@@ -120,6 +120,7 @@ class Permiso {
             $sql = "SELECT 
             p.id,
             p.permiso,
+            p.slug,
             p.id_categoria as id_categoria,
             p.descripcion,
             cp.nombre AS categoria,

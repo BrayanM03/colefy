@@ -10,7 +10,8 @@ if($_GET['tipo']== 'datatable'){
 }
 
 if($_GET['tipo']== 'combo'){
-    $controller->combo($busqueda);
+    $busqueda = isset($_POST['busqueda']) ? $_POST['busqueda'] : null;
+    $controller->combo(1, $busqueda);
 }
 
 
@@ -37,5 +38,8 @@ if($_GET['tipo']=='agregar_escuela'){
 
 if($_GET['tipo'] == 'actualizar_logo'){
     $controller->actualizar_logo(1, $_POST['id_reg']);
+}
 
+if($_GET['tipo'] =='cambiar_escuela'){
+    $controller->cambiar_escuela(1, $_POST['id_escuela_sel']);
 }
